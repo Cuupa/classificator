@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.cuupa.classificator;
 
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
@@ -6,14 +6,9 @@ import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
 @RestController
-public class DemoApplication {
-
-	@GetMapping("/")
-	String home() {
-		return "Spring is here!";
-	}
-
+public class SpringBootClassificatorApplication {
+	
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(SpringBootClassificatorApplication.class, args);
 	}
 }
