@@ -15,15 +15,10 @@ public class Classificiator {
 	}
 
 	public List<SemanticResult> classifiy(final String text) {
-		final List<SemanticResult> results = new ArrayList<>();
-		
 		if(text == null || text.length() == 0) {
-			return results;
+			return new ArrayList<SemanticResult>();
 		}
 		
-		results.addAll(manager.getResults(text));
-		
-		return results;
+		return manager.getResults(text);
 	}
-
 }

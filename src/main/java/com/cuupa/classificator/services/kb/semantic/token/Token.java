@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb;
+package com.cuupa.classificator.services.kb.semantic.token;
 
 import java.util.List;
 
@@ -11,4 +11,6 @@ public abstract class Token {
 	public void setTokenValue(List<String> tokenValue) {
 		this.tokenValue = tokenValue;
 	}
+
+	public abstract int getDistance();
 }

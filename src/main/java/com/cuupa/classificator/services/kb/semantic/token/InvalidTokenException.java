@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb.semantic;
+package com.cuupa.classificator.services.kb.semantic.token;
 
 public class InvalidTokenException extends RuntimeException {
 

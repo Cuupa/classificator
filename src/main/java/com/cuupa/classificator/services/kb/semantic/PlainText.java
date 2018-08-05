@@ -7,6 +7,8 @@ public class PlainText {
 
 	private final String plainText;
 
+	private int distance;
+
 	public PlainText(String plainText) {
 		this.plainText = plainText;
 	}
@@ -71,6 +73,7 @@ public class PlainText {
 				matchingWords++;
 				currentPositionPlainText++;
 				currentPositionSearchString++;
+				this.distance += distance;
 			} else {
 				matchingWords = 0;
 				currentPositionSearchString = 0;
@@ -136,9 +139,12 @@ public class PlainText {
 		text = text.replace("\t", " ");
 		text = text.replace("-", " ");
 		text = text.replace(",", " ");
-		text = text.replace(":", " ");
+		text = text.replace(": ", " ");
 		text = text.replace("€", " €");
 		return text.trim().toLowerCase();
 	}
 
+	public int getDistance() {
+		return distance;
+	}
 }

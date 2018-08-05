@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb;
+package com.cuupa.classificator.services.kb.semantic.token;
 
 import com.cuupa.classificator.services.kb.semantic.PlainText;
 
@@ -13,5 +13,10 @@ public class Not extends Token {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public int getDistance() {
+		return 0;
 	}
 }

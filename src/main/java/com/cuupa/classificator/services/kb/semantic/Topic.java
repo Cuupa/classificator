@@ -3,16 +3,16 @@ package com.cuupa.classificator.services.kb.semantic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cuupa.classificator.services.kb.MetaData;
-import com.cuupa.classificator.services.kb.Token;
+import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
+import com.cuupa.classificator.services.kb.semantic.token.Token;
 
 public class Topic {
 
 	private String topicName;
-
+	
 	private List<Token> tokenList = new ArrayList<>();
 
-	private List<MetaData> metaData = new ArrayList<>();
+	private List<MetaDataToken> metaDataToken = new ArrayList<>();
 
 	public void setName(String topicName) {
 		this.topicName = topicName;
@@ -35,13 +35,17 @@ public class Topic {
 		return true;
 	}
 
-	public void addMetaData(MetaData metadata) {
-		this.metaData.add(metadata);
+	public void addMetaData(MetaDataToken metadata) {
+		this.metaDataToken.add(metadata);
 	}
 
-	public void getMetaData(String text) {
-		for (MetaData data : metaData) {
-			data.extract(text);
+	public List<Metadata> getMetaData(String text) {
+		List<Metadata> metadata = new ArrayList<>();
+		for (MetaDataToken data : metaDataToken) {
+			Metadata extract = data.extract(text);
+			metadata.add(extract);
 		}
+		
+		return metadata;
 	}
 }

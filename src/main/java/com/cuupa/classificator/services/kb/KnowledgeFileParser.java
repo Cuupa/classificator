@@ -3,8 +3,11 @@ package com.cuupa.classificator.services.kb;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cuupa.classificator.services.kb.semantic.InvalidTokenException;
 import com.cuupa.classificator.services.kb.semantic.Topic;
+import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException;
+import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
+import com.cuupa.classificator.services.kb.semantic.token.Token;
+import com.cuupa.classificator.services.kb.semantic.token.TokenUtil;
 
 public class KnowledgeFileParser {
 
@@ -35,7 +38,7 @@ public class KnowledgeFileParser {
 
 		if (kbFile.contains("$")) {
 			String extractName = "";
-			MetaData metadata = new MetaData();
+			MetaDataToken metadata = new MetaDataToken();
 			for (int index = 0; index < charArray.length; index++) {
 				if (charArray[index] == '$') {
 					extractName = findExtractName(charArray, index);
@@ -48,6 +51,7 @@ public class KnowledgeFileParser {
 					token.setTokenValue(tokenValue);
 					metadata.addToken(token);
 					topic.addMetaData(metadata);
+					metadata = new MetaDataToken();
 				}
 			}
 		}
@@ -91,23 +95,6 @@ public class KnowledgeFileParser {
 		return value;
 	}
 
-	private static String resolveVars(String tokenValue) {
-		char[] charArray = tokenValue.toCharArray();
-		String var = "";
-
-		for (int index = 0; index < charArray.length; index++) {
-			if (charArray[index] == '[') {
-				for (int i = index + 1; i < charArray.length; i++) {
-					if(charArray[i] == ']') {
-						break;
-					}
-					var = var + charArray[i];
-				}
-			}
-		}
-		return var;
-	}
-
 	private static String findTokenName(final char[] charArray, int index) {
 		String tokenName = "";
 
@@ -137,7 +124,7 @@ public class KnowledgeFileParser {
 			}
 		}
 
-		if (curlyCloseBrackets != curlyOpenBrackets && normalCloseBrackets != normalOpenBrackets) {
+		if (curlyCloseBrackets != curlyOpenBrackets || normalCloseBrackets != normalOpenBrackets) {
 			throw new InvalidTokenException("invalid bracket count");
 		}
 

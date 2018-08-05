@@ -41,8 +41,8 @@ public class KnowledgeManager {
 		
 		for (Topic topic : topics) {
 			if(topic.match(text)) {
-				topic.getMetaData(text);
 				SemanticResult semanticResult = new SemanticResult(topic.getName());
+				semanticResult.setMetaData(topic.getMetaData(text));
 				value.add(semanticResult);
 			}
 		}

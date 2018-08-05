@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb;
+package com.cuupa.classificator.services.kb.semantic.token;
 
 public class TokenUtil {
 
@@ -9,6 +9,10 @@ public class TokenUtil {
 		
 		else if("not".equals(tokenName)) {
 			return new Not();
+		}
+		
+		else if("all".equals(tokenName)) {
+			return new All();
 		}
 		
 		else return null;
