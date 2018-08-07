@@ -65,26 +65,32 @@ public class PlainText {
 			currentPositionPlainText = pairPlain.getRight();
 			currentPositionSearchString = pairSearch.getRight();
 
-			Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
-					currentWordToSearch);
+			if (currentWordFromPlain.length() > (currentWordToSearch.length() + 5 + tolerance)) {
 
-			if (distance <= tolerance) {
-				matchingWords++;
-				currentPositionPlainText++;
-				currentPositionSearchString++;
-				this.distance += distance;
-			} else {
-				matchingWords = 0;
-				currentPositionSearchString = 0;
-				Pair<String, Integer> pair = findNonEmptyEntry(wordsToSearch, currentPositionSearchString);
-				currentWordToSearch = pair.getLeft();
-				currentPositionSearchString = pair.getRight();
-				distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain, currentWordToSearch);
+				Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
+						currentWordToSearch);
 
 				if (distance <= tolerance) {
 					matchingWords++;
+					currentPositionPlainText++;
 					currentPositionSearchString++;
+					this.distance += distance;
+				} else {
+					matchingWords = 0;
+					currentPositionSearchString = 0;
+					Pair<String, Integer> pair = findNonEmptyEntry(wordsToSearch, currentPositionSearchString);
+					currentWordToSearch = pair.getLeft();
+					currentPositionSearchString = pair.getRight();
+					distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
+							currentWordToSearch);
+
+					if (distance <= tolerance) {
+						matchingWords++;
+						currentPositionSearchString++;
+					}
+					currentPositionPlainText++;
 				}
+			} else {
 				currentPositionPlainText++;
 			}
 
