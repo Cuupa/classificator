@@ -22,10 +22,9 @@ public class PlainText {
 				return false;
 			}
 
-			int numberOfWhitespaces = countWhitespaces(text);
 			String[] wordsToSearch = text.split(" ");
 
-			return search(tempPlaintext, wordsToSearch, numberOfWhitespaces, tolerance);
+			return search(tempPlaintext, wordsToSearch, tolerance);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -36,7 +35,7 @@ public class PlainText {
 		return contains(text, 1);
 	}
 
-	private boolean search(String tempPlaintext, String[] wordsToSearch, int numberOfWhitespaces, int tolerance) {
+	private boolean search(String tempPlaintext, String[] wordsToSearch, int tolerance) {
 		String[] splitPlain = tempPlaintext.split(" ");
 
 		int positionOfFirstMatch = -1;
@@ -117,18 +116,6 @@ public class PlainText {
 			return true;
 		}
 		return false;
-	}
-
-	private int countWhitespaces(String text) {
-		char[] charArray = text.toCharArray();
-		int value = 0;
-
-		for (char c : charArray) {
-			if (c == 32) {
-				value++;
-			}
-		}
-		return value;
 	}
 
 	private String normalizeText(String text) {
