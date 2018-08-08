@@ -65,41 +65,38 @@ public class PlainText {
 			currentPositionPlainText = pairPlain.getRight();
 			currentPositionSearchString = pairSearch.getRight();
 
-			if (currentWordFromPlain.length() > (currentWordToSearch.length() + 5 + tolerance)) {
-
-				Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
-						currentWordToSearch);
-
-				if (distance <= tolerance) {
-					matchingWords++;
-					currentPositionPlainText++;
-					currentPositionSearchString++;
-					this.distance += distance;
-				} else {
-					matchingWords = 0;
-					currentPositionSearchString = 0;
-					Pair<String, Integer> pair = findNonEmptyEntry(wordsToSearch, currentPositionSearchString);
-					currentWordToSearch = pair.getLeft();
-					currentPositionSearchString = pair.getRight();
-					distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
-							currentWordToSearch);
-
-					if (distance <= tolerance) {
-						matchingWords++;
-						currentPositionSearchString++;
-					}
-					currentPositionPlainText++;
-				}
-			} else {
+			if (currentWordFromPlain.length() > (currentWordToSearch.length() + 2 + tolerance)) {
 				currentPositionPlainText++;
 			}
 
-			if (currentPositionPlainText + 1 > splitPlain.length
-					|| currentPositionSearchString + 1 > wordsToSearch.length) {
-				search = false;
-			}
-		}
+			Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
+					currentWordToSearch);
 
+			if (distance <= tolerance) {
+				matchingWords++;
+				currentPositionPlainText++;
+				currentPositionSearchString++;
+				this.distance += distance;
+			} else {
+				matchingWords = 0;
+				currentPositionSearchString = 0;
+				Pair<String, Integer> pair = findNonEmptyEntry(wordsToSearch, currentPositionSearchString);
+				currentWordToSearch = pair.getLeft();
+				currentPositionSearchString = pair.getRight();
+				distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain, currentWordToSearch);
+
+				if (distance <= tolerance) {
+					matchingWords++;
+					currentPositionSearchString++;
+				}
+				currentPositionPlainText++;
+			}
+
+		if (currentPositionPlainText + 1 > splitPlain.length
+				|| currentPositionSearchString + 1 > wordsToSearch.length) {
+			search = false;
+		}
+		}
 		return matchingWords == wordsToSearch.length;
 	}
 
