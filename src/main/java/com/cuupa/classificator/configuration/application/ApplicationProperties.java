@@ -37,6 +37,8 @@ public class ApplicationProperties {
 			_setTomcat();
 		} 
 
+		Properties properties2 = System.getProperties();
+		System.out.println(properties2);
 		LOG.debug("detected environment: " + serverProperties.getProperty("serverEnvironment"));
 		LOG.debug("set config dir to : " + serverProperties.getProperty("configDir"));
 	}

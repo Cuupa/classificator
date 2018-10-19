@@ -30,13 +30,13 @@ public class ClassificatorController {
 	}
 	
 	@RequestMapping("/classify")
-	public ResponseEntity<String> classify(@RequestBody String text) {
+	public ResponseEntity<String> classify(String text) {
 		try {
 			List<SemanticResult> result = classificator.classifiy(text);
 			String semanticResult = gson.toJson(result);
 			return ResponseEntity.status(HttpStatus.OK).body(semanticResult);
 		} catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
