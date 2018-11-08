@@ -105,4 +105,8 @@ public class MetaDataToken {
 	private boolean hasVariable(String text) {
 		return text.contains("[") && text.contains("]");
 	}
+
+	public String getName() {
+		return name;
+	}
 }

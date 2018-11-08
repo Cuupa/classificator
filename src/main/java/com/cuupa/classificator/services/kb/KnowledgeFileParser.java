@@ -7,7 +7,7 @@ import com.cuupa.classificator.services.kb.semantic.Topic;
 import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException;
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
 import com.cuupa.classificator.services.kb.semantic.token.Token;
-import com.cuupa.classificator.services.kb.semantic.token.TokenUtil;
+import com.cuupa.classificator.services.kb.semantic.token.Tokens;
 
 public class KnowledgeFileParser {
 
@@ -26,10 +26,7 @@ public class KnowledgeFileParser {
 		char[] charArray = kbFile.toCharArray();
 		for (int index = 0; index < charArray.length; index++) {
 			if (charArray[index] == '(') {
-				String tokenName = findTokenName(charArray, index);
-				Token token = TokenUtil.get(tokenName);
-				token.setTokenValue(findTokenValue(charArray, index));
-				topic.addToken(token);
+				topic.addToken(Tokens.get(new TokenTextPointer(charArray, index)));
 			}
 			if(charArray[index] == '}') {
 				break;
@@ -37,19 +34,14 @@ public class KnowledgeFileParser {
 		}
 
 		if (kbFile.contains("$")) {
-			String extractName = "";
 			MetaDataToken metadata = new MetaDataToken();
 			for (int index = 0; index < charArray.length; index++) {
 				if (charArray[index] == '$') {
-					extractName = findExtractName(charArray, index);
-					metadata.setName(extractName);
+					metadata.setName(findExtractName(charArray, index));
 				}
 
-				else if (charArray[index] == '(' && extractName.length() > 0) {
-					Token token = TokenUtil.get(findTokenName(charArray, index)); 
-					List<String> tokenValue = findTokenValue(charArray, index);
-					token.setTokenValue(tokenValue);
-					metadata.addToken(token);
+				else if (charArray[index] == '(' && metadata.getName().length() > 0) {
+					metadata.addToken(Tokens.get(new TokenTextPointer(charArray, index))); 
 					topic.addMetaData(metadata);
 					metadata = new MetaDataToken();
 				}
@@ -75,37 +67,6 @@ public class KnowledgeFileParser {
 		return extractName.trim();
 	}
 
-	private static List<String> findTokenValue(final char[] charArray, int index) {
-		List<String> value = new ArrayList<>();
-
-		String tokenValue = "";
-		for (int i = index + 1; i < charArray.length; i++) {
-			if (charArray[i] == ',') {
-				value.add(tokenValue);
-				tokenValue = "";
-			} else if (charArray[i] != '"' && charArray[i] != ')') {
-				tokenValue = tokenValue + charArray[i];
-			}
-
-			else if (charArray[i] == ')') {
-				value.add(tokenValue);
-				return value;
-			}
-		}
-		return value;
-	}
-
-	private static String findTokenName(final char[] charArray, int index) {
-		String tokenName = "";
-
-		for (int i = index - 1; i > 0; i--) {
-			if (charArray[i] != '{' && charArray[i] != ',' && charArray[i] > 64 && charArray[i] < 123) {
-				tokenName = charArray[i] + tokenName;
-			} else
-				return tokenName;
-		}
-		return tokenName;
-	}
 
 	private static void validateToken(String kbFile) {
 		char[] charArray = kbFile.toCharArray();
