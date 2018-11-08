@@ -10,9 +10,9 @@ public class Topic {
 
 	private String topicName;
 	
-	private List<Token> tokenList = new ArrayList<>();
+	private final List<Token> tokenList = new ArrayList<>();
 
-	private List<MetaDataToken> metaDataToken = new ArrayList<>();
+	private final List<MetaDataToken> metaDataToken = new ArrayList<>();
 
 	public void setName(String topicName) {
 		this.topicName = topicName;
