@@ -46,10 +46,10 @@ public class ApplicationProperties {
 	private static void _setTomcat() {
 		serverProperties.setProperty("serverEnvironment", "tomcat");
 		serverProperties.setProperty("configDir", System.getProperty("catalina.base") + getFileSeperator() + "conf"
-				+ getFileSeperator() + "classificator" + getFileSeperator());
+				+ getFileSeperator() + "mailprocessor/classificator" + getFileSeperator());
 	}
 
-	private static void _setJBoss() {
+private static void _setJBoss() {
 		serverProperties.setProperty("serverEnvironment", "jboss");
 		serverProperties.setProperty("configDir", System.getProperty("jboss.server.config.dir") + getFileSeperator()
 				+ "classificator" + getFileSeperator());
