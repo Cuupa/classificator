@@ -26,13 +26,15 @@ public class KnowledgeManager {
 		if (knowledgbaseDir.exists() && knowledgbaseDir.isDirectory()) {
 			List<File> knowledgeFiles = Arrays.asList(knowledgbaseDir.listFiles());
 
-			for (File file : knowledgeFiles) {
-				try {
-					topics.add(KnowledgeFileParser.parse(FileUtils.readFileToString(file, Charset.defaultCharset())));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			knowledgeFiles.stream().forEach(e -> addToTopicList(e));
+		}
+	}
+
+	private void addToTopicList(File e) {
+		 try {
+			topics.add(KnowledgeFileParser.parse(FileUtils.readFileToString(e, Charset.defaultCharset())));
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 
