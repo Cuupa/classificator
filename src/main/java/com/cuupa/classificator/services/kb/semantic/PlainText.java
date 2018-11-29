@@ -131,6 +131,7 @@ public class PlainText {
 		text = text.replace(",", " ");
 		text = text.replace(": ", " ");
 		text = text.replace("€", " €");
+		text = text.replace("ä", "ae");
 		return text.trim().toLowerCase();
 	}
 
