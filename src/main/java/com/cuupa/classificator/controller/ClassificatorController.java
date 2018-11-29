@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cuupa.classificator.services.Classificiator;
@@ -27,8 +29,8 @@ public class ClassificatorController {
 		return ResponseEntity.ok().body("200");
 	}
 	
-	@RequestMapping("/classify")
-	public ResponseEntity<String> classify(String text) {
+	@RequestMapping(value = "/classify", method = RequestMethod.POST)
+	public ResponseEntity<String> classify(@RequestBody String text) {
 		try {
 			List<SemanticResult> result = classificator.classifiy(text);
 			String semanticResult = gson.toJson(result);
