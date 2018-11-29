@@ -19,6 +19,11 @@ public class Classificiator {
 			return new ArrayList<SemanticResult>();
 		}
 		
-		return manager.getResults(text);
+		List<SemanticResult> results = manager.getResults(text);
+		if(results.size() == 0) {
+			results.add(new SemanticResult("sonstiges"));
+		}
+		
+		return results;
 	}
 }
