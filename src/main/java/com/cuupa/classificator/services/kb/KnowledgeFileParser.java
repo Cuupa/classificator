@@ -18,7 +18,7 @@ public class KnowledgeFileParser {
 
 	private static Topic parseFile(String kbFile) {
 		String[] split = kbFile.split("=");
-		String topicName = split[0];
+		String topicName = split[0].trim();
 
 		Topic topic = new Topic();
 		topic.setName(topicName);
@@ -40,7 +40,7 @@ public class KnowledgeFileParser {
 					metadata.setName(findExtractName(charArray, index));
 				}
 
-				else if (charArray[index] == '(' && metadata.getName().length() > 0) {
+				else if (charArray[index] == '(' && metadata.getName() != null && metadata.getName().length() > 0) {
 					metadata.addToken(Tokens.get(new TokenTextPointer(charArray, index))); 
 					topic.addMetaData(metadata);
 					metadata = new MetaDataToken();
