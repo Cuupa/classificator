@@ -115,11 +115,8 @@ public class PlainText {
 
 	private boolean findFirst(String string, String[] wordsToSearch, int tolerance) {
 		Integer distance = LevenshteinDistance.getDefaultInstance().apply(string, wordsToSearch[0]);
-		if (distance <= tolerance) {
-			return true;
-		}
-		return false;
-	}
+        return distance <= tolerance;
+    }
 
 	private String normalizeText(String text) {
 		text = text.toLowerCase();
