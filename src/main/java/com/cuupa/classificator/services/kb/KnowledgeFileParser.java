@@ -31,7 +31,7 @@ public class KnowledgeFileParser {
         return metadata;
     }
 
-    private static Topic parseTopic(String kbFile) {
+	public static Topic parseTopic(String kbFile) {
         String[] split = kbFile.split("=");
         String topicName = split[0].trim();
 

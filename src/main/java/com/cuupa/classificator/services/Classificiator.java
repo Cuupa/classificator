@@ -1,10 +1,10 @@
 package com.cuupa.classificator.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.kb.semantic.SemanticResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Classificiator {
 	
@@ -16,7 +16,7 @@ public class Classificiator {
 
 	public List<SemanticResult> classifiy(final String text) {
 		if(text == null || text.length() == 0) {
-			return new ArrayList<SemanticResult>();
+			return new ArrayList<>();
 		}
 		
 		List<SemanticResult> results = manager.getResults(text);
@@ -25,5 +25,9 @@ public class Classificiator {
 		}
 		
 		return results;
+	}
+
+	public List<SemanticResult> classifiy(byte[] content) {
+		return null;
 	}
 }

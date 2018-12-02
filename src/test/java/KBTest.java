@@ -1,22 +1,19 @@
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.cuupa.classificator.services.kb.KnowledgeFileParser;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.kb.semantic.Metadata;
 import com.cuupa.classificator.services.kb.semantic.SemanticResult;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class KBTest {
 
-	String bill = "BILL = {\r\n" + "	oneOf(\"rechnung\", \"jahresrechnung\"),\r\n"
+	private String bill = "BILL = {\r\n" + "	oneOf(\"rechnung\", \"jahresrechnung\"),\r\n"
 			+ "	oneOf(\"eur, \"euro\", \"€\"),\r\n" + "	not(\"mahnung\")\r\n" + "}";
 
-	String warning = "WARNING = {\r\n" + "	oneOf(\"mahnung\", \"zahlungserinnerung\", \"angemahnte Betrag\"),\r\n"
+	private String warning = "WARNING = {\r\n" + "	oneOf(\"mahnung\", \"zahlungserinnerung\", \"angemahnte Betrag\"),\r\n"
 			+ "	oneOf(\"keine Zahlung erhalten\", \"keine Zahlung eingegangen\", \"noch nicht eingegangen\", \"noch nicht bei uns eingegangen\"),\r\n"
 			+ "	oneOf(\"eur\", \"euro\", \"€\")\r\n" + "}\r\n" + "\r\n" + "$dueDate = {\r\n"
 			+ "	oneOf(\"bis zum [DATE]\")\r\n" + "}\r\n" + "\r\n" + "$IBAN = {\r\n" + "	oneOf(\"IBAN: [IBAN]\")\r\n"
@@ -29,26 +26,26 @@ public class KBTest {
 
 	@Test
 	public void parseTest() {
-		KnowledgeFileParser.parse(bill);
+		KnowledgeFileParser.parseTopic(bill);
 	}
 
 	@Test
 	public void parseText() {
 		KnowledgeManager manager = new KnowledgeManager();
-		manager.manualParse(KnowledgeFileParser.parse(bill));
+		manager.manualParse(KnowledgeFileParser.parseTopic(bill));
 
 		List<SemanticResult> results = manager.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€");
 		assertTrue(results.size() > 0);
 
 		results = manager
 				.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€. Dies ist die letzte Mahnung");
-		assertTrue(results.size() == 0);
+		assertEquals(0, results.size());
 	}
 
 	@Test
 	public void parseWarning() {
 		KnowledgeManager manager = new KnowledgeManager();
-		manager.manualParse(KnowledgeFileParser.parse(warning));
+		manager.manualParse(KnowledgeFileParser.parseTopic(warning));
 
 		List<SemanticResult> results = manager.getResults(
 				"Mahnung über 130€ bis zum 31.12.18. Wir haben keine Zahlung erhalten. Bitte überweisen Sie es auf IBAN: DE19 1234 1234 1234 1234 12");
@@ -65,7 +62,7 @@ public class KBTest {
 	@Test
 	public void parseSicknote() {
 		KnowledgeManager manager = new KnowledgeManager();
-		manager.manualParse(KnowledgeFileParser.parse(sickNote));
+		manager.manualParse(KnowledgeFileParser.parseTopic(sickNote));
 
 		List<SemanticResult> results = manager.getResults("Krankenkasse bzw. Kostenträger\r\n"
 				+ "Techniker Krankenkasse______ 38\r\n" + "Name, Vorname des Versicherten\r\n" + "Thiel\r\n"
