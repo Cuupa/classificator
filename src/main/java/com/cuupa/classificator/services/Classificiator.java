@@ -21,7 +21,7 @@ public class Classificiator {
 		
 		List<SemanticResult> results = manager.getResults(text);
 		if(results.size() == 0) {
-			results.add(new SemanticResult("sonstiges"));
+			results.add(new SemanticResult("OTHER"));
 		}
 		
 		return results;
