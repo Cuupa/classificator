@@ -23,9 +23,9 @@ public class KnowledgeManager {
 	}
 
 	private void initKnowledgeBase() {
-		File knowledgbaseDir = new File(ApplicationProperties.getKnowledgbaseDir());
-		if (knowledgbaseDir.exists() && knowledgbaseDir.isDirectory()) {
-            File[] files = knowledgbaseDir.listFiles();
+        File knowledgebaseDir = new File(ApplicationProperties.getKnowledgbaseDir());
+        if (knowledgebaseDir.exists() && knowledgebaseDir.isDirectory()) {
+            File[] files = knowledgebaseDir.listFiles();
             if (files == null) {
                 return;
             }
