@@ -19,7 +19,10 @@ public class ApplicationProperties {
 
 	static {
 		_initServerEnvironment();
+		_readKBFiles();
+	}
 
+	private static void _readKBFiles() {
 		File file = new File(serverProperties.getProperty("configDir") + "application.properties");
 
 		try (InputStream in = new FileInputStream(file)) {
@@ -35,10 +38,8 @@ public class ApplicationProperties {
 			_setJBoss();
 		} else if (System.getProperty("catalina.base") != null) {
 			_setTomcat();
-		} 
+		}
 
-		Properties properties2 = System.getProperties();
-		System.out.println(properties2);
 		LOG.debug("detected environment: " + serverProperties.getProperty("serverEnvironment"));
 		LOG.debug("set config dir to : " + serverProperties.getProperty("configDir"));
 	}
@@ -49,14 +50,14 @@ public class ApplicationProperties {
 				+ getFileSeperator() + "mailprocessor/classificator" + getFileSeperator());
 	}
 
-private static void _setJBoss() {
+	private static void _setJBoss() {
 		serverProperties.setProperty("serverEnvironment", "jboss");
 		serverProperties.setProperty("configDir", System.getProperty("jboss.server.config.dir") + getFileSeperator()
 				+ "classificator" + getFileSeperator());
 	}
 
 	public static String getKnowledgbaseDir() {
-		return properties.getProperty("knowledgebase","");
+		return properties.getProperty("knowledgebase", "");
 	}
 
 	public static String getFileSeperator() {
