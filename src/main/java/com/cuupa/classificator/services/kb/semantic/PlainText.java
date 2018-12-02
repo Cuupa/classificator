@@ -92,10 +92,10 @@ public class PlainText {
 				currentPositionPlainText++;
 			}
 
-		if (currentPositionPlainText + 1 > splitPlain.length
-				|| currentPositionSearchString + 1 > wordsToSearch.length) {
-			search = false;
-		}
+			if (currentPositionPlainText + 1 > splitPlain.length
+					|| currentPositionSearchString + 1 > wordsToSearch.length) {
+				search = false;
+			}
 		}
 		return matchingWords == wordsToSearch.length;
 	}
@@ -122,6 +122,7 @@ public class PlainText {
 	}
 
 	private String normalizeText(String text) {
+		text = text.toLowerCase();
 		text = text.replace("\n\r", " ");
 		text = text.replace("\r\n", " ");
 		text = text.replace("\r", " ");
@@ -132,7 +133,8 @@ public class PlainText {
 		text = text.replace(": ", " ");
 		text = text.replace("€", " €");
 		text = text.replace("ä", "ae");
-		return text.trim().toLowerCase();
+		text = text.replace("ü", "ue");
+		return text.trim();
 	}
 
 	public int getDistance() {
