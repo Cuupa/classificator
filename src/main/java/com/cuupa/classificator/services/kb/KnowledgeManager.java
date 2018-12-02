@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 
@@ -24,14 +25,12 @@ public class KnowledgeManager {
 	private void initKnowledgeBase() {
 		File knowledgbaseDir = new File(ApplicationProperties.getKnowledgbaseDir());
 		if (knowledgbaseDir.exists() && knowledgbaseDir.isDirectory()) {
-			List<File> knowledgeFiles = Arrays.asList(knowledgbaseDir.listFiles());
-
-			knowledgeFiles.stream().forEach(e -> addToTopicList(e));
+			Arrays.asList(knowledgbaseDir.listFiles()).stream().forEach(this::addToTopicList);
 		}
 	}
 
 	private void addToTopicList(File e) {
-		 try {
+		try {
 			topics.add(KnowledgeFileParser.parse(FileUtils.readFileToString(e, Charset.defaultCharset())));
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -39,16 +38,10 @@ public class KnowledgeManager {
 	}
 
 	public List<SemanticResult> getResults(String text) {
-		List<SemanticResult> value = new ArrayList<>();
-		
-		for (Topic topic : topics) {
-			if(topic.match(text)) {
-				SemanticResult semanticResult = new SemanticResult(topic.getName());
-				semanticResult.setMetaData(topic.getMetaData(text));
-				value.add(semanticResult);
-			}
-		}
-		return value;
+		return topics.stream()
+				.filter(e -> e.match(text))
+				.map(e -> new SemanticResult(e.getName(), e.getMetaData(text)))
+				.collect(Collectors.toList());
 	}
 
 	public void manualParse(Topic parse) {
