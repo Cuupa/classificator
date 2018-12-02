@@ -8,6 +8,11 @@ public class SemanticResult {
 
 	private List<Metadata> metaData;
 
+	public SemanticResult(String topicName, List<Metadata> metaData) {
+		this.topicName = topicName;
+		this.metaData = metaData;
+	}
+
 	public SemanticResult(String topicName) {
 		this.topicName = topicName;
 	}
