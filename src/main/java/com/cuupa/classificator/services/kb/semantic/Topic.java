@@ -1,10 +1,10 @@
 package com.cuupa.classificator.services.kb.semantic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
 import com.cuupa.classificator.services.kb.semantic.token.Token;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Topic {
 
@@ -12,7 +12,7 @@ public class Topic {
 	
 	private final List<Token> tokenList = new ArrayList<>();
 
-	private final List<MetaDataToken> metaDataToken = new ArrayList<>();
+    private List<MetaDataToken> metaDataToken = new ArrayList<>();
 
 	public void setName(String topicName) {
 		this.topicName = topicName;
@@ -48,4 +48,8 @@ public class Topic {
 		
 		return metadata;
 	}
+
+    public void setMetaDataList(List<MetaDataToken> metaDataTokenList) {
+        this.metaDataToken = new ArrayList<>(metaDataTokenList);
+    }
 }

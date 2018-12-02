@@ -1,55 +1,55 @@
 package com.cuupa.classificator.services.kb;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.cuupa.classificator.services.kb.semantic.Topic;
 import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException;
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
-import com.cuupa.classificator.services.kb.semantic.token.Token;
 import com.cuupa.classificator.services.kb.semantic.token.Tokens;
 
 public class KnowledgeFileParser {
 
-	public static Topic parse(String kbFile) {
+    static Topic parseTopicFile(String kbFile) {
+        validateToken(kbFile);
+        return parseTopic(kbFile);
+    }
+
+    static MetaDataToken parseMetaFile(String kbFile) {
 		validateToken(kbFile);
-		return parseFile(kbFile);
-	}
+        return parseMetaData(kbFile);
+    }
 
-	private static Topic parseFile(String kbFile) {
-		String[] split = kbFile.split("=");
-		String topicName = split[0].trim();
+    private static MetaDataToken parseMetaData(String kbFile) {
+        MetaDataToken metadata = new MetaDataToken();
+        char[] charArray = kbFile.toCharArray();
+        for (int index = 0; index < charArray.length; index++) {
+            if (charArray[index] == '$') {
+                metadata.setName(findExtractName(charArray, index));
+            } else if (charArray[index] == '(' && metadata.getName() != null && metadata.getName().length() > 0) {
+                metadata.addToken(Tokens.get(new TokenTextPointer(charArray, index)));
+            }
+        }
 
-		Topic topic = new Topic();
-		topic.setName(topicName);
+        return metadata;
+    }
 
-		char[] charArray = kbFile.toCharArray();
-		for (int index = 0; index < charArray.length; index++) {
-			if (charArray[index] == '(') {
-				topic.addToken(Tokens.get(new TokenTextPointer(charArray, index)));
-			}
-			if(charArray[index] == '}') {
-				break;
-			}
-		}
+    private static Topic parseTopic(String kbFile) {
+        String[] split = kbFile.split("=");
+        String topicName = split[0].trim();
 
-		if (kbFile.contains("$")) {
-			MetaDataToken metadata = new MetaDataToken();
-			for (int index = 0; index < charArray.length; index++) {
-				if (charArray[index] == '$') {
-					metadata.setName(findExtractName(charArray, index));
-				}
+        Topic topic = new Topic();
+        topic.setName(topicName);
 
-				else if (charArray[index] == '(' && metadata.getName() != null && metadata.getName().length() > 0) {
-					metadata.addToken(Tokens.get(new TokenTextPointer(charArray, index))); 
-					topic.addMetaData(metadata);
-					metadata = new MetaDataToken();
-				}
-			}
-		}
+        char[] charArray = kbFile.toCharArray();
+        for (int index = 0; index < charArray.length; index++) {
+            if (charArray[index] == '(') {
+                topic.addToken(Tokens.get(new TokenTextPointer(charArray, index)));
+            }
+            if (charArray[index] == '}') {
+                break;
+            }
+        }
 
-		return topic;
-	}
+        return topic;
+    }
 
 	private static String findExtractName(final char[] charArray, int index) {
 		String extractName = "";
