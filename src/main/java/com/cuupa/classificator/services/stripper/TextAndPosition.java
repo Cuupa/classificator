@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services;
+package com.cuupa.classificator.services.stripper;
 
 public class TextAndPosition {
     private String value = "";
@@ -9,7 +9,7 @@ public class TextAndPosition {
 
     private float y;
 
-    private float maxheight;
+    private float maxHeight;
 
 
     public void add(String value, float xDirAdj, float width, float yDirAdj, float heightDir) {
@@ -25,7 +25,7 @@ public class TextAndPosition {
 
         y = yDirAdj;
 
-        maxheight = heightDir;
+        maxHeight = heightDir;
     }
 
     public float getX() {
@@ -41,7 +41,7 @@ public class TextAndPosition {
     }
 
     public float getHeight() {
-        return maxheight;
+        return maxHeight;
     }
 
     public String getValue() {

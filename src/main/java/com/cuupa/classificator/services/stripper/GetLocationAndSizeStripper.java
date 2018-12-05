@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.stripper;
 
-import com.cuupa.classificator.services.TextAndPosition;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 
@@ -43,15 +43,16 @@ public class GetLocationAndSizeStripper extends PDFTextStripper {
     }
 
     private boolean isEmpty(TextPosition textPosition) {
-        return textPosition.getUnicode() == null || textPosition.getUnicode().trim().length() == 0;
-    }
-
-    public List<TextAndPosition> getTextAndPositions() {
-        return list;
+        return textPosition.getUnicode() == null;
     }
 
     public void setTextAlreadyParsed() {
         textAlreadyParsed = true;
+    }
+
+    public List<TextAndPosition> getTextAndPositions(PDDocument document) throws IOException {
+        super.getText(document);
+        return list;
     }
 }
 
