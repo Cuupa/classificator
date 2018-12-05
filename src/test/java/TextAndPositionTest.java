@@ -44,9 +44,18 @@ public class TextAndPositionTest {
         int bottom = middle + sizePerPart;
 
         List<TextAndPosition> topText = getTextOfHeight(textAndPositions, 0, top);
+        List<TextAndPosition> middleText = getTextOfHeight(textAndPositions, top, middle);
+        List<TextAndPosition> bottomText = getTextOfHeight(textAndPositions, middle, bottom);
 
-        for (TextAndPosition text :
-                topText) {
+        for (TextAndPosition text : topText) {
+            System.out.println(text.getValue());
+        }
+
+        for (TextAndPosition text : middleText) {
+            System.out.println(text.getValue());
+        }
+
+        for (TextAndPosition text : bottomText) {
             System.out.println(text.getValue());
         }
     }

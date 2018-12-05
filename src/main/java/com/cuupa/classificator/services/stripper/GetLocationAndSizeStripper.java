@@ -43,7 +43,7 @@ public class GetLocationAndSizeStripper extends PDFTextStripper {
     }
 
     private boolean isEmpty(TextPosition textPosition) {
-        return textPosition.getUnicode() == null;
+        return textPosition.getUnicode() == null || textPosition.getUnicode().equals(" ");
     }
 
     public void setTextAlreadyParsed() {
