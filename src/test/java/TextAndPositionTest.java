@@ -3,7 +3,6 @@ import com.cuupa.classificator.services.stripper.TextAndPosition;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,7 +35,7 @@ public class TextAndPositionTest {
 
     }
 
-    private void splitHorizontly(@NotNull PDRectangle cropBox, List<TextAndPosition> textAndPositions) {
+    private void splitHorizontly(PDRectangle cropBox, List<TextAndPosition> textAndPositions) {
 
         int sizePerPart = Math.round(cropBox.getHeight() / 3);
         int top = sizePerPart;
@@ -60,7 +59,7 @@ public class TextAndPositionTest {
         }
     }
 
-    private List<List<TextAndPosition>> splitVerticaly(@NotNull PDRectangle cropBox, List<TextAndPosition> textAndPositions) {
+    private List<List<TextAndPosition>> splitVerticaly(PDRectangle cropBox, List<TextAndPosition> textAndPositions) {
         int leftSide = Math.round(cropBox.getWidth() / 2);
         int rightSide = Math.round(cropBox.getWidth() - leftSide);
 

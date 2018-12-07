@@ -38,6 +38,7 @@ public class KnowledgeManager {
                     .map(this::createTopic).collect(Collectors.toList());
 
             topicList.stream().forEach(topic -> topic.setMetaDataList(metaDataTokenList));
+            topics.addAll(topicList);
 		}
 	}
 

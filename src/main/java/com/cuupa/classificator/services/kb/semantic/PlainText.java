@@ -64,11 +64,10 @@ public class PlainText {
 
 			currentPositionPlainText = pairPlain.getRight();
 			currentPositionSearchString = pairSearch.getRight();
-
-			if (currentWordFromPlain.length() > (currentWordToSearch.length() + 2 + tolerance)) {
-				currentPositionPlainText++;
+			if(currentWordFromPlain.endsWith("nachzahlung")) {
+				System.out.println();
 			}
-
+			
 			Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
 					currentWordToSearch);
 
