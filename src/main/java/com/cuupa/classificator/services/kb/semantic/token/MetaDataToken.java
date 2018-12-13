@@ -50,7 +50,7 @@ public class MetaDataToken {
 
 			Set<Entry<Metadata, Integer>> entrySet = match.entrySet();
 			Entry<Metadata, Integer> smallestDistance = null;
-			
+
 			for (Entry<Metadata, Integer> entry : entrySet) {
 				if (smallestDistance == null) {
 					smallestDistance = entry;
@@ -77,17 +77,31 @@ public class MetaDataToken {
 
 		if (hasVariable(tokenValue)) {
 			String[] split = tokenValue.split("\\[");
+			String textBeforeToken = split[0];
 			String var = "[" + split[1];
+			String textAfterToken = getTextAfterToken(var);
+			var = var.split("]")[0] + "]";
+			// textAferToken =
 			Extract extract = compile(var);
 			Pattern pattern = extract.getPattern();
 			Matcher matcher = pattern.matcher(text);
 			while (matcher.find()) {
 				String normalizedValue = extract.normalize(matcher.group());
-				value.add(new ImmutablePair<String, String>(split[0] + matcher.group(), normalizedValue));
+				value.add(new ImmutablePair<String, String>(textBeforeToken + matcher.group() + textAfterToken,
+						normalizedValue));
 			}
 		}
 
 		return value;
+	}
+
+	private String getTextAfterToken(String var) {
+		String[] split = var.split("]");
+		if (split.length >= 2) {
+			return split[1];
+		} else {
+			return "";
+		}
 	}
 
 	private Extract compile(String var) {
