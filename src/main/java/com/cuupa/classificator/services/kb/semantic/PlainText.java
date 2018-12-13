@@ -130,6 +130,7 @@ public class PlainText {
 		text = text.replace("€", " €");
 		text = text.replace("ä", "ae");
 		text = text.replace("ü", "ue");
+		text = text.replace("/", " ");
 		return text.trim();
 	}
 
