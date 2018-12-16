@@ -1,6 +1,6 @@
 package com.cuupa.classificator.controller;
 
-import com.cuupa.classificator.services.Classificiator;
+import com.cuupa.classificator.services.Classificator;
 import com.cuupa.classificator.services.kb.semantic.SemanticResult;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
@@ -16,10 +16,10 @@ import java.util.List;
 public class ClassificatorController {
 	
 	private static final Gson gson = new Gson();
-	
-	private Classificiator classificator;
-	
-	public ClassificatorController(Classificiator classificator) {
+
+    private Classificator classificator;
+
+    public ClassificatorController(Classificator classificator) {
 		this.classificator = classificator;
 	}
 

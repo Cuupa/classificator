@@ -1,7 +1,7 @@
 package com.cuupa.classificator.configuration.spring;
 
 import com.cuupa.classificator.controller.ClassificatorController;
-import com.cuupa.classificator.services.Classificiator;
+import com.cuupa.classificator.services.Classificator;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.stripper.PdfAnalyser;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +16,8 @@ public class ApplicationConfiguration {
 	}
 	
 	@Bean
-	public Classificiator classificator() {
-        return new Classificiator(knowledgeManager(), analyser());
+	public Classificator classificator() {
+		return new Classificator(knowledgeManager(), analyser());
 	}
 
 	@Bean

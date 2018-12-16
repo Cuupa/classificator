@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Classificiator {
+public class Classificator {
 	
 	private KnowledgeManager manager;
 
     private PdfAnalyser analyser;
 
-    public Classificiator(KnowledgeManager manager, PdfAnalyser analyser) {
+    public Classificator(KnowledgeManager manager, PdfAnalyser analyser) {
 		this.manager = manager;
         this.analyser = analyser;
     }
