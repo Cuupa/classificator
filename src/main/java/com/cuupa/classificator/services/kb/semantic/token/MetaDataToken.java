@@ -6,6 +6,7 @@ import com.cuupa.classificator.services.kb.semantic.dataExtraction.Extract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -36,6 +37,7 @@ public class MetaDataToken {
 
 				List<Pair<String, String>> compiledText = compileText(text, tokenValue.get(i));
 				for (Pair<String, String> pair : compiledText) {
+                    // replace the variable with the value
                     token.tokenValue.set(i, pair.getLeft());
 
                     if (isExclusionCondition(text, token)) {
@@ -100,25 +102,25 @@ public class MetaDataToken {
 		return value;
 	}
 
-	private String getTextAfterToken(String var) {
-		String[] split = var.split("]");
-		if (split.length >= 2) {
-			return split[1];
-		} else {
-			return "";
-		}
-	}
-
     private Extract getExtractForName(String name) {
         if ("[DATE]".equals(name)) {
-			return new DateExtract();
-		}
+            return new DateExtract();
+        }
 
         if ("[IBAN]".equals(name)) {
-			return new IbanExtract();
-		}
+            return new IbanExtract();
+        }
 
-		return null;
+        throw new RuntimeException("There is no extract specified");
+    }
+
+    private String getTextAfterToken(String var) {
+        String[] split = var.split("]");
+        if (split.length >= 2) {
+            return split[1];
+        } else {
+            return Strings.EMPTY;
+        }
 	}
 
 	private boolean hasVariable(String text) {

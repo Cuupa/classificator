@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetLocationAndSizeStripper extends PDFTextStripper {
+public class LocationAndSizeStripper extends PDFTextStripper {
 
     private volatile boolean textAlreadyParsed = false;
 
     private List<TextAndPosition> list = new ArrayList<>();
 
-    public GetLocationAndSizeStripper() throws IOException {
+    public LocationAndSizeStripper() throws IOException {
         super();
     }
 

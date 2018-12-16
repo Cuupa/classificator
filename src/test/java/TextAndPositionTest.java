@@ -1,4 +1,4 @@
-import com.cuupa.classificator.services.stripper.GetLocationAndSizeStripper;
+import com.cuupa.classificator.services.stripper.LocationAndSizeStripper;
 import com.cuupa.classificator.services.stripper.TextAndPosition;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -18,7 +18,7 @@ public class TextAndPositionTest {
     @Test
     public void dingens() {
         try (PDDocument document = PDDocument.load(testFile)) {
-            GetLocationAndSizeStripper stripper = new GetLocationAndSizeStripper();
+            LocationAndSizeStripper stripper = new LocationAndSizeStripper();
             stripper.setStartPage(1);
             stripper.setEndPage(1);
             List<TextAndPosition> textAndPositions = stripper.getTextAndPositions(document);
