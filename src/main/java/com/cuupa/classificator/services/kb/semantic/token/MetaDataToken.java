@@ -1,95 +1,100 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.cuupa.classificator.services.kb.semantic.Metadata;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.DateExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.Extract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MetaDataToken {
 
 	private String name;
 
-	private List<Token> token = new ArrayList<>();
+    private List<Token> tokenList = new ArrayList<>();
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	public void addToken(Token token) {
-		this.token.add(token);
+        this.tokenList.add(token);
 	}
 
 	public Metadata extract(String text) {
-		for (Token token2 : token) {
-			List<String> tokenValue = token2.tokenValue;
+        Map<Metadata, Integer> match = new HashMap<>();
 
-			Map<Metadata, Integer> match = new HashMap<>();
+        for (Token token : tokenList) {
+            List<String> tokenValue = token.tokenValue;
+
 			for (int i = 0; i < tokenValue.size(); i++) {
 
 				List<Pair<String, String>> compiledText = compileText(text, tokenValue.get(i));
 				for (Pair<String, String> pair : compiledText) {
-					token2.tokenValue.set(i, pair.getLeft());
-					if (token2.match(text)) {
+                    token.tokenValue.set(i, pair.getLeft());
+
+                    if (isExclusionCondition(text, token)) {
+                        return null;
+                    } else if (token.match(text)) {
 						Metadata metadata = new Metadata(name, pair.getRight());
-						match.put(metadata, token2.getDistance());
-					}
-				}
-			}
+                        match.put(metadata, token.getDistance());
+                    }
+                }
+            }
+        }
 
-			Set<Entry<Metadata, Integer>> entrySet = match.entrySet();
-			Entry<Metadata, Integer> smallestDistance = null;
+        return findMostFittingResult(match);
+    }
 
-			for (Entry<Metadata, Integer> entry : entrySet) {
-				if (smallestDistance == null) {
-					smallestDistance = entry;
-				}
+    private Metadata findMostFittingResult(Map<Metadata, Integer> match) {
+        Set<Entry<Metadata, Integer>> entrySet = match.entrySet();
+        Entry<Metadata, Integer> smallestDistance = null;
 
-				if (smallestDistance.getValue() > entry.getValue()) {
-					smallestDistance = entry;
-				}
-			}
+        for (Entry<Metadata, Integer> entry : entrySet) {
+            if (smallestDistance == null) {
+                smallestDistance = entry;
+            }
 
-			if (smallestDistance != null) {
-				return smallestDistance.getKey();
-			}
-		}
+            if (smallestDistance.getValue() > entry.getValue()) {
+                smallestDistance = entry;
+            }
+        }
+
+        if (smallestDistance != null) {
+            return smallestDistance.getKey();
+        }
+
 		return null;
 	}
 
+    private boolean isExclusionCondition(String text, Token token) {
+        return token instanceof Not && !token.match(text);
+    }
+
 	private List<Pair<String, String>> compileText(String text, String tokenValue) {
 		List<Pair<String, String>> value = new ArrayList<>();
-		if (text == null) {
-			value.add(new ImmutablePair<String, String>(tokenValue, ""));
+        if (text == null || !hasVariable(tokenValue)) {
+            value.add(new ImmutablePair<>(tokenValue, ""));
 			return value;
 		}
 
-		if (hasVariable(tokenValue)) {
-			String[] split = tokenValue.split("\\[");
-			String textBeforeToken = split[0];
-			String var = "[" + split[1];
-			String textAfterToken = getTextAfterToken(var);
-			var = var.split("]")[0] + "]";
-			// textAferToken =
-			Extract extract = compile(var);
-			Pattern pattern = extract.getPattern();
-			Matcher matcher = pattern.matcher(text);
-			while (matcher.find()) {
-				String normalizedValue = extract.normalize(matcher.group());
-				value.add(new ImmutablePair<String, String>(textBeforeToken + matcher.group() + textAfterToken,
-						normalizedValue));
-			}
+        String[] split = tokenValue.split("\\[");
+        String textBeforeToken = split[0];
+        String variable = "[" + split[1];
+        String textAfterToken = getTextAfterToken(variable);
+        variable = variable.split("]")[0] + "]";
+        Extract extract = getExtractForName(variable);
+        Pattern pattern = extract.getPattern();
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            String normalizedValue = extract.normalize(matcher.group());
+            value.add(new ImmutablePair<>(textBeforeToken + matcher.group() + textAfterToken,
+                    normalizedValue));
 		}
 
 		return value;
@@ -104,12 +109,12 @@ public class MetaDataToken {
 		}
 	}
 
-	private Extract compile(String var) {
-		if ("[DATE]".equals(var)) {
+    private Extract getExtractForName(String name) {
+        if ("[DATE]".equals(name)) {
 			return new DateExtract();
 		}
 
-		if ("[IBAN]".equals(var)) {
+        if ("[IBAN]".equals(name)) {
 			return new IbanExtract();
 		}
 
