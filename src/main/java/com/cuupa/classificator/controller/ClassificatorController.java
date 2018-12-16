@@ -31,7 +31,7 @@ public class ClassificatorController {
     @RequestMapping(value = "/classifyText", method = RequestMethod.POST)
 	public ResponseEntity<String> classify(@RequestBody String text) {
 		try {
-			List<SemanticResult> result = classificator.classifiy(text);
+            List<SemanticResult> result = classificator.classify(text);
             return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(result));
 		} catch(Exception e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class ClassificatorController {
     @RequestMapping(value = "/classify", method = RequestMethod.POST)
     public ResponseEntity<String> classify(@RequestBody byte[] content) {
         try {
-            List<SemanticResult> result = classificator.classifiy(content);
+            List<SemanticResult> result = classificator.classify(content);
             return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(result));
         } catch (Exception e) {
             e.printStackTrace();

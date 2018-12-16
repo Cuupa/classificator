@@ -38,19 +38,7 @@ public class PlainText {
 	private boolean search(String tempPlaintext, String[] wordsToSearch, int tolerance) {
 		String[] splitPlain = tempPlaintext.split(" ");
 
-		int positionOfFirstMatch = -1;
-		for (int i = 0; i < splitPlain.length; i++) {
-			if (findFirst(splitPlain[i], wordsToSearch, tolerance)) {
-				positionOfFirstMatch = i;
-				break;
-			}
-		}
-
-		if (positionOfFirstMatch == -1) {
-			return false;
-		}
-
-		int currentPositionPlainText = positionOfFirstMatch;
+		int currentPositionPlainText = 0;
 		int currentPositionSearchString = 0;
 
 		int matchingWords = 0;
@@ -64,9 +52,6 @@ public class PlainText {
 
 			currentPositionPlainText = pairPlain.getRight();
 			currentPositionSearchString = pairSearch.getRight();
-			if(currentWordFromPlain.endsWith("nachzahlung")) {
-				System.out.println();
-			}
 			
 			Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
 					currentWordToSearch);
@@ -112,13 +97,9 @@ public class PlainText {
 		return value;
 	}
 
-	private boolean findFirst(String string, String[] wordsToSearch, int tolerance) {
-		Integer distance = LevenshteinDistance.getDefaultInstance().apply(string, wordsToSearch[0]);
-        return distance <= tolerance;
-    }
-
 	private String normalizeText(String text) {
 		text = text.toLowerCase();
+		text = text.replace("\t", " ");
 		text = text.replace("\n\r", " ");
 		text = text.replace("\r\n", " ");
 		text = text.replace("\r", " ");

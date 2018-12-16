@@ -62,7 +62,7 @@ public class KnowledgeManager {
 	}
 
 	public List<SemanticResult> getResults(String text) {
-		return topics.stream()
+        return topics.parallelStream()
 				.filter(e -> e.match(text))
 				.map(e -> new SemanticResult(e.getName(), e.getMetaData(text)))
 				.collect(Collectors.toList());

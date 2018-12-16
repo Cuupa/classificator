@@ -23,7 +23,7 @@ public class Classificiator {
         this.analyser = analyser;
     }
 
-	public List<SemanticResult> classifiy(final String text) {
+    public List<SemanticResult> classify(final String text) {
 		if(text == null || text.length() == 0) {
 			return new ArrayList<>();
 		}
@@ -36,7 +36,7 @@ public class Classificiator {
 		return results;
 	}
 
-    public List<SemanticResult> classifiy(final byte[] content) {
+    public List<SemanticResult> classify(final byte[] content) {
         if (content == null || content.length == 0) {
             return new ArrayList<>();
         }
