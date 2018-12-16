@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public class TokenTextPointer {
 
-	private char[] charArray;
-	private int index;
+	private final char[] charArray;
+	private final int index;
 	
 	public TokenTextPointer(char[] charArray, int index) {
 		this.charArray = Arrays.copyOf(charArray, charArray.length);

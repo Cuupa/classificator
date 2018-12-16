@@ -52,19 +52,19 @@ public class KnowledgeFileParser {
     }
 
 	private static String findExtractName(final char[] charArray, int index) {
-		String extractName = "";
+		StringBuilder extractName = new StringBuilder();
 		for (int i = index; i < charArray.length; i++) {
 			if (charArray[i] == '=') {
 				for (int j = i- 1; j > 0; j--) {
 					if(charArray[j] == '$') {
-						return extractName.trim();
+						return extractName.toString().trim();
 					}
-					extractName = charArray[j] + extractName;
+					extractName.insert(0, charArray[j]);
 				}
 			}
 		}
 
-		return extractName.trim();
+		return extractName.toString().trim();
 	}
 
 

@@ -12,7 +12,7 @@ public class LocationAndSizeStripper extends PDFTextStripper {
 
     private volatile boolean textAlreadyParsed = false;
 
-    private List<TextAndPosition> list = new ArrayList<>();
+    private final List<TextAndPosition> list = new ArrayList<>();
 
     public LocationAndSizeStripper() throws IOException {
         super();

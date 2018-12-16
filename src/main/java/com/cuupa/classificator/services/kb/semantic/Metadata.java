@@ -2,8 +2,8 @@ package com.cuupa.classificator.services.kb.semantic;
 
 public class Metadata {
 
-	private String name;
-	private String value;
+	private final String name;
+	private final String value;
 
 	public Metadata(String name, String value) {
 		this.name = name;

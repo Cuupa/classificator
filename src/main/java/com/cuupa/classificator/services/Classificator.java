@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Classificator {
-	
-	private KnowledgeManager manager;
 
-    private PdfAnalyser analyser;
+    private final KnowledgeManager manager;
+
+    private final PdfAnalyser analyser;
 
     public Classificator(KnowledgeManager manager, PdfAnalyser analyser) {
 		this.manager = manager;

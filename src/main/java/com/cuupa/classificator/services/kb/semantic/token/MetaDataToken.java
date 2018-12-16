@@ -17,7 +17,7 @@ public class MetaDataToken {
 
 	private String name;
 
-    private List<Token> tokenList = new ArrayList<>();
+    private final List<Token> tokenList = new ArrayList<>();
 
 	public void setName(String name) {
 		this.name = name;

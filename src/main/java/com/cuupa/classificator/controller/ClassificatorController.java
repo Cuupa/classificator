@@ -17,7 +17,7 @@ public class ClassificatorController {
 	
 	private static final Gson gson = new Gson();
 
-    private Classificator classificator;
+    private final Classificator classificator;
 
     public ClassificatorController(Classificator classificator) {
 		this.classificator = classificator;

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class SemanticResult {
 
-	private String topicName;
+	private final String topicName;
 
 	private List<Metadata> metaData;
 
