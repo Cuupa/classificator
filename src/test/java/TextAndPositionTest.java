@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class TextAndPositionTest {
 
-    private File testFile = new File("C:/Users/Simon/Desktop/test.pdf");
+    private File testFile = new File("C:/Users/Simon/Desktop/Testdaten/BRN3C2AF4402B24_20181206_205721_001340.pdf");
 
     @Test
     public void dingens() {
