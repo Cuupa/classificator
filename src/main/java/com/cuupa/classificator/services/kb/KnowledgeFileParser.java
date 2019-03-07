@@ -47,6 +47,22 @@ public class KnowledgeFileParser {
                 break;
             }
         }
+        
+        // these are the metadata which is only applicable for the specific topic 
+        if (kbFile.contains("$")) {
+			MetaDataToken metadata = new MetaDataToken();
+			for (int index = 0; index < charArray.length; index++) {
+				if (charArray[index] == '$') {
+					metadata.setName(findExtractName(charArray, index));
+				}
+
+				else if (charArray[index] == '(' && metadata.getName() != null && metadata.getName().length() > 0) {
+					metadata.addToken(Tokens.get(new TokenTextPointer(charArray, index))); 
+					topic.addMetaData(metadata);
+					metadata = new MetaDataToken();
+				}
+			}
+		}
 
         return topic;
     }

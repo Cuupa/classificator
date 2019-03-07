@@ -4,6 +4,8 @@ import com.cuupa.classificator.services.kb.semantic.Metadata;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.DateExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.Extract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract;
+import com.cuupa.classificator.services.kb.semantic.dataExtraction.RegexExtract;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.util.Strings;
@@ -41,7 +43,7 @@ public class MetaDataToken {
                     token.tokenValue.set(i, pair.getLeft());
 
                     if (isExclusionCondition(text, token)) {
-                        return null;
+                        return new Metadata("", "");
                     } else if (token.match(text)) {
 						Metadata metadata = new Metadata(name, pair.getRight());
                         match.put(metadata, token.getDistance());
@@ -71,17 +73,17 @@ public class MetaDataToken {
             return smallestDistance.getKey();
         }
 
-		return null;
+		return new Metadata("", "");
 	}
 
     private boolean isExclusionCondition(String text, Token token) {
-        return token instanceof Not && !token.match(text);
+        return token instanceof Not && token.match(text);
     }
 
 	private List<Pair<String, String>> compileText(String text, String tokenValue) {
 		List<Pair<String, String>> value = new ArrayList<>();
         if (text == null || !hasVariable(tokenValue)) {
-            value.add(new ImmutablePair<>(tokenValue, ""));
+            value.add(new ImmutablePair<>(tokenValue, tokenValue));
 			return value;
 		}
 
@@ -110,6 +112,11 @@ public class MetaDataToken {
         if ("[IBAN]".equals(name)) {
             return new IbanExtract();
         }
+        
+        if(name.startsWith("[REGEX:")) {
+        	String string = name.split("REGEX:")[1];
+        	return new RegexExtract(string.substring(0, string.length()-1));
+        }
 
         throw new RuntimeException("There is no extract specified");
     }
@@ -118,7 +125,13 @@ public class MetaDataToken {
         String[] split = var.split("]");
         if (split.length >= 2) {
             return split[1];
-        } else {
+        }
+        
+        else if(split.length == 1) {
+        	return split[0];
+        }
+        
+        else {
             return Strings.EMPTY;
         }
 	}

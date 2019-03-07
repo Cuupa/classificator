@@ -14,24 +14,24 @@ public class Tokens {
 		token.setTokenValue(tokenValues);
 		return token;
 	}
-	
-	
+
 	private static Token get(String tokenName) {
-		if("oneOf".equals(tokenName)) {
+		if ("oneOf".equals(tokenName)) {
 			return new OneOf();
 		}
-		
-		else if("not".equals(tokenName)) {
+
+		else if ("not".equals(tokenName)) {
 			return new Not();
 		}
-		
-		else if("all".equals(tokenName)) {
+
+		else if ("all".equals(tokenName)) {
 			return new All();
 		}
-		
-		else return null;
+
+		else
+			return null;
 	}
-	
+
 	private static String findTokenName(final TokenTextPointer pointer) {
 		String tokenName = "";
 
@@ -43,24 +43,29 @@ public class Tokens {
 		}
 		return tokenName;
 	}
-	
+
 	private static List<String> findTokenValue(final TokenTextPointer pointer) {
 		List<String> value = new ArrayList<>();
 
 		StringBuilder tokenValue = new StringBuilder();
 		for (int i = pointer.getIndex() + 1; i < pointer.getCharSize(); i++) {
+			
 			if (pointer.get(i) == ',') {
 				value.add(tokenValue.toString());
 				tokenValue = new StringBuilder();
-			} else if (pointer.get(i) != '"' && pointer.get(i) != ')') {
+			} else if (pointer.get(i) != '"' && !isNextToken(pointer, i)) {
 				tokenValue.append(pointer.get(i));
 			}
 
-			else if (pointer.get(i) == ')') {
+			else if (pointer.get(i) == '}' || isNextToken(pointer, i)) {
 				value.add(tokenValue.toString());
 				return value;
 			}
 		}
 		return value;
+	}
+	
+	private static boolean isNextToken(final TokenTextPointer pointer, final int i) {
+		return pointer.get(i) == ')' && (pointer.get(i + 1) == ',' || pointer.get(i+1) == '\r' || pointer.get(i+1) == '\n');
 	}
 }

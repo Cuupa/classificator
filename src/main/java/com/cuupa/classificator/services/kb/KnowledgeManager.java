@@ -37,7 +37,7 @@ public class KnowledgeManager {
                     .filter(e -> e.getName().endsWith(".dsl"))
                     .map(this::createTopic).collect(Collectors.toList());
 
-            topicList.stream().forEach(topic -> topic.setMetaDataList(metaDataTokenList));
+            topicList.stream().forEach(topic -> topic.addMetaDataList(metaDataTokenList));
             topics.addAll(topicList);
 		}
 	}
@@ -62,7 +62,7 @@ public class KnowledgeManager {
 	}
 
 	public List<SemanticResult> getResults(String text) {
-        return topics.parallelStream()
+        return topics.stream()
 				.filter(e -> e.match(text))
 				.map(e -> new SemanticResult(e.getName(), e.getMetaData(text)))
 				.collect(Collectors.toList());

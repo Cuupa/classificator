@@ -6,6 +6,8 @@ import com.cuupa.classificator.services.kb.semantic.token.Token;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Topic {
 
 	private String topicName;
@@ -43,7 +45,7 @@ public class Topic {
 		List<Metadata> metadata = new ArrayList<>();
 		for (MetaDataToken data : metaDataToken) {
 			Metadata extract = data.extract(text);
-			if (extract != null) {
+			if (StringUtils.isNotBlank(extract.getValue())) {
 				metadata.add(extract);
 			}
 		}
@@ -53,5 +55,9 @@ public class Topic {
 
 	public void setMetaDataList(List<MetaDataToken> metaDataTokenList) {
 		this.metaDataToken = new ArrayList<>(metaDataTokenList);
+	}
+
+	public void addMetaDataList(List<MetaDataToken> metaDataTokenList) {
+		metaDataToken.addAll(metaDataTokenList);
 	}
 }
