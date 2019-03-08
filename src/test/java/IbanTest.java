@@ -9,7 +9,7 @@ public class IbanTest {
 
 	@Test
 	public void test() {
-		IbanExtract extract = new IbanExtract();
+		IbanExtract extract = new IbanExtract("[A-Z]{2}[0-9]{2}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{2}");
 		Pattern pattern = extract.getPattern();
 
 		Matcher matcher = pattern.matcher("DE19 1234 1234 1234 1234 12");
