@@ -4,7 +4,10 @@ import com.cuupa.classificator.configuration.application.ApplicationProperties;
 import com.cuupa.classificator.services.kb.semantic.SemanticResult;
 import com.cuupa.classificator.services.kb.semantic.Topic;
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
+import com.cuupa.classificator.services.kb.semantic.token.Token;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class KnowledgeManager {
@@ -26,20 +30,49 @@ public class KnowledgeManager {
         File knowledgebaseDir = new File(ApplicationProperties.getKnowledgbaseDir());
         if (knowledgebaseDir.exists() && knowledgebaseDir.isDirectory()) {
             File[] files = knowledgebaseDir.listFiles();
+            
             if (files == null) {
-                return;
+            	return;
             }
-            List<MetaDataToken> metaDataTokenList = Arrays.stream(files)
-                    .filter(e -> e.getName().endsWith(".meta"))
-                    .map(this::createMetaData).collect(Collectors.toList());
-
+            
+            final List<MetaDataToken> metaDataTokenList = getMetaData(files);
+            
             List<Topic> topicList = Arrays.stream(files)
                     .filter(e -> e.getName().endsWith(".dsl"))
                     .map(this::createTopic).collect(Collectors.toList());
+            
+            Optional<File> regexList = Arrays.stream(files).filter(e -> e.getName().equals("regex")).findFirst();
+            
+            if(regexList.isPresent()) {
+            	List<Pair<String, String>> collect = Arrays.stream(regexList.get().listFiles()).filter(e -> e.getName().endsWith(".regx")).map(this::createRegex).collect(Collectors.toList());
+            	
+//            	for (MetaDataToken token : metaDataTokenList) {
+//            		for (Pair<String, String> pair : collect) {
+//            			for (Token t : token.getTokenList()) {
+//            				for(int i = 0; i < t.getTokenValue().size(); i++) {
+//								t.getTokenValue().set(i, t.getTokenValue().get(i).replace("[" + pair.getLeft() + "]", pair.getRight()));
+//							}
+//							System.out.println(t);
+//						}
+//					}
+//				}
+//            	
+            	System.err.println(collect);
+            }
 
             topicList.stream().forEach(topic -> topic.addMetaDataList(metaDataTokenList));
             topics.addAll(topicList);
 		}
+	}
+
+	private List<MetaDataToken> getMetaData(File[] files) {
+		Optional<File> metadataDir = Arrays.stream(files).filter(e -> e.getName().equals("metadata")).findFirst();
+		if(metadataDir.isPresent()) {
+			return Arrays.stream(metadataDir.get().listFiles())
+		            .filter(e -> e.getName().endsWith(".meta"))
+		            .map(this::createMetaData).collect(Collectors.toList());
+		}
+		return new ArrayList<>(0);
 	}
 
     private MetaDataToken createMetaData(File metaFile) {
@@ -49,6 +82,15 @@ public class KnowledgeManager {
             e1.printStackTrace();
         }
         return null;
+    }
+    
+    private Pair<String, String> createRegex(File regexFile) {
+    	try {
+			return KnowledgeFileParser.parseRegexFile(regexFile.getName(), FileUtils.readFileToString(regexFile, Charset.defaultCharset()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	return null;
     }
 
 

@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb;
+package com.cuupa.classificator.services.kb.semantic.token;
 
 import java.util.Arrays;
 

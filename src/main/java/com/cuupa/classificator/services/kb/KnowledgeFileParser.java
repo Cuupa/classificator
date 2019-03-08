@@ -1,8 +1,11 @@
 package com.cuupa.classificator.services.kb;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.cuupa.classificator.services.kb.semantic.Topic;
 import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException;
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
+import com.cuupa.classificator.services.kb.semantic.token.TokenTextPointer;
 import com.cuupa.classificator.services.kb.semantic.token.Tokens;
 
 public class KnowledgeFileParser {
@@ -16,8 +19,12 @@ public class KnowledgeFileParser {
 		validateToken(kbFile);
         return parseMetaData(kbFile);
     }
+    
+	static Pair<String, String> parseRegexFile(String filename, String content) {
+		return Pair.of(filename.split("\\.")[0], content);
+	}
 
-    private static MetaDataToken parseMetaData(String kbFile) {
+	private static MetaDataToken parseMetaData(String kbFile) {
         MetaDataToken metadata = new MetaDataToken();
         char[] charArray = kbFile.toCharArray();
         for (int index = 0; index < charArray.length; index++) {

@@ -11,6 +11,10 @@ public abstract class Token {
 	public void setTokenValue(List<String> tokenValue) {
 		this.tokenValue = tokenValue;
 	}
+	
+	public List<String> getTokenValue() {
+		return tokenValue;
+	}
 
 	public abstract int getDistance();
 }

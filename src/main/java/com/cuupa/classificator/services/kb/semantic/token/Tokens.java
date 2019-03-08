@@ -1,7 +1,5 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import com.cuupa.classificator.services.kb.TokenTextPointer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,15 +47,14 @@ public class Tokens {
 
 		StringBuilder tokenValue = new StringBuilder();
 		for (int i = pointer.getIndex() + 1; i < pointer.getCharSize(); i++) {
-			
 			if (pointer.get(i) == ',') {
 				value.add(tokenValue.toString());
 				tokenValue = new StringBuilder();
-			} else if (pointer.get(i) != '"' && !isNextToken(pointer, i)) {
+			} else if (pointer.get(i) != '"' && pointer.get(i) != ')') {
 				tokenValue.append(pointer.get(i));
 			}
 
-			else if (pointer.get(i) == '}' || isNextToken(pointer, i)) {
+			else if (pointer.get(i) == ')') {
 				value.add(tokenValue.toString());
 				return value;
 			}

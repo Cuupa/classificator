@@ -1,9 +1,7 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
 import com.cuupa.classificator.services.kb.semantic.Metadata;
-import com.cuupa.classificator.services.kb.semantic.dataExtraction.DateExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.Extract;
-import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.RegexExtract;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -106,11 +104,11 @@ public class MetaDataToken {
 
     private Extract getExtractForName(String name) {
         if ("[DATE]".equals(name)) {
-            return new DateExtract();
+//            return new DateExtract();
         }
 
         if ("[IBAN]".equals(name)) {
-            return new IbanExtract();
+//            return new IbanExtract();
         }
         
         if(name.startsWith("[REGEX:")) {
@@ -142,5 +140,9 @@ public class MetaDataToken {
 
 	public String getName() {
 		return name;
+	}
+
+	public List<Token> getTokenList() {
+		return tokenList;
 	}
 }
