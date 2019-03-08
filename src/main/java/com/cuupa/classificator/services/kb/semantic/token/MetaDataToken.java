@@ -19,7 +19,7 @@ public class MetaDataToken {
 
 	private String name;
 
-    private final List<Token> tokenList = new ArrayList<>();
+	private final List<Token> tokenList = new ArrayList<>();
 
 	private List<Pair<String, String>> regexContent;
 
@@ -28,110 +28,108 @@ public class MetaDataToken {
 	}
 
 	public void addToken(Token token) {
-        this.tokenList.add(token);
+		this.tokenList.add(token);
 	}
 
 	public Metadata extract(String text) {
-        Map<Metadata, Integer> match = new HashMap<>();
+		Map<Metadata, Integer> match = new HashMap<>();
 
-        for (Token token : tokenList) {
-            List<String> tokenValue = token.tokenValue;
+		for (Token token : tokenList) {
+			List<String> tokenValue = token.tokenValue;
 
 			for (int i = 0; i < tokenValue.size(); i++) {
 
 				List<Pair<String, String>> compiledText = compileText(text, tokenValue.get(i));
 				for (Pair<String, String> pair : compiledText) {
-                    // replace the variable with the value
-                    token.tokenValue.set(i, pair.getLeft());
+					// replace the variable with the value
+					token.tokenValue.set(i, pair.getLeft());
 
-                    if (isExclusionCondition(text, token)) {
-                        return new Metadata("", "");
-                    } else if (token.match(text)) {
+					if (isExclusionCondition(text, token)) {
+						return new Metadata("", "");
+					} else if (token.match(text)) {
 						Metadata metadata = new Metadata(name, pair.getRight());
-                        match.put(metadata, token.getDistance());
-                    }
-                }
-            }
-        }
+						match.put(metadata, token.getDistance());
+					}
+				}
+			}
+		}
 
-        return findMostFittingResult(match);
-    }
+		return findMostFittingResult(match);
+	}
 
-    private Metadata findMostFittingResult(Map<Metadata, Integer> match) {
-        Set<Entry<Metadata, Integer>> entrySet = match.entrySet();
-        Entry<Metadata, Integer> smallestDistance = null;
+	private Metadata findMostFittingResult(Map<Metadata, Integer> match) {
+		Set<Entry<Metadata, Integer>> entrySet = match.entrySet();
+		Entry<Metadata, Integer> smallestDistance = null;
 
-        for (Entry<Metadata, Integer> entry : entrySet) {
-            if (smallestDistance == null) {
-                smallestDistance = entry;
-            }
+		for (Entry<Metadata, Integer> entry : entrySet) {
+			if (smallestDistance == null) {
+				smallestDistance = entry;
+			}
 
-            if (smallestDistance.getValue() > entry.getValue()) {
-                smallestDistance = entry;
-            }
-        }
+			if (smallestDistance.getValue() > entry.getValue()) {
+				smallestDistance = entry;
+			}
+		}
 
-        if (smallestDistance != null) {
-            return smallestDistance.getKey();
-        }
+		if (smallestDistance != null) {
+			return smallestDistance.getKey();
+		}
 
 		return new Metadata("", "");
 	}
 
-    private boolean isExclusionCondition(String text, Token token) {
-        return token instanceof Not && token.match(text);
-    }
+	private boolean isExclusionCondition(String text, Token token) {
+		return token instanceof Not && token.match(text);
+	}
 
 	private List<Pair<String, String>> compileText(String text, String tokenValue) {
 		List<Pair<String, String>> value = new ArrayList<>();
-        if (text == null || !hasVariable(tokenValue)) {
-            value.add(new ImmutablePair<>(tokenValue, tokenValue));
+		if (text == null || !hasVariable(tokenValue)) {
+			value.add(new ImmutablePair<>(tokenValue, tokenValue));
 			return value;
 		}
 
-        String[] split = tokenValue.split("\\[");
-        String textBeforeToken = split[0];
-        String variable = "[" + split[1];
-        String textAfterToken = getTextAfterToken(variable);
-        variable = variable.split("]")[0] + "]";
-        Extract extract = getExtractForName(variable);
-        Pattern pattern = extract.getPattern();
-        Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) {
-            String normalizedValue = extract.normalize(matcher.group()).trim();
-            value.add(new ImmutablePair<>(textBeforeToken + matcher.group() + textAfterToken,
-                    normalizedValue));
+		String[] split = tokenValue.split("\\[");
+		String textBeforeToken = split[0];
+		String variable = "[" + split[1];
+		String textAfterToken = getTextAfterToken(variable);
+		variable = variable.split("]")[0] + "]";
+		Extract extract = getExtractForName(variable);
+		Pattern pattern = extract.getPattern();
+		Matcher matcher = pattern.matcher(text);
+		while (matcher.find()) {
+			String normalizedValue = extract.normalize(matcher.group()).trim();
+			value.add(new ImmutablePair<>(textBeforeToken + matcher.group() + textAfterToken, normalizedValue));
 		}
 
 		return value;
 	}
 
-    private Extract getExtractForName(String name) {
-    	
-    	for (Pair<String, String> pair : regexContent) {
-    		 if ("[DATE]".equals(name)) {
-    	            return new DateExtract(pair.getRight());
-    	        }
+	private Extract getExtractForName(String name) {
 
-    	        if ("[IBAN]".equals(name)) {
-    	            return new IbanExtract(pair.getRight());
-    	        }
+		for (Pair<String, String> pair : regexContent) {
+			if ("[DATE]".equals(name) && name.contains(pair.getLeft())) {
+				return new DateExtract(pair.getRight());
+			}
 
-    		
-			if(name.contains(pair.getLeft())) {
+			if ("[IBAN]".equals(name) && name.contains(pair.getLeft())) {
+				return new IbanExtract(pair.getRight());
+			}
+
+			if (name.contains(pair.getLeft())) {
 				return new RegexExtract(pair.getRight());
 			}
 		}
-        throw new RuntimeException("There is no extract specified");
-    }
+		throw new RuntimeException("There is no extract specified");
+	}
 
-    private String getTextAfterToken(String var) {
-        String[] split = var.split("]");
-        if (split.length >= 2) {
-            return split[1];
-        } else {
-            return Strings.EMPTY;
-        }
+	private String getTextAfterToken(String var) {
+		String[] split = var.split("]");
+		if (split.length >= 2) {
+			return split[1];
+		} else {
+			return Strings.EMPTY;
+		}
 	}
 
 	private boolean hasVariable(String text) {
