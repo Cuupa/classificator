@@ -1,12 +1,12 @@
 package com.cuupa.classificator.services.kb.semantic;
 
-import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
-import com.cuupa.classificator.services.kb.semantic.token.Token;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
+import com.cuupa.classificator.services.kb.semantic.token.Token;
 
 public class Topic {
 
