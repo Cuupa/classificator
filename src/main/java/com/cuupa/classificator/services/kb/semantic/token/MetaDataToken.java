@@ -1,7 +1,9 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
 import com.cuupa.classificator.services.kb.semantic.Metadata;
+import com.cuupa.classificator.services.kb.semantic.dataExtraction.DateExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.Extract;
+import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.RegexExtract;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -18,6 +20,8 @@ public class MetaDataToken {
 	private String name;
 
     private final List<Token> tokenList = new ArrayList<>();
+
+	private List<Pair<String, String>> regexContent;
 
 	public void setName(String name) {
 		this.name = name;
@@ -94,7 +98,7 @@ public class MetaDataToken {
         Pattern pattern = extract.getPattern();
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            String normalizedValue = extract.normalize(matcher.group());
+            String normalizedValue = extract.normalize(matcher.group()).trim();
             value.add(new ImmutablePair<>(textBeforeToken + matcher.group() + textAfterToken,
                     normalizedValue));
 		}
@@ -103,19 +107,21 @@ public class MetaDataToken {
 	}
 
     private Extract getExtractForName(String name) {
-        if ("[DATE]".equals(name)) {
-//            return new DateExtract();
-        }
+    	
+    	for (Pair<String, String> pair : regexContent) {
+    		 if ("[DATE]".equals(name)) {
+    	            return new DateExtract(pair.getRight());
+    	        }
 
-        if ("[IBAN]".equals(name)) {
-//            return new IbanExtract();
-        }
-        
-        if(name.startsWith("[REGEX:")) {
-        	String string = name.split("REGEX:")[1];
-        	return new RegexExtract(string.substring(0, string.length()-1));
-        }
+    	        if ("[IBAN]".equals(name)) {
+    	            return new IbanExtract(pair.getRight());
+    	        }
 
+    		
+			if(name.contains(pair.getLeft())) {
+				return new RegexExtract(pair.getRight());
+			}
+		}
         throw new RuntimeException("There is no extract specified");
     }
 
@@ -123,13 +129,7 @@ public class MetaDataToken {
         String[] split = var.split("]");
         if (split.length >= 2) {
             return split[1];
-        }
-        
-        else if(split.length == 1) {
-        	return split[0];
-        }
-        
-        else {
+        } else {
             return Strings.EMPTY;
         }
 	}
@@ -144,5 +144,9 @@ public class MetaDataToken {
 
 	public List<Token> getTokenList() {
 		return tokenList;
+	}
+
+	public void setRegexContent(List<Pair<String, String>> regexContent) {
+		this.regexContent = regexContent;
 	}
 }

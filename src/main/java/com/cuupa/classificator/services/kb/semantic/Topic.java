@@ -56,6 +56,10 @@ public class Topic {
 	public void setMetaDataList(List<MetaDataToken> metaDataTokenList) {
 		this.metaDataToken = new ArrayList<>(metaDataTokenList);
 	}
+	
+	public List<MetaDataToken> getMetaDataList() {
+		return metaDataToken;
+	}
 
 	public void addMetaDataList(List<MetaDataToken> metaDataTokenList) {
 		metaDataToken.addAll(metaDataTokenList);

@@ -35,16 +35,19 @@ public class KnowledgeManager {
             	return;
             }
             
+            
+            Optional<File> regexList = Arrays.stream(files).filter(e -> e.getName().equals("regex")).findFirst();
+            final List<Pair<String, String>> regexContent = new ArrayList<>();
+            if(regexList.isPresent()) {
+            	 regexContent.addAll(Arrays.stream(regexList.get().listFiles()).filter(e -> e.getName().endsWith(".regx")).map(this::createRegex).collect(Collectors.toList()));
+            }
+            
             final List<MetaDataToken> metaDataTokenList = getMetaData(files);
             
             List<Topic> topicList = Arrays.stream(files)
                     .filter(e -> e.getName().endsWith(".dsl"))
                     .map(this::createTopic).collect(Collectors.toList());
-            
-            Optional<File> regexList = Arrays.stream(files).filter(e -> e.getName().equals("regex")).findFirst();
-            
-            if(regexList.isPresent()) {
-            	List<Pair<String, String>> collect = Arrays.stream(regexList.get().listFiles()).filter(e -> e.getName().endsWith(".regx")).map(this::createRegex).collect(Collectors.toList());
+           
             	
 //            	for (MetaDataToken token : metaDataTokenList) {
 //            		for (Pair<String, String> pair : collect) {
@@ -57,10 +60,8 @@ public class KnowledgeManager {
 //					}
 //				}
 //            	
-            	System.err.println(collect);
-            }
-
             topicList.stream().forEach(topic -> topic.addMetaDataList(metaDataTokenList));
+            topicList.stream().forEach(topic -> topic.getMetaDataList().forEach(token -> token.setRegexContent(regexContent)));
             topics.addAll(topicList);
 		}
 	}
@@ -77,7 +78,7 @@ public class KnowledgeManager {
 
     private MetaDataToken createMetaData(File metaFile) {
         try {
-            return KnowledgeFileParser.parseMetaFile(FileUtils.readFileToString(metaFile, Charset.defaultCharset()));
+        	return KnowledgeFileParser.parseMetaFile(FileUtils.readFileToString(metaFile, Charset.defaultCharset()));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
