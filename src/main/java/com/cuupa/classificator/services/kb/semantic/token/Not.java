@@ -1,5 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
+import java.util.ArrayList;
 import com.cuupa.classificator.services.kb.semantic.PlainText;
 
 public class Not extends Token {
@@ -18,5 +19,12 @@ public class Not extends Token {
 	@Override
 	public int getDistance() {
 		return 0;
+	}
+
+	@Override
+	protected Token clone() {
+		Token token = new Not();
+		token.setTokenValue(new ArrayList<>(tokenValue));
+		return token;
 	}
 }

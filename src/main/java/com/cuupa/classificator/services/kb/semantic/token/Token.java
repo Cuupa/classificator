@@ -17,4 +17,7 @@ public abstract class Token {
 	}
 
 	public abstract int getDistance();
+
+	@Override
+	protected abstract Token clone();
 }

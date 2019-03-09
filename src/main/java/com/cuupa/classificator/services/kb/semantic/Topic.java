@@ -44,10 +44,8 @@ public class Topic {
 	public List<Metadata> getMetaData(String text) {
 		List<Metadata> metadata = new ArrayList<>();
 		for (MetaDataToken data : metaDataToken) {
-			Metadata extract = data.extract(text);
-			if (StringUtils.isNotBlank(extract.getValue())) {
-				metadata.add(extract);
-			}
+			List<Metadata> extract = data.extract(text);
+			metadata.addAll(extract);
 		}
 
 		return metadata;
@@ -56,7 +54,7 @@ public class Topic {
 	public void setMetaDataList(List<MetaDataToken> metaDataTokenList) {
 		this.metaDataToken = new ArrayList<>(metaDataTokenList);
 	}
-	
+
 	public List<MetaDataToken> getMetaDataList() {
 		return metaDataToken;
 	}

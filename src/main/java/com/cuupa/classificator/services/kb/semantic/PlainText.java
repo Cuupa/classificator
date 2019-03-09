@@ -64,6 +64,7 @@ public class PlainText {
 			} else {
 				matchingWords = 0;
 				currentPositionSearchString = 0;
+				this.distance = 0;
 				Pair<String, Integer> pair = findNonEmptyEntry(wordsToSearch, currentPositionSearchString);
 				currentWordToSearch = pair.getLeft();
 				currentPositionSearchString = pair.getRight();
@@ -109,7 +110,9 @@ public class PlainText {
 		text = text.replace(",", " ");
 		text = text.replace(": ", " ");
 		text = text.replace("€", " €");
+		text = text.replace("Ãœ", "ae");
 		text = text.replace("ä", "ae");
+		text = text.replace("ã¼", "ue");
 		text = text.replace("ü", "ue");
 		text = text.replace("/", " ");
 		return text.trim();

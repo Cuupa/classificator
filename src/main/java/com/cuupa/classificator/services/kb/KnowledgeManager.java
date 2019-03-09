@@ -35,7 +35,6 @@ public class KnowledgeManager {
             	return;
             }
             
-            
             Optional<File> regexList = Arrays.stream(files).filter(e -> e.getName().equals("regex")).findFirst();
             final List<Pair<String, String>> regexContent = new ArrayList<>();
             if(regexList.isPresent()) {
@@ -48,18 +47,6 @@ public class KnowledgeManager {
                     .filter(e -> e.getName().endsWith(".dsl"))
                     .map(this::createTopic).collect(Collectors.toList());
            
-            	
-//            	for (MetaDataToken token : metaDataTokenList) {
-//            		for (Pair<String, String> pair : collect) {
-//            			for (Token t : token.getTokenList()) {
-//            				for(int i = 0; i < t.getTokenValue().size(); i++) {
-//								t.getTokenValue().set(i, t.getTokenValue().get(i).replace("[" + pair.getLeft() + "]", pair.getRight()));
-//							}
-//							System.out.println(t);
-//						}
-//					}
-//				}
-//            	
             topicList.stream().forEach(topic -> topic.addMetaDataList(metaDataTokenList));
             topicList.stream().forEach(topic -> topic.getMetaDataList().forEach(token -> token.setRegexContent(regexContent)));
             topics.addAll(topicList);
@@ -78,7 +65,7 @@ public class KnowledgeManager {
 
     private MetaDataToken createMetaData(File metaFile) {
         try {
-        	return KnowledgeFileParser.parseMetaFile(FileUtils.readFileToString(metaFile, Charset.defaultCharset()));
+        	return KnowledgeFileParser.parseMetaFile(FileUtils.readFileToString(metaFile, Charset.forName("UTF-8")));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -87,7 +74,7 @@ public class KnowledgeManager {
     
     private Pair<String, String> createRegex(File regexFile) {
     	try {
-			return KnowledgeFileParser.parseRegexFile(regexFile.getName(), FileUtils.readFileToString(regexFile, Charset.defaultCharset()));
+			return KnowledgeFileParser.parseRegexFile(regexFile.getName(), FileUtils.readFileToString(regexFile, Charset.forName("UTF-8")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -97,7 +84,7 @@ public class KnowledgeManager {
 
     private Topic createTopic(File kbFile) {
 		try {
-            return KnowledgeFileParser.parseTopicFile(FileUtils.readFileToString(kbFile, Charset.defaultCharset()));
+            return KnowledgeFileParser.parseTopicFile(FileUtils.readFileToString(kbFile, Charset.forName("UTF-8")));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

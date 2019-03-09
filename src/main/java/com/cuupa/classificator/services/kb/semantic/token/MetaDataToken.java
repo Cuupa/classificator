@@ -12,6 +12,7 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,51 +32,78 @@ public class MetaDataToken {
 		this.tokenList.add(token);
 	}
 
-	public Metadata extract(String text) {
-		Map<Metadata, Integer> match = new HashMap<>();
-
-		for (Token token : tokenList) {
-			List<String> tokenValue = token.tokenValue;
-
-			for (int i = 0; i < tokenValue.size(); i++) {
-
-				List<Pair<String, String>> compiledText = compileText(text, tokenValue.get(i));
-				for (Pair<String, String> pair : compiledText) {
-					// replace the variable with the value
-					token.tokenValue.set(i, pair.getLeft());
-
-					if (isExclusionCondition(text, token)) {
-						return new Metadata("", "");
-					} else if (token.match(text)) {
-						Metadata metadata = new Metadata(name, pair.getRight());
-						match.put(metadata, token.getDistance());
-					}
-				}
-			}
-		}
-
+	public List<Metadata> extract(String text) {
+		List<Token> temporaryTokenList = createTempList();
+		Map<Metadata, Integer> match = findMetaData(text, temporaryTokenList);
 		return findMostFittingResult(match);
 	}
 
-	private Metadata findMostFittingResult(Map<Metadata, Integer> match) {
-		Set<Entry<Metadata, Integer>> entrySet = match.entrySet();
-		Entry<Metadata, Integer> smallestDistance = null;
+	private Map<Metadata, Integer> findMetaData(String text, List<Token> temporaryTokenList) {
+		Map<Metadata, Integer> match = new HashMap<>();
 
-		for (Entry<Metadata, Integer> entry : entrySet) {
-			if (smallestDistance == null) {
-				smallestDistance = entry;
-			}
+		temporaryTokenList.parallelStream().forEach(new Consumer<Token>() {
 
-			if (smallestDistance.getValue() > entry.getValue()) {
-				smallestDistance = entry;
+			@Override
+			public void accept(Token token) {
+				List<String> tokenValue = token.tokenValue;
+
+				for (int i = 0; i < tokenValue.size(); i++) {
+
+					List<Pair<String, String>> compiledText = compileText(text, tokenValue.get(i));
+					for (Pair<String, String> pair : compiledText) {
+						// replace the variable with the value
+						token.tokenValue.set(i, pair.getLeft());
+
+						if (isExclusionCondition(text, token)) {
+						} else if (token.match(text)) {
+							Metadata metadata = new Metadata(name, pair.getRight());
+							match.put(metadata, token.getDistance());
+						}
+					}
+				}
 			}
+		});
+		return match;
+	}
+
+	private List<Token> createTempList() {
+		List<Token> temporaryTokenList = new ArrayList<Token>();
+
+		for (Token token : tokenList) {
+			temporaryTokenList.add(token.clone());
 		}
 
-		if (smallestDistance != null) {
-			return smallestDistance.getKey();
-		}
+		return temporaryTokenList;
+	}
 
-		return new Metadata("", "");
+	private List<Metadata> findMostFittingResult(Map<Metadata, Integer> match) {
+
+		Map<Integer, List<Metadata>> entries = new HashMap<>();
+		match.entrySet().stream().forEach(new Consumer<Entry<Metadata, Integer>>() {
+
+			@Override
+			public void accept(Entry<Metadata, Integer> entry) {
+				if (entries.containsKey(entry.getValue())) {
+					entries.get(entry.getValue()).add(entry.getKey());
+				} else {
+					ArrayList<Metadata> list = new ArrayList<Metadata>();
+					list.add(entry.getKey());
+					entries.put(entry.getValue(), list);
+				}
+			}
+
+		});
+		
+		List<Metadata> result = entries.entrySet().stream().min(new Comparator<Entry<Integer, List<Metadata>>>() {
+
+			@Override
+			public int compare(Entry<Integer, List<Metadata>> o1, Entry<Integer, List<Metadata>> o2) {
+				return o1.getKey().compareTo(o2.getKey());
+			}
+			
+		}).map(e-> e.getValue()).orElse(new ArrayList<Metadata>());
+		
+		return result;
 	}
 
 	private boolean isExclusionCondition(String text, Token token) {
@@ -98,8 +126,8 @@ public class MetaDataToken {
 		Pattern pattern = extract.getPattern();
 		Matcher matcher = pattern.matcher(text);
 		while (matcher.find()) {
-			String normalizedValue = extract.normalize(matcher.group()).trim();
-			value.add(new ImmutablePair<>(textBeforeToken + matcher.group() + textAfterToken, normalizedValue));
+			String normalizedValue = extract.normalize(matcher.group());
+			value.add(new ImmutablePair<>(textBeforeToken + normalizedValue + textAfterToken, normalizedValue));
 		}
 
 		return value;

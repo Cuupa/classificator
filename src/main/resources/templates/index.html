@@ -10,13 +10,13 @@
 
 	<form action="#" th:action="@{guiProcess}" th:object="${guiProcess}"
 		method="post">
-		<table border="1">
+		<table class="table">
 			<tr>
-				<td width="50%"><textarea autofocus="autofocus" cols="100%"
-						rows="30%" th:field="${guiProcess.inputText}"></textarea></td>
+				<td width="50%"><textarea autofocus="autofocus" cols="70%"
+						rows="15" th:field="${guiProcess.inputText}"></textarea></td>
 				<td width="50%" align="center">Result
-					<table border="1">
-						<thead>
+					<table border="1" class="table table-striped">
+						<thead class="thead-dark">
 							<tr>
 								<th>Topic</th>
 								<th>Metadata</th>
@@ -24,11 +24,11 @@
 						</thead>
 						<tbody>
 							<tr th:each="result : ${guiProcess.result}">
-								<td width="50%"><span th:text="${result.topicName}">Topic</span></td>
-								<td width="50%">
+								<td width="30%"><span th:text="${result.topicName}">Topic</span></td>
+								<td width="70%">
 
 									<table border="1">
-										<thead>
+										<thead class="thead-dark">
 											<tr>
 												<th>Name</th>
 												<th>Value</th>
