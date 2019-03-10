@@ -68,11 +68,14 @@ public class MetaDataToken {
 							if (!isExclusionCondition(text, tokens.get(value)) && tokens.get(value).match(text)) {
 								String metadataValue = compiledText.get(0).get(value).getRight();
 
-								synchronized (MetaDataToken.class) {
-									if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
-											&& e.getKey().getValue().equals(metadataValue))) {
-										Metadata metadata = new Metadata(name, metadataValue);
-										match.put(metadata, tokens.get(value).getDistance());
+								if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
+										&& e.getKey().getValue().equals(metadataValue))) {
+									synchronized (MetaDataToken.class) {
+										if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
+												&& e.getKey().getValue().equals(metadataValue))) {
+											Metadata metadata = new Metadata(name, metadataValue);
+											match.put(metadata, tokens.get(value).getDistance());
+										}
 									}
 								}
 							}
@@ -82,6 +85,10 @@ public class MetaDataToken {
 			}
 		});
 		return match;
+	}
+
+	private boolean isExclusionCondition(String text, Token token) {
+		return token instanceof Not && token.match(text);
 	}
 
 	private List<Token> createTempList() {
@@ -116,10 +123,6 @@ public class MetaDataToken {
 		}).map(e -> e.getValue()).orElse(new ArrayList<Metadata>());
 
 		return result;
-	}
-
-	private boolean isExclusionCondition(String text, Token token) {
-		return token instanceof Not && token.match(text);
 	}
 
 	private List<Pair<String, String>> compileText(String text, String tokenValue) {
