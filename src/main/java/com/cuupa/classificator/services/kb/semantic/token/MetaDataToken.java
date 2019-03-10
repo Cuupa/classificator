@@ -13,8 +13,11 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MetaDataToken {
 
@@ -33,33 +36,48 @@ public class MetaDataToken {
 	}
 
 	public List<Metadata> extract(String text) {
-		List<Token> temporaryTokenList = createTempList();
-		Map<Metadata, Integer> match = findMetaData(text, temporaryTokenList);
-		return findMostFittingResult(match);
+		return findMostFittingResult(findMetaData(text, createTempList()));
 	}
 
-	private Map<Metadata, Integer> findMetaData(String text, List<Token> temporaryTokenList) {
-		Map<Metadata, Integer> match = new HashMap<>();
+	private Map<Metadata, Integer> findMetaData(final String text, final List<Token> temporaryTokenList) {
+		final Map<Metadata, Integer> match = new HashMap<>();
 
-		temporaryTokenList.parallelStream().forEach(new Consumer<Token>() {
+		temporaryTokenList.stream().forEach(new Consumer<Token>() {
 
 			@Override
-			public void accept(Token token) {
-				List<String> tokenValue = token.tokenValue;
+			public void accept(final Token token) {
+				final List<List<Pair<String, String>>> compiledText = token.tokenValue.stream()
+						.map(e -> compileText(text, e)).collect(Collectors.toList());
 
-				for (int i = 0; i < tokenValue.size(); i++) {
+				List<Token> tokens = new ArrayList<>();
+				if (!compiledText.isEmpty()) {
+					IntStream.range(0, compiledText.get(0).size()).forEach(i -> tokens.add(token.clone()));
 
-					List<Pair<String, String>> compiledText = compileText(text, tokenValue.get(i));
-					for (Pair<String, String> pair : compiledText) {
-						// replace the variable with the value
-						token.tokenValue.set(i, pair.getLeft());
+					IntStream.range(0, compiledText.size()).forEach(i -> IntStream.range(0, tokens.size())
+							.forEach(j -> tokens.get(j).tokenValue.set(i, compiledText.get(i).get(j).getLeft())));
 
-						if (isExclusionCondition(text, token)) {
-						} else if (token.match(text)) {
-							Metadata metadata = new Metadata(name, pair.getRight());
-							match.put(metadata, token.getDistance());
-						}
+					IntStream searchStream = IntStream.range(0, tokens.size());
+					if (tokens.size() > 50) {
+						searchStream.parallel();
 					}
+
+					searchStream.forEach(new IntConsumer() {
+
+						@Override
+						public void accept(int value) {
+							if (!isExclusionCondition(text, tokens.get(value)) && tokens.get(value).match(text)) {
+								String metadataValue = compiledText.get(0).get(value).getRight();
+
+								synchronized (MetaDataToken.class) {
+									if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
+											&& e.getKey().getValue().equals(metadataValue))) {
+										Metadata metadata = new Metadata(name, metadataValue);
+										match.put(metadata, tokens.get(value).getDistance());
+									}
+								}
+							}
+						}
+					});
 				}
 			}
 		});
@@ -67,13 +85,7 @@ public class MetaDataToken {
 	}
 
 	private List<Token> createTempList() {
-		List<Token> temporaryTokenList = new ArrayList<Token>();
-
-		for (Token token : tokenList) {
-			temporaryTokenList.add(token.clone());
-		}
-
-		return temporaryTokenList;
+		return tokenList.stream().map(e -> e.clone()).collect(Collectors.toList());
 	}
 
 	private List<Metadata> findMostFittingResult(Map<Metadata, Integer> match) {
@@ -93,16 +105,16 @@ public class MetaDataToken {
 			}
 
 		});
-		
+
 		List<Metadata> result = entries.entrySet().stream().min(new Comparator<Entry<Integer, List<Metadata>>>() {
 
 			@Override
 			public int compare(Entry<Integer, List<Metadata>> o1, Entry<Integer, List<Metadata>> o2) {
 				return o1.getKey().compareTo(o2.getKey());
 			}
-			
-		}).map(e-> e.getValue()).orElse(new ArrayList<Metadata>());
-		
+
+		}).map(e -> e.getValue()).orElse(new ArrayList<Metadata>());
+
 		return result;
 	}
 
