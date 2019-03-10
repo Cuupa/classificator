@@ -24,7 +24,7 @@ public class PlainText {
 
 			String[] wordsToSearch = text.split(" ");
 
-			return search(tempPlaintext, wordsToSearch, tolerance);
+            return search(tempPlaintext, wordsToSearch, tolerance) && distance <= tolerance;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
