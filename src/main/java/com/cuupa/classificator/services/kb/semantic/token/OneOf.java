@@ -29,4 +29,9 @@ public class OneOf extends Token {
 		token.setTokenValue(new ArrayList<>(tokenValue));
 		return token;
 	}
+	
+	@Override
+	public String toString() {
+		return "OneOf " + super.toString();
+	}
 }

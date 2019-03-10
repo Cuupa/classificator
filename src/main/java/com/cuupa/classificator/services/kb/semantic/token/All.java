@@ -30,4 +30,9 @@ public class All extends Token {
 		token.setTokenValue(new ArrayList<>(tokenValue));
 		return token;
 	}
+	
+	@Override
+	public String toString() {
+		return "ALL " + super.toString();
+	}
 }

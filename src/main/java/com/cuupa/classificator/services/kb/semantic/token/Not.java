@@ -27,4 +27,9 @@ public class Not extends Token {
 		token.setTokenValue(new ArrayList<>(tokenValue));
 		return token;
 	}
+	
+	@Override
+	public String toString() {
+		return "NOT " + super.toString();
+	}
 }
