@@ -1,6 +1,7 @@
 package com.cuupa.classificator.configuration.spring;
 
 import com.cuupa.classificator.controller.ClassificatorController;
+import com.cuupa.classificator.controller.GuiController;
 import com.cuupa.classificator.services.Classificator;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.stripper.PdfAnalyser;
@@ -14,7 +15,12 @@ public class ApplicationConfiguration {
 	public ClassificatorController classificatorController() {
 		return new ClassificatorController(classificator());
 	}
-	
+
+	@Bean
+	public GuiController guiController() {
+		return new GuiController(classificator());
+	}
+
 	@Bean
 	public Classificator classificator() {
 		return new Classificator(knowledgeManager(), analyser());

@@ -5,15 +5,14 @@ import com.cuupa.classificator.services.kb.semantic.dataExtraction.DateExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.Extract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract;
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.RegexExtract;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.util.Strings;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -42,46 +41,44 @@ public class MetaDataToken {
 	private Map<Metadata, Integer> findMetaData(final String text, final List<Token> temporaryTokenList) {
 		final Map<Metadata, Integer> match = new HashMap<>();
 
-		temporaryTokenList.stream().forEach(new Consumer<Token>() {
+		temporaryTokenList.stream().forEach(token -> {
+			final List<List<Pair<String, String>>> compiledText = token.tokenValue.stream()
+					.map(e -> compileText(text, e)).collect(Collectors.toList());
 
-			@Override
-			public void accept(final Token token) {
-				final List<List<Pair<String, String>>> compiledText = token.tokenValue.stream()
-						.map(e -> compileText(text, e)).collect(Collectors.toList());
-
-				List<Token> tokens = new ArrayList<>();
-				if (!compiledText.isEmpty()) {
-					IntStream.range(0, compiledText.get(0).size()).forEach(i -> tokens.add(token.clone()));
-
-					IntStream.range(0, compiledText.size()).forEach(i -> IntStream.range(0, tokens.size())
-							.forEach(j -> tokens.get(j).tokenValue.set(i, compiledText.get(i).get(j).getLeft())));
-
-					IntStream searchStream = IntStream.range(0, tokens.size());
-					if (tokens.size() > 50) {
-						searchStream.parallel();
+			List<Token> tokens = new ArrayList<>();
+			if (!compiledText.isEmpty()) {
+				IntStream.range(0, compiledText.get(0).size()).forEach(i -> {
+					try {
+						tokens.add(token.clone());
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
 					}
+				});
 
-					searchStream.forEach(new IntConsumer() {
+				IntStream.range(0, compiledText.size()).forEach(i -> IntStream.range(0, tokens.size())
+						.forEach(j -> tokens.get(j).tokenValue.set(i, compiledText.get(i).get(j).getLeft())));
 
-						@Override
-						public void accept(int value) {
-							if (!isExclusionCondition(text, tokens.get(value)) && tokens.get(value).match(text)) {
-								String metadataValue = compiledText.get(0).get(value).getRight();
+				IntStream searchStream = IntStream.range(0, tokens.size());
+				if (tokens.size() > 50) {
+					searchStream.parallel();
+				}
 
+				searchStream.forEach(value -> {
+					if (!isExclusionCondition(text, tokens.get(value)) && tokens.get(value).match(text)) {
+						String metadataValue = compiledText.get(0).get(value).getRight();
+
+						if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
+								&& e.getKey().getValue().equals(metadataValue))) {
+							synchronized (MetaDataToken.class) {
 								if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
 										&& e.getKey().getValue().equals(metadataValue))) {
-									synchronized (MetaDataToken.class) {
-										if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
-												&& e.getKey().getValue().equals(metadataValue))) {
-											Metadata metadata = new Metadata(name, metadataValue);
-											match.put(metadata, tokens.get(value).getDistance());
-										}
-									}
+									Metadata metadata = new Metadata(name, metadataValue);
+									match.put(metadata, tokens.get(value).getDistance());
 								}
 							}
 						}
-					});
-				}
+					}
+				});
 			}
 		});
 		return match;
@@ -92,37 +89,30 @@ public class MetaDataToken {
 	}
 
 	private List<Token> createTempList() {
-		return tokenList.stream().map(e -> e.clone()).collect(Collectors.toList());
+		return tokenList.stream().map(e -> {
+			try {
+				return e.clone();
+			} catch (CloneNotSupportedException e1) {
+				e1.printStackTrace();
+			}
+			return null;
+		}).collect(Collectors.toList());
 	}
 
 	private List<Metadata> findMostFittingResult(Map<Metadata, Integer> match) {
 
 		Map<Integer, List<Metadata>> entries = new HashMap<>();
-		match.entrySet().stream().forEach(new Consumer<Entry<Metadata, Integer>>() {
-
-			@Override
-			public void accept(Entry<Metadata, Integer> entry) {
-				if (entries.containsKey(entry.getValue())) {
-					entries.get(entry.getValue()).add(entry.getKey());
-				} else {
-					ArrayList<Metadata> list = new ArrayList<Metadata>();
-					list.add(entry.getKey());
-					entries.put(entry.getValue(), list);
-				}
+		match.entrySet().stream().forEach(entry -> {
+			if (entries.containsKey(entry.getValue())) {
+				entries.get(entry.getValue()).add(entry.getKey());
+			} else {
+				ArrayList<Metadata> list = new ArrayList<Metadata>();
+				list.add(entry.getKey());
+				entries.put(entry.getValue(), list);
 			}
-
 		});
 
-		List<Metadata> result = entries.entrySet().stream().min(new Comparator<Entry<Integer, List<Metadata>>>() {
-
-			@Override
-			public int compare(Entry<Integer, List<Metadata>> o1, Entry<Integer, List<Metadata>> o2) {
-				return o1.getKey().compareTo(o2.getKey());
-			}
-
-		}).map(e -> e.getValue()).orElse(new ArrayList<Metadata>());
-
-		return result;
+		return entries.entrySet().stream().min((o1, o2) -> o1.getKey().compareTo(o2.getKey())).map(e -> e.getValue()).orElse(new ArrayList<Metadata>());
 	}
 
 	private List<Pair<String, String>> compileText(String text, String tokenValue) {

@@ -4,8 +4,6 @@ import com.cuupa.classificator.configuration.application.ApplicationProperties;
 import com.cuupa.classificator.services.kb.semantic.SemanticResult;
 import com.cuupa.classificator.services.kb.semantic.Topic;
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
-import com.cuupa.classificator.services.kb.semantic.token.Token;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -37,9 +35,7 @@ public class KnowledgeManager {
             
             Optional<File> regexList = Arrays.stream(files).filter(e -> e.getName().equals("regex")).findFirst();
             final List<Pair<String, String>> regexContent = new ArrayList<>();
-            if(regexList.isPresent()) {
-            	 regexContent.addAll(Arrays.stream(regexList.get().listFiles()).filter(e -> e.getName().endsWith(".regx")).map(this::createRegex).collect(Collectors.toList()));
-            }
+			regexList.ifPresent(file -> regexContent.addAll(Arrays.stream(file.listFiles()).filter(e -> e.getName().endsWith(".regx")).map(this::createRegex).collect(Collectors.toList())));
             
             final List<MetaDataToken> metaDataTokenList = getMetaData(files);
             
@@ -55,12 +51,9 @@ public class KnowledgeManager {
 
 	private List<MetaDataToken> getMetaData(File[] files) {
 		Optional<File> metadataDir = Arrays.stream(files).filter(e -> e.getName().equals("metadata")).findFirst();
-		if(metadataDir.isPresent()) {
-			return Arrays.stream(metadataDir.get().listFiles())
-		            .filter(e -> e.getName().endsWith(".meta"))
-		            .map(this::createMetaData).collect(Collectors.toList());
-		}
-		return new ArrayList<>(0);
+		return metadataDir.map(file -> Arrays.stream(file.listFiles())
+				.filter(e -> e.getName().endsWith(".meta"))
+				.map(this::createMetaData).collect(Collectors.toList())).orElseGet(() -> new ArrayList<>(0));
 	}
 
     private MetaDataToken createMetaData(File metaFile) {

@@ -20,7 +20,7 @@ public abstract class Token {
 	public abstract int getDistance();
 
 	@Override
-	protected abstract Token clone();
+	protected abstract Token clone() throws CloneNotSupportedException;
 	
 	@Override
 	public String toString() {

@@ -45,7 +45,7 @@ public class Classificator {
 
             List<String> text = extractText(document);
             List<List<SemanticResult>> semanticResult = text.stream()
-                    .map(t -> manager.getResults(t))
+                    .map(manager::getResults)
                     .collect(Collectors.toList());
 
             List<SemanticResult> resultFromStructure = analyser.getResults(document);
