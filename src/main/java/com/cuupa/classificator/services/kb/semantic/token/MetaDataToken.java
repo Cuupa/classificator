@@ -63,29 +63,33 @@ public class MetaDataToken {
 					searchStream.parallel();
 				}
 
-				searchStream.forEach(value -> {
-					if (!isExclusionCondition(text, tokens.get(value)) && tokens.get(value).match(text)) {
-						String metadataValue = compiledText.get(0).get(value).getRight();
+				if (!searchStream.anyMatch(value -> token instanceof Not && tokens.get(value).match(text))) {
 
-						if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
-								&& e.getKey().getValue().equals(metadataValue))) {
-							synchronized (MetaDataToken.class) {
-								if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
-										&& e.getKey().getValue().equals(metadataValue))) {
-									Metadata metadata = new Metadata(name, metadataValue);
-									match.put(metadata, tokens.get(value).getDistance());
+					searchStream = IntStream.range(0, tokens.size());
+					if (tokens.size() > 50) {
+						searchStream.parallel();
+					}
+					
+					searchStream.forEach(value -> {
+						if (tokens.get(value).match(text)) {
+							String metadataValue = compiledText.get(0).get(value).getRight();
+
+							if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
+									&& e.getKey().getValue().equals(metadataValue))) {
+								synchronized (MetaDataToken.class) {
+									if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
+											&& e.getKey().getValue().equals(metadataValue))) {
+										Metadata metadata = new Metadata(name, metadataValue);
+										match.put(metadata, tokens.get(value).getDistance());
+									}
 								}
 							}
 						}
-					}
-				});
+					});
+				}
 			}
 		});
 		return match;
-	}
-
-	private boolean isExclusionCondition(String text, Token token) {
-		return token instanceof Not && token.match(text);
 	}
 
 	private List<Token> createTempList() {
@@ -112,7 +116,8 @@ public class MetaDataToken {
 			}
 		});
 
-		return entries.entrySet().stream().min((o1, o2) -> o1.getKey().compareTo(o2.getKey())).map(e -> e.getValue()).orElse(new ArrayList<Metadata>());
+		return entries.entrySet().stream().min((o1, o2) -> o1.getKey().compareTo(o2.getKey())).map(e -> e.getValue())
+				.orElse(new ArrayList<Metadata>());
 	}
 
 	private List<Pair<String, String>> compileText(String text, String tokenValue) {
