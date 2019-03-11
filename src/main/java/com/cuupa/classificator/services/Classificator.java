@@ -28,12 +28,7 @@ public class Classificator {
 			return new ArrayList<>();
 		}
 		
-		List<SemanticResult> results = manager.getResults(text);
-		if(results.size() == 0) {
-			results.add(new SemanticResult("OTHER"));
-		}
-		
-		return results;
+		return manager.getResults(text);
 	}
 
     public List<SemanticResult> classify(final byte[] content) {
