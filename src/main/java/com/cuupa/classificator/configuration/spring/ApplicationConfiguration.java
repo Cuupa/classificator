@@ -18,7 +18,7 @@ public class ApplicationConfiguration {
 
 	@Bean
 	public GuiController guiController() {
-		return new GuiController(classificator());
+		return new GuiController(classificator(), knowledgeManager());
 	}
 
 	@Bean

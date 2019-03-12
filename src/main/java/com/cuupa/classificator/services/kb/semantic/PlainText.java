@@ -17,7 +17,7 @@ public class PlainText {
 		try {
 			text = normalizeText(text);
 			String tempPlaintext = normalizeText(plainText);
-
+			
 			if (text.length() == 0 || tempPlaintext.length() == 0) {
 				return false;
 			}

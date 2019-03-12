@@ -8,6 +8,10 @@
 
 <body>
 
+	<form action="#" th:action="@{reloadKB}">
+		<input type="submit" value="reload KB">
+	</form>
+
 	<form action="#" th:action="@{guiProcess}" th:object="${guiProcess}"
 		method="post">
 		<table class="table">

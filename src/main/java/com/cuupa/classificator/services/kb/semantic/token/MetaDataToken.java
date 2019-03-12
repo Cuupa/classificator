@@ -72,7 +72,7 @@ public class MetaDataToken {
 					
 					searchStream.forEach(value -> {
 						if (tokens.get(value).match(text)) {
-							String metadataValue = compiledText.get(0).get(value).getRight();
+							String metadataValue = compiledText.get(0).get(value).getRight().replaceAll(" ", "");
 
 							if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
 									&& e.getKey().getValue().equals(metadataValue))) {

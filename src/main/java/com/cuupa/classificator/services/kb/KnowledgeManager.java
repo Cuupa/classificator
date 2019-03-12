@@ -1,6 +1,7 @@
 package com.cuupa.classificator.services.kb;
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties;
+import com.cuupa.classificator.services.kb.semantic.Metadata;
 import com.cuupa.classificator.services.kb.semantic.SemanticResult;
 import com.cuupa.classificator.services.kb.semantic.Topic;
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
@@ -21,6 +22,11 @@ public class KnowledgeManager {
 	private final List<Topic> topics = new ArrayList<>();
 
 	public KnowledgeManager() {
+		initKnowledgeBase();
+	}
+	
+	public void reloadKB() {
+		topics.clear();
 		initKnowledgeBase();
 	}
 
@@ -91,10 +97,8 @@ public class KnowledgeManager {
 		if (foundTopics.isEmpty()) {
 			SemanticResult other = topics.stream().filter(e -> !e.match(text))
 					.map(e -> new SemanticResult("OTHER", e.getMetaData(text))).collect(Collectors.toList()).stream()
-					.filter(e -> e.getMetaData().size() > 0).findFirst().orElse(null);
-			List<SemanticResult> result = new ArrayList<>(1);
-			result.add(other);
-			return result;
+					.filter(e -> e.getMetaData().size() > 0).findFirst().orElse(new SemanticResult("OTHER", new ArrayList<Metadata>()));
+			foundTopics.add(other);
 		}
 
 		return foundTopics;
