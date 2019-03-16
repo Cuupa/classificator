@@ -106,7 +106,7 @@ public class PlainText {
 		text = text.replace("\r", " ");
 		text = text.replace("\n", " ");
 		text = text.replace("\t", " ");
-		text = text.replace("-", " ");
+//		text = text.replace("-", " ");
 		text = text.replace(",", " ");
 		text = text.replace(": ", " ");
 		text = text.replace("€", " €");
@@ -115,6 +115,9 @@ public class PlainText {
 		text = text.replace("ã¼", "ue");
 		text = text.replace("ü", "ue");
 		text = text.replace("/", " ");
+		while(text.contains("  ")) {
+			text = text.replace("  ", " ");
+		}
 		return text.trim();
 	}
 
