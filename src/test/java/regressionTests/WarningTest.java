@@ -32,10 +32,7 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class WarningTest {
-
-    @Autowired
-    private Classificator classificator;
+public class WarningTest extends RegressionTest {
 
     @Value("${test.paths.warning}")
     private String path;
@@ -47,12 +44,7 @@ public class WarningTest {
 
     @Test
     public void shouldBeWarnings() throws Exception {
-        List<List<String>> contents = Files.list(Paths.get(path)).map(this::read).collect(Collectors.toList());
-        List<List<SemanticResult>> semanticResults = new ArrayList<>();
-        for (List<String> string : contents) {
-            String strings = contents.stream().map(Objects::toString).collect(Collectors.joining());
-            semanticResults.add(classificator.classify(strings));
-        }
+        List<List<SemanticResult>> semanticResults = callSemantik(path);
 
         for (List<SemanticResult> results : semanticResults) {
             boolean found = false;
@@ -63,23 +55,5 @@ public class WarningTest {
             }
             assertTrue(found);
         }
-    }
-
-    private List<String> read(Path path) {
-        try (PDDocument document = PDDocument.load(Files.readAllBytes(path))) {
-            List<String> pages = new ArrayList<>(document.getNumberOfPages());
-            for (int page = 1; page <= document.getNumberOfPages(); page++) {
-                PDFTextStripper stripper = new PDFTextStripper();
-                stripper.setStartPage(page);
-                stripper.setEndPage(page);
-                pages.add(stripper.getText(document));
-            }
-
-            return pages;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return Collections.emptyList();
     }
 }
