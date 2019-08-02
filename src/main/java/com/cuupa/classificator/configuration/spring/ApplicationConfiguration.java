@@ -1,5 +1,6 @@
 package com.cuupa.classificator.configuration.spring;
 
+import com.cuupa.classificator.configuration.application.ApplicationProperties;
 import com.cuupa.classificator.controller.ClassificatorController;
 import com.cuupa.classificator.controller.GuiController;
 import com.cuupa.classificator.services.Classificator;
@@ -28,10 +29,15 @@ public class ApplicationConfiguration {
 
 	@Bean
 	public KnowledgeManager knowledgeManager() {
-		return new KnowledgeManager();
+		return new KnowledgeManager(applicationProperties());
 	}
 
-    @Bean
+	@Bean
+	public ApplicationProperties applicationProperties() {
+		return new ApplicationProperties();
+	}
+
+	@Bean
     public PdfAnalyser analyser() {
         return new PdfAnalyser();
     }

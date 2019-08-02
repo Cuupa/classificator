@@ -1,0 +1,5 @@
+$dueDate = {
+	oneOf("bis zum [DATE]", "am [DATE] faellig"),
+    not("Saldenmitteilung"),
+	not("ab dem [DATE] bis zum [DATE]")
+}

@@ -1,0 +1,9 @@
+classificator:
+  kbfiles: kbfiles
+  metadatafiles: kbfiles/metadata
+  regexfiles: kbfiles/regex
+
+test:
+  paths:
+    warning: C:\Users\Simon\SynologyDrive\Desktop\Testdaten\Classificator\WARNING
+    bill: C:\Users\Simon\SynologyDrive\Desktop\Testdaten\Classificator\BILL

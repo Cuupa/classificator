@@ -77,7 +77,14 @@
             <artifactId>pdfbox</artifactId>
             <version>2.0.12</version>
         </dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
 
     <build>
 		<finalName>${project.artifactId}</finalName>

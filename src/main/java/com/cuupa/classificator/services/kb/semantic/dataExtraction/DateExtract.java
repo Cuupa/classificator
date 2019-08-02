@@ -12,7 +12,6 @@ public class DateExtract extends Extract {
 
 	@Override
 	public Pattern getPattern() {
-		// TODO Auto-generated method stub
 		return pattern;
 	}
 

@@ -31,7 +31,7 @@ public class KBTest {
 
 	@Test
 	public void parseText() {
-		KnowledgeManager manager = new KnowledgeManager();
+        KnowledgeManager manager = new KnowledgeManager(null);
 		manager.manualParse(KnowledgeFileParser.parseTopic(bill));
 
 		List<SemanticResult> results = manager.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€");
@@ -44,7 +44,7 @@ public class KBTest {
 
 	@Test
 	public void parseWarning() {
-		KnowledgeManager manager = new KnowledgeManager();
+        KnowledgeManager manager = new KnowledgeManager(null);
 		manager.manualParse(KnowledgeFileParser.parseTopic(warning));
 
 		List<SemanticResult> results = manager.getResults(
@@ -61,7 +61,7 @@ public class KBTest {
 
 	@Test
 	public void parseSicknote() {
-		KnowledgeManager manager = new KnowledgeManager();
+        KnowledgeManager manager = new KnowledgeManager(null);
 		manager.manualParse(KnowledgeFileParser.parseTopic(sickNote));
 
 		List<SemanticResult> results = manager.getResults("Krankenkasse bzw. Kostenträger\r\n"
