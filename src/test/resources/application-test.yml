@@ -5,5 +5,7 @@ classificator:
 
 test:
   paths:
-    warning: C:\Users\Simon\SynologyDrive\Desktop\Testdaten\Classificator\WARNING
-    bill: C:\Users\Simon\SynologyDrive\Desktop\Testdaten\Classificator\BILL
+    warning: C:\Users\Simon\Desktop\Testdaten\Classificator\WARNING
+    bill: C:\Users\Simon\Desktop\Testdaten\Classificator\BILL
+    bank_statement: D:\Users\Simon\Desktop\Testdaten\Classificator\BANK_STATEMENT
+    receipt_slip: D:\Users\Simon\Desktop\Testdaten\Classificator\RECEIPT_SLIP
