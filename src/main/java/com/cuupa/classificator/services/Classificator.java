@@ -32,26 +32,22 @@ public class Classificator {
 	}
 
     public List<SemanticResult> classify(final byte[] content) {
+        final List<SemanticResult> results = new ArrayList<>();
         if (content == null || content.length == 0) {
             return new ArrayList<>();
         }
-
         try (PDDocument document = PDDocument.load(new ByteArrayInputStream((content)))) {
-
-            List<String> text = extractText(document);
-            List<List<SemanticResult>> semanticResult = text.stream()
-                    .map(manager::getResults)
-                    .collect(Collectors.toList());
-
+            String text = extractText(document).stream().collect(Collectors.joining());
+            results.addAll(manager.getResults(text));
             List<SemanticResult> resultFromStructure = analyser.getResults(document);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return results;
     }
 
-    private List<String> extractText(PDDocument document) {
-        List<String> pages = new ArrayList<>();
+    private List<String> extractText(final PDDocument document) {
+        final List<String> pages = new ArrayList<>();
         try {
             for (int page = 1; page <= document.getNumberOfPages(); page++) {
                 PDFTextStripper stripper = new PDFTextStripper();

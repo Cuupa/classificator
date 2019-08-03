@@ -1,10 +1,7 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
 import com.cuupa.classificator.services.kb.semantic.Metadata;
-import com.cuupa.classificator.services.kb.semantic.dataExtraction.DateExtract;
-import com.cuupa.classificator.services.kb.semantic.dataExtraction.Extract;
-import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract;
-import com.cuupa.classificator.services.kb.semantic.dataExtraction.RegexExtract;
+import com.cuupa.classificator.services.kb.semantic.dataExtraction.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.util.Strings;
@@ -72,7 +69,7 @@ public class MetaDataToken {
 					
 					searchStream.forEach(value -> {
 						if (tokens.get(value).match(text)) {
-							String metadataValue = compiledText.get(0).get(value).getRight().replaceAll(" ", "");
+							String metadataValue = compiledText.get(0).get(value).getRight();
 
 							if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
 									&& e.getKey().getValue().equals(metadataValue))) {
@@ -152,6 +149,10 @@ public class MetaDataToken {
 
 			if ("[IBAN]".equals(name) && name.contains(pair.getLeft())) {
 				return new IbanExtract(pair.getRight());
+			}
+
+			if ("[SENDER]".equals(name) && name.contains(pair.getLeft())) {
+				return new SenderExtract(pair.getRight());
 			}
 
 			if (name.contains(pair.getLeft())) {
