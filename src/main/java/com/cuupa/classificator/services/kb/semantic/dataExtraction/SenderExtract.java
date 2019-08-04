@@ -20,6 +20,6 @@ public class SenderExtract extends Extract {
 
     @Override
     public String normalize(String value) {
-        return value;
+        return value.trim();
     }
 }
