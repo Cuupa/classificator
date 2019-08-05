@@ -41,10 +41,7 @@ public class MetaDataToken {
                     .map(e -> compileText(text, e)).collect(Collectors.toList());
 
             if (!compiledText.isEmpty()) {
-                List<Token> tokens = cloneTokens(token, compiledText);
-
-                IntStream.range(0, compiledText.size()).forEach(i -> IntStream.range(0, tokens.size())
-                        .forEach(j -> tokens.get(j).tokenValue.set(i, compiledText.get(i).get(j).getLeft())));
+                List<Token> tokens = replaceCompiledTextInTokenValue(compiledText, cloneTokens(token, compiledText));
 
                 IntStream searchStream = getIntStream(tokens.size());
 
@@ -72,6 +69,12 @@ public class MetaDataToken {
             }
         });
         return match;
+    }
+
+    private List<Token> replaceCompiledTextInTokenValue(final List<List<Pair<String, String>>> compiledText, final List<Token> tokens) {
+        IntStream.range(0, compiledText.size()).forEach(i -> IntStream.range(0, tokens.size())
+                .forEach(j -> tokens.get(j).tokenValue.set(i, compiledText.get(i).get(j).getLeft())));
+        return tokens;
     }
 
     private IntStream getIntStream(int size) {
