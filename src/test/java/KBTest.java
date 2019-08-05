@@ -1,14 +1,26 @@
 import com.cuupa.classificator.services.kb.KnowledgeFileParser;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
+import com.cuupa.classificator.services.kb.SemanticResult;
 import com.cuupa.classificator.services.kb.semantic.Metadata;
-import com.cuupa.classificator.services.kb.semantic.SemanticResult;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import regressionTests.config.TestConfig;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
+@SpringBootTest(classes = TestConfig.class)
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class KBTest {
+
+	@Autowired
+	private KnowledgeManager knowledgeManager;
 
 	private String bill = "BILL = {\r\n" + "	oneOf(\"rechnung\", \"jahresrechnung\"),\r\n"
 			+ "	oneOf(\"eur, \"euro\", \"€\"),\r\n" + "	not(\"mahnung\")\r\n" + "}";
@@ -31,23 +43,21 @@ public class KBTest {
 
 	@Test
 	public void parseText() {
-        KnowledgeManager manager = new KnowledgeManager(null);
-		manager.manualParse(KnowledgeFileParser.parseTopic(bill));
+		knowledgeManager.manualParse(KnowledgeFileParser.parseTopic(bill));
 
-		List<SemanticResult> results = manager.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€");
+		List<SemanticResult> results = knowledgeManager.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€");
 		assertTrue(results.size() > 0);
 
-		results = manager
+		results = knowledgeManager
 				.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€. Dies ist die letzte Mahnung");
 		assertEquals(0, results.size());
 	}
 
 	@Test
 	public void parseWarning() {
-        KnowledgeManager manager = new KnowledgeManager(null);
-		manager.manualParse(KnowledgeFileParser.parseTopic(warning));
+		knowledgeManager.manualParse(KnowledgeFileParser.parseTopic(warning));
 
-		List<SemanticResult> results = manager.getResults(
+		List<SemanticResult> results = knowledgeManager.getResults(
 				"Mahnung über 130€ bis zum 31.12.18. Wir haben keine Zahlung erhalten. Bitte überweisen Sie es auf IBAN: DE19 1234 1234 1234 1234 12");
 
 		for (SemanticResult semanticResult : results) {
@@ -61,10 +71,9 @@ public class KBTest {
 
 	@Test
 	public void parseSicknote() {
-        KnowledgeManager manager = new KnowledgeManager(null);
-		manager.manualParse(KnowledgeFileParser.parseTopic(sickNote));
+		knowledgeManager.manualParse(KnowledgeFileParser.parseTopic(sickNote));
 
-		List<SemanticResult> results = manager.getResults("Krankenkasse bzw. Kostenträger\r\n"
+		List<SemanticResult> results = knowledgeManager.getResults("Krankenkasse bzw. Kostenträger\r\n"
 				+ "Techniker Krankenkasse______ 38\r\n" + "Name, Vorname des Versicherten\r\n" + "Thiel\r\n"
 				+ "geb. am\r\n" + "Simon 25.09.90\r\n" + "Düsselstr. 63\r\n" + "D 40219 Düsseldorf\r\n"
 				+ "Kostenträgerkennung Versicherten-Nr Status\r\n" + "104077501|D038352185 |1\r\n"
@@ -95,6 +104,7 @@ public class KBTest {
 
 		for (SemanticResult semanticResult : results) {
 			System.out.println(semanticResult.getTopicName());
+			System.out.println(semanticResult.getSender());
 			List<Metadata> metaData = semanticResult.getMetaData();
 			for (Metadata data : metaData) {
 				assertNotNull(data.getName());

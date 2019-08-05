@@ -1,8 +1,8 @@
 package com.cuupa.classificator.gui;
 
-import java.util.List;
+import com.cuupa.classificator.services.kb.SemanticResult;
 
-import com.cuupa.classificator.services.kb.semantic.SemanticResult;
+import java.util.List;
 
 public class GuiProcess {
 

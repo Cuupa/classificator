@@ -1,7 +1,7 @@
 package regressionTests;
 
 import com.cuupa.classificator.services.Classificator;
-import com.cuupa.classificator.services.kb.semantic.SemanticResult;
+import com.cuupa.classificator.services.kb.SemanticResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Autowired;

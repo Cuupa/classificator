@@ -2,11 +2,14 @@ package com.cuupa.classificator.services.kb.semantic;
 
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
 import com.cuupa.classificator.services.kb.semantic.token.Token;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Topic {
+
+	public static final String OTHER = "OTHER";
 
 	private String topicName;
 
@@ -39,6 +42,7 @@ public class Topic {
 		this.metaDataToken.add(metadata);
 	}
 
+	@NonNull
 	public List<Metadata> getMetaData(String text) {
 		List<Metadata> metadata = new ArrayList<>();
 		for (MetaDataToken data : metaDataToken) {

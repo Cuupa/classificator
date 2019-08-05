@@ -22,6 +22,9 @@ public class ApplicationProperties {
 	@Value("${classificator.regexfiles}")
 	private String regexFiles;
 
+	@Value("${classificator.senderfiles}")
+	private String senderFiles;
+
 	@PostConstruct
 	void init() {
 		_initServerEnvironment();
@@ -52,6 +55,10 @@ public class ApplicationProperties {
 
 	public String getKnowledgbaseDir() {
 		return pathToKBFiles;
+	}
+
+	public String getSenderFiles() {
+		return senderFiles;
 	}
 
 	public String getFileSeperator() {

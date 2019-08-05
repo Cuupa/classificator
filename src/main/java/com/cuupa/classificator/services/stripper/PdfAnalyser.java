@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.stripper;
 
-import com.cuupa.classificator.services.kb.semantic.SemanticResult;
+import com.cuupa.classificator.services.kb.SemanticResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.io.IOException;

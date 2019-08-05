@@ -115,6 +115,7 @@ public class PlainText {
 		text = text.replace("ã¼", "ue");
 		text = text.replace("ü", "ue");
 		text = text.replace("/", " ");
+		text = text.replace("_", " ");
 		while(text.contains("  ")) {
 			text = text.replace("  ", " ");
 		}

@@ -1,7 +1,7 @@
 package com.cuupa.classificator.controller;
 
 import com.cuupa.classificator.services.Classificator;
-import com.cuupa.classificator.services.kb.semantic.SemanticResult;
+import com.cuupa.classificator.services.kb.SemanticResult;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

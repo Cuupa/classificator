@@ -3,7 +3,7 @@ package com.cuupa.classificator.controller;
 import com.cuupa.classificator.gui.GuiProcess;
 import com.cuupa.classificator.services.Classificator;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
-import com.cuupa.classificator.services.kb.semantic.SemanticResult;
+import com.cuupa.classificator.services.kb.SemanticResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
