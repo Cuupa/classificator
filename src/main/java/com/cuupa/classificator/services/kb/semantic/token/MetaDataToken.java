@@ -32,18 +32,12 @@ public class MetaDataToken {
 		return findMostFittingResult(findMetaData(text, createTempList()));
 	}
 
-	private Map<Metadata, Integer> findMetaData(String text, final List<Token> temporaryTokenList) {
+	private Map<Metadata, Integer> findMetaData(final String text, final List<Token> temporaryTokenList) {
 		final Map<Metadata, Integer> match = new HashMap<>();
-
-		if("sender".equals(name)) {
-			text = quickAndDirtyHackForSender(text);
-		}
-
-		final String localWorkText = text;
 
 		temporaryTokenList.stream().forEach(token -> {
 			final List<List<Pair<String, String>>> compiledText = token.tokenValue.stream()
-					.map(e -> compileText(localWorkText, e)).collect(Collectors.toList());
+					.map(e -> compileText(text, e)).collect(Collectors.toList());
 
 			List<Token> tokens = new ArrayList<>();
 			if (!compiledText.isEmpty()) {
@@ -63,7 +57,7 @@ public class MetaDataToken {
 					searchStream.parallel();
 				}
 
-				if (!searchStream.anyMatch(value -> token instanceof Not && tokens.get(value).match(localWorkText))) {
+				if (!searchStream.anyMatch(value -> token instanceof Not && tokens.get(value).match(text))) {
 
 					searchStream = IntStream.range(0, tokens.size());
 					if (tokens.size() > 50) {
@@ -71,7 +65,7 @@ public class MetaDataToken {
 					}
 					
 					searchStream.forEach(value -> {
-						if (tokens.get(value).match(localWorkText)) {
+						if (tokens.get(value).match(text)) {
 							String metadataValue = compiledText.get(0).get(value).getRight();
 
 							if (!match.entrySet().stream().anyMatch(e -> name.equals(e.getKey().getName())
@@ -90,10 +84,6 @@ public class MetaDataToken {
 			}
 		});
 		return match;
-	}
-
-	private String quickAndDirtyHackForSender(String text) {
-		return text.substring(0, text.length() < 1000 ? text.length() : 1000);
 	}
 
 	private List<Token> createTempList() {
