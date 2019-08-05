@@ -39,15 +39,8 @@ public class MetaDataToken {
 			final List<List<Pair<String, String>>> compiledText = token.tokenValue.stream()
 					.map(e -> compileText(text, e)).collect(Collectors.toList());
 
-			List<Token> tokens = new ArrayList<>();
 			if (!compiledText.isEmpty()) {
-				IntStream.range(0, compiledText.get(0).size()).forEach(i -> {
-					try {
-						tokens.add(token.clone());
-					} catch (CloneNotSupportedException e) {
-						e.printStackTrace();
-					}
-				});
+				List<Token> tokens = cloneTokens(token, compiledText);
 
 				IntStream.range(0, compiledText.size()).forEach(i -> IntStream.range(0, tokens.size())
 						.forEach(j -> tokens.get(j).tokenValue.set(i, compiledText.get(i).get(j).getLeft())));
@@ -84,6 +77,18 @@ public class MetaDataToken {
 			}
 		});
 		return match;
+	}
+
+	private List<Token> cloneTokens(Token token, List<List<Pair<String, String>>> compiledText) {
+		List<Token> tokens = new ArrayList<>();
+		IntStream.range(0, compiledText.get(0).size()).forEach(i -> {
+			try {
+				tokens.add(token.clone());
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+		});
+		return tokens;
 	}
 
 	private List<Token> createTempList() {
