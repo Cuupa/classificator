@@ -4,6 +4,7 @@ import com.cuupa.classificator.gui.GuiProcess;
 import com.cuupa.classificator.services.Classificator;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.kb.SemanticResult;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,22 +24,25 @@ public class GuiController {
 		this.manager = manager;
     }
 
+    @NotNull
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@NotNull Model model) {
         model.addAttribute("guiProcess", new GuiProcess());
         return "index";
     }
 
+    @NotNull
     @RequestMapping(value = "/guiProcess", method = RequestMethod.POST)
-    public String guiProcess(@ModelAttribute GuiProcess guiProcess) {
+    public String guiProcess(@NotNull @ModelAttribute GuiProcess guiProcess) {
         List<SemanticResult> result = classificator.classify(guiProcess.getInputText());
         guiProcess.setResult(result);
         return "index";
     }
-    
+
+    @NotNull
     @RequestMapping(value ="/reloadKB", method = RequestMethod.POST)
     public String reloadKB() {
-    	manager.reloadKB();
-    	return "index";
+        manager.reloadKB();
+        return "index";
     }
 }

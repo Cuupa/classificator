@@ -2,7 +2,7 @@ package com.cuupa.classificator.services.kb.semantic;
 
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
 import com.cuupa.classificator.services.kb.semantic.token.Token;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ public class Topic {
 
 	private final List<Token> tokenList = new ArrayList<>();
 
+	@NotNull
 	private List<MetaDataToken> metaDataToken = new ArrayList<>();
 
 	public void setName(String topicName) {
@@ -42,8 +43,8 @@ public class Topic {
 		this.metaDataToken.add(metadata);
 	}
 
-	@NonNull
-	public List<Metadata> getMetaData(String text) {
+	@NotNull
+	public List<Metadata> getMetaData(final String text) {
 		List<Metadata> metadata = new ArrayList<>();
 		for (MetaDataToken data : metaDataToken) {
 			List<Metadata> extract = data.extract(text);
@@ -53,15 +54,16 @@ public class Topic {
 		return metadata;
 	}
 
-	public void setMetaDataList(List<MetaDataToken> metaDataTokenList) {
-		this.metaDataToken = new ArrayList<>(metaDataTokenList);
-	}
-
+	@NotNull
 	public List<MetaDataToken> getMetaDataList() {
 		return metaDataToken;
 	}
 
-	public void addMetaDataList(List<MetaDataToken> metaDataTokenList) {
+	public void setMetaDataList(@NotNull List<MetaDataToken> metaDataTokenList) {
+		this.metaDataToken = new ArrayList<>(metaDataTokenList);
+	}
+
+	public void addMetaDataList(@NotNull List<MetaDataToken> metaDataTokenList) {
 		metaDataToken.addAll(metaDataTokenList);
 	}
 }

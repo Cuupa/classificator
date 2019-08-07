@@ -3,6 +3,7 @@ import com.cuupa.classificator.services.stripper.TextAndPosition;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class TextAndPositionTest {
 
+    @NotNull
     private File testFile = new File("C:/Users/Simon/Desktop/Testdaten/BRN3C2AF4402B24_20181206_205721_001340.pdf");
 
     @Test
@@ -35,7 +37,7 @@ public class TextAndPositionTest {
 
     }
 
-    private void splitHorizontly(PDRectangle cropBox, List<TextAndPosition> textAndPositions) {
+    private void splitHorizontly(@NotNull PDRectangle cropBox, @NotNull List<TextAndPosition> textAndPositions) {
 
         int sizePerPart = Math.round(cropBox.getHeight() / 3);
         int top = sizePerPart;
@@ -59,7 +61,8 @@ public class TextAndPositionTest {
         }
     }
 
-    private List<List<TextAndPosition>> splitVerticaly(PDRectangle cropBox, List<TextAndPosition> textAndPositions) {
+    @NotNull
+    private List<List<TextAndPosition>> splitVerticaly(@NotNull PDRectangle cropBox, @NotNull List<TextAndPosition> textAndPositions) {
         int leftSide = Math.round(cropBox.getWidth() / 2);
         int rightSide = Math.round(cropBox.getWidth() - leftSide);
 
@@ -72,13 +75,13 @@ public class TextAndPositionTest {
         return value;
     }
 
-    private List<TextAndPosition> getTextOfWidth(List<TextAndPosition> textAndPositions, int start, int end) {
+    private List<TextAndPosition> getTextOfWidth(@NotNull List<TextAndPosition> textAndPositions, int start, int end) {
         return textAndPositions.stream()
                 .filter(e -> e.getX() >= start && e.getX() <= end)
                 .collect(Collectors.toList());
     }
 
-    private List<TextAndPosition> getTextOfHeight(List<TextAndPosition> textAndPositions, int start, int end) {
+    private List<TextAndPosition> getTextOfHeight(@NotNull List<TextAndPosition> textAndPositions, int start, int end) {
         return textAndPositions.stream()
                 .filter(e -> e.getY() >= start && e.getY() <= end)
                 .collect(Collectors.toList());

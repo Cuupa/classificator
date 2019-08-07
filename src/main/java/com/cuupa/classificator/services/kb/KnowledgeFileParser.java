@@ -7,25 +7,30 @@ import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
 import com.cuupa.classificator.services.kb.semantic.token.TokenTextPointer;
 import com.cuupa.classificator.services.kb.semantic.token.Tokens;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 public class KnowledgeFileParser {
 
-    static Topic parseTopicFile(String kbFile) {
+    @NotNull
+    static Topic parseTopicFile(@NotNull String kbFile) {
         validateToken(kbFile);
         return parseTopic(kbFile);
     }
 
-    static MetaDataToken parseMetaFile(String kbFile) {
+    @NotNull
+    static MetaDataToken parseMetaFile(@NotNull String kbFile) {
         validateToken(kbFile);
         return parseMetaData(kbFile);
     }
 
-    static SenderToken parseSenderFile(String kbFile) {
+    @NotNull
+    static SenderToken parseSenderFile(@NotNull String kbFile) {
         validateToken(kbFile);
         return parseSender(kbFile);
     }
 
-    private static SenderToken parseSender(String kbFile) {
+    @NotNull
+    private static SenderToken parseSender(@NotNull String kbFile) {
         String[] split = kbFile.split("=");
         String topicName = split[0].trim();
 
@@ -44,11 +49,13 @@ public class KnowledgeFileParser {
         return senderToken;
     }
 
-    static Pair<String, String> parseRegexFile(String filename, String content) {
+    @NotNull
+    static Pair<String, String> parseRegexFile(@NotNull String filename, String content) {
         return Pair.of(filename.split("\\.")[0], content);
     }
 
-    private static MetaDataToken parseMetaData(String kbFile) {
+    @NotNull
+    private static MetaDataToken parseMetaData(@NotNull String kbFile) {
         MetaDataToken metadata = new MetaDataToken();
         char[] charArray = kbFile.toCharArray();
         for (int index = 0; index < charArray.length; index++) {
@@ -62,7 +69,8 @@ public class KnowledgeFileParser {
         return metadata;
     }
 
-    public static Topic parseTopic(String kbFile) {
+    @NotNull
+    public static Topic parseTopic(@NotNull String kbFile) {
         String[] split = kbFile.split("=");
         String topicName = split[0].trim();
 
@@ -96,7 +104,8 @@ public class KnowledgeFileParser {
         return topic;
     }
 
-    private static String findExtractName(final char[] charArray, int index) {
+    @NotNull
+    private static String findExtractName(@NotNull final char[] charArray, int index) {
         StringBuilder extractName = new StringBuilder();
         for (int i = index; i < charArray.length; i++) {
             if (charArray[i] == '=') {
@@ -112,7 +121,7 @@ public class KnowledgeFileParser {
         return extractName.toString().trim();
     }
 
-    private static void validateToken(String kbFile) {
+    private static void validateToken(@NotNull String kbFile) {
         char[] charArray = kbFile.toCharArray();
 
         int curlyOpenBrackets = 0, curlyCloseBrackets = 0;

@@ -1,5 +1,7 @@
 package com.cuupa.classificator.services.kb.semantic.dataExtraction;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.regex.Pattern;
 
 /**
@@ -9,7 +11,7 @@ public class SenderExtract extends Extract {
 
     private static Pattern pattern;
 
-    public SenderExtract(String regex) {
+    public SenderExtract(@NotNull String regex) {
         pattern = Pattern.compile(regex);
     }
 
@@ -18,8 +20,9 @@ public class SenderExtract extends Extract {
         return pattern;
     }
 
+    @NotNull
     @Override
-    public String normalize(String value) {
+    public String normalize(@NotNull String value) {
         return value.trim();
     }
 }

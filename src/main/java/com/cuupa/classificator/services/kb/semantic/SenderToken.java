@@ -1,6 +1,7 @@
 package com.cuupa.classificator.services.kb.semantic;
 
 import com.cuupa.classificator.services.kb.semantic.token.Token;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,6 @@ public class SenderToken {
     }
 
     public SenderToken() {
-
     }
 
     public void addToken(Token token) {
@@ -46,7 +46,7 @@ public class SenderToken {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == null) {
             return false;
         }

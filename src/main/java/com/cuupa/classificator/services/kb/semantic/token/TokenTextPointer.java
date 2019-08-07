@@ -1,13 +1,16 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 public class TokenTextPointer {
 
+	@NotNull
 	private final char[] charArray;
 	private final int index;
-	
-	public TokenTextPointer(char[] charArray, int index) {
+
+	public TokenTextPointer(@NotNull char[] charArray, int index) {
 		this.charArray = Arrays.copyOf(charArray, charArray.length);
 		this.index = index;
 	}

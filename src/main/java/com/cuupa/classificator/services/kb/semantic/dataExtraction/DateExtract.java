@@ -1,12 +1,14 @@
 package com.cuupa.classificator.services.kb.semantic.dataExtraction;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.regex.Pattern;
 
 public class DateExtract extends Extract {
 
 	private static Pattern pattern;
 
-	public DateExtract(String regex) {
+	public DateExtract(@NotNull String regex) {
 		pattern = Pattern.compile(regex);
 	}
 
@@ -15,8 +17,9 @@ public class DateExtract extends Extract {
 		return pattern;
 	}
 
+	@NotNull
 	@Override
-	public String normalize(String value) {
+	public String normalize(@NotNull String value) {
 		String[] split = value.split("\\.");
 		String day = split[0];
 		String month = split[1];

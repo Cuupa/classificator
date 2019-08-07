@@ -5,6 +5,8 @@ import com.cuupa.classificator.services.kb.SemanticResult;
 import com.cuupa.classificator.services.stripper.PdfAnalyser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class Classificator {
         this.analyser = analyser;
     }
 
-    public List<SemanticResult> classify(final String text) {
+    public List<SemanticResult> classify(@Nullable final String text) {
 		if(text == null || text.length() == 0) {
 			return new ArrayList<>();
 		}
@@ -31,10 +33,11 @@ public class Classificator {
 		return manager.getResults(text);
 	}
 
-    public List<SemanticResult> classify(final byte[] content) {
+    @NotNull
+    public List<SemanticResult> classify(@Nullable final byte[] content) {
         final List<SemanticResult> results = new ArrayList<>();
         if (content == null || content.length == 0) {
-            return new ArrayList<>();
+            return results;
         }
         try (PDDocument document = PDDocument.load(new ByteArrayInputStream((content)))) {
             String text = extractText(document).stream().collect(Collectors.joining());
@@ -46,7 +49,8 @@ public class Classificator {
         return results;
     }
 
-    private List<String> extractText(final PDDocument document) {
+    @NotNull
+    private List<String> extractText(@NotNull final PDDocument document) {
         final List<String> pages = new ArrayList<>();
         try {
             for (int page = 1; page <= document.getNumberOfPages(); page++) {

@@ -1,12 +1,14 @@
 package com.cuupa.classificator.services.kb.semantic.dataExtraction;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.regex.Pattern;
 
 public class IbanExtract extends Extract {
 
 	private static Pattern pattern;
-	
-	public IbanExtract(String regex) {
+
+	public IbanExtract(@NotNull String regex) {
 		pattern = Pattern.compile(regex);
 	}
 
@@ -15,6 +17,7 @@ public class IbanExtract extends Extract {
 		return pattern;
 	}
 
+	@NotNull
 	@Override
 	public String normalize(String value) {
 		value = value.replace(" ", "");
@@ -25,10 +28,7 @@ public class IbanExtract extends Extract {
 				sb.append(" ");
 			}
 			sb.append(charArray[i]);
-
 		}
-
 		return sb.toString();
 	}
-
 }

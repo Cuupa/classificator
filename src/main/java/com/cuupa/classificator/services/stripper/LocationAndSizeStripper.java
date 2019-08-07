@@ -3,6 +3,7 @@ package com.cuupa.classificator.services.stripper;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,30 +20,34 @@ public class LocationAndSizeStripper extends PDFTextStripper {
     }
 
     @Override
-    protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
-
+    protected void writeString(String text, @NotNull List<TextPosition> textPositions) throws IOException {
         if (!textAlreadyParsed) {
-            TextAndPosition textAndPosition = new TextAndPosition();
-            for (TextPosition textPosition : textPositions) {
-                if (!isEmpty(textPosition)) {
-                    textAndPosition.add(textPosition.getUnicode(), textPosition.getXDirAdj(),
-                            textPosition.getWidthDirAdj(), textPosition.getYDirAdj(), textPosition.getHeightDir());
-                } else {
-                    textAndPosition.add(textPosition.getUnicode(), textPosition.getXDirAdj(),
-                            textPosition.getWidthDirAdj(), textPosition.getYDirAdj(), textPosition.getHeightDir());
-                    list.add(textAndPosition);
-                    textAndPosition = new TextAndPosition();
-                }
-            }
-
-            if (!list.contains(textAndPosition)) {
-                list.add(textAndPosition);
-            }
+            parse(textPositions);
+            textAlreadyParsed = true;
         }
         writeString(text);
     }
 
-    private boolean isEmpty(TextPosition textPosition) {
+    private void parse(@NotNull List<TextPosition> textPositions) {
+        TextAndPosition textAndPosition = new TextAndPosition();
+        for (TextPosition textPosition : textPositions) {
+            if (!isEmpty(textPosition)) {
+                textAndPosition.add(textPosition.getUnicode(), textPosition.getXDirAdj(),
+                        textPosition.getWidthDirAdj(), textPosition.getYDirAdj(), textPosition.getHeightDir());
+            } else {
+                textAndPosition.add(textPosition.getUnicode(), textPosition.getXDirAdj(),
+                        textPosition.getWidthDirAdj(), textPosition.getYDirAdj(), textPosition.getHeightDir());
+                list.add(textAndPosition);
+                textAndPosition = new TextAndPosition();
+            }
+        }
+
+        if (!list.contains(textAndPosition)) {
+            list.add(textAndPosition);
+        }
+    }
+
+    private boolean isEmpty(@NotNull TextPosition textPosition) {
         return textPosition.getUnicode() == null || textPosition.getUnicode().equals(" ");
     }
 
@@ -50,6 +55,7 @@ public class LocationAndSizeStripper extends PDFTextStripper {
         textAlreadyParsed = true;
     }
 
+    @NotNull
     public List<TextAndPosition> getTextAndPositions(PDDocument document) throws IOException {
         super.getText(document);
         return list;

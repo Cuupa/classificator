@@ -4,6 +4,7 @@ import com.cuupa.classificator.services.Classificator;
 import com.cuupa.classificator.services.kb.SemanticResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -21,7 +22,8 @@ public abstract class RegressionTest {
     @Autowired
     private Classificator classificator;
 
-    protected List<List<SemanticResult>> callSemantik(String path) throws IOException {
+    @NotNull
+    protected List<List<SemanticResult>> callSemantik(@NotNull String path) throws IOException {
         List<List<String>> contents = Files.list(Paths.get(path)).map(this::read).collect(Collectors.toList());
         List<List<SemanticResult>> semanticResults = new ArrayList<>();
         for (List<String> string : contents) {
@@ -32,7 +34,8 @@ public abstract class RegressionTest {
         return semanticResults;
     }
 
-    protected List<List<SemanticResult>> callSemantikWithStructure(String path) throws IOException {
+    @NotNull
+    protected List<List<SemanticResult>> callSemantikWithStructure(@NotNull String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         List<List<SemanticResult>> semanticResults = new ArrayList<>();
         semanticResults.add(classificator.classify(bytes));
@@ -40,7 +43,8 @@ public abstract class RegressionTest {
         return semanticResults;
     }
 
-    protected List<String> read(Path path) {
+    @NotNull
+    protected List<String> read(@NotNull Path path) {
         try (PDDocument document = PDDocument.load(Files.readAllBytes(path))) {
             List<String> pages = new ArrayList<>(document.getNumberOfPages());
             for (int page = 1; page <= document.getNumberOfPages(); page++) {

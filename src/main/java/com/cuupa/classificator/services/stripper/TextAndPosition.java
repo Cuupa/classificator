@@ -1,7 +1,10 @@
 package com.cuupa.classificator.services.stripper;
 
+import org.apache.logging.log4j.util.Strings;
+
 public class TextAndPosition {
-    private String value = "";
+
+    private String value = Strings.EMPTY;
 
     private float fromX;
 
@@ -10,7 +13,6 @@ public class TextAndPosition {
     private float y;
 
     private float maxHeight;
-
 
     public void add(String value, float xDirAdj, float width, float yDirAdj, float heightDir) {
         this.value += value;

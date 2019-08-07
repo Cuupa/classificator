@@ -1,5 +1,7 @@
 package com.cuupa.classificator.to;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -15,10 +17,12 @@ public class DocumentBuilder {
 		this.fileSize = fileSize;
 	}
 
+	@NotNull
 	public static DocumentBuilder create(InputStream inputStream, String fileName, int fileSize) {
 		return new DocumentBuilder(inputStream, fileName, fileSize);
 	}
 
+	@NotNull
 	public Document build() throws IOException {
 		Document document = new Document();
 		document.setFileName(filename);

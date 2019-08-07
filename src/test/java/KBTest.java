@@ -2,6 +2,7 @@ import com.cuupa.classificator.services.kb.KnowledgeFileParser;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.kb.SemanticResult;
 import com.cuupa.classificator.services.kb.semantic.Metadata;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,18 @@ public class KBTest {
 	@Autowired
 	private KnowledgeManager knowledgeManager;
 
+	@NotNull
 	private String bill = "BILL = {\r\n" + "	oneOf(\"rechnung\", \"jahresrechnung\"),\r\n"
 			+ "	oneOf(\"eur, \"euro\", \"€\"),\r\n" + "	not(\"mahnung\")\r\n" + "}";
 
+	@NotNull
 	private String warning = "WARNING = {\r\n" + "	oneOf(\"mahnung\", \"zahlungserinnerung\", \"angemahnte Betrag\"),\r\n"
 			+ "	oneOf(\"keine Zahlung erhalten\", \"keine Zahlung eingegangen\", \"noch nicht eingegangen\", \"noch nicht bei uns eingegangen\"),\r\n"
 			+ "	oneOf(\"eur\", \"euro\", \"€\")\r\n" + "}\r\n" + "\r\n" + "$dueDate = {\r\n"
 			+ "	oneOf(\"bis zum [DATE]\")\r\n" + "}\r\n" + "\r\n" + "$IBAN = {\r\n" + "	oneOf(\"IBAN: [IBAN]\")\r\n"
 			+ "}";
 
+	@NotNull
 	private String sickNote = "SICKNOTE = {\r\n" + "	oneOf(\"Arbeitsunfähigkeitsbescheinigung\"),\r\n"
 			+ "	oneOf(\"ICD 10\"),\r\n" + "	all(\"Erstbescheinigung\", \"Folgebescheinigung\"),\r\n"
 			+ "	all(\"arbeitsunfähig seit\", \"voraussichtlich arbeitsunfähig bis einschließlich oder letzter Tag der Arbeitsunfähigkeit\", \"festgestellt am\")\r\n"

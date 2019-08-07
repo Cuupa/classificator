@@ -2,6 +2,9 @@ package com.cuupa.classificator.services.kb.semantic;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PlainText {
 
@@ -13,8 +16,11 @@ public class PlainText {
 		this.plainText = plainText;
 	}
 
-	public boolean contains(String text, int tolerance) {
+	public boolean contains(@Nullable String text, int tolerance) {
 		try {
+			if (text == null || plainText == null) {
+				return false;
+			}
 			text = normalizeText(text);
 			String tempPlaintext = normalizeText(plainText);
 			
@@ -35,7 +41,7 @@ public class PlainText {
 		return contains(text, 1);
 	}
 
-	private boolean search(String tempPlaintext, String[] wordsToSearch, int tolerance) {
+	private boolean search(@NotNull String tempPlaintext, @NotNull String[] wordsToSearch, int tolerance) {
 		String[] splitPlain = tempPlaintext.split(" ");
 
 		int currentPositionPlainText = 0;
@@ -85,8 +91,8 @@ public class PlainText {
 		return matchingWords == wordsToSearch.length;
 	}
 
-	private Pair<String, Integer> findNonEmptyEntry(String[] strings, int index) {
-		Pair<String, Integer> value = Pair.of("", index);
+	@NotNull
+	private Pair<String, Integer> findNonEmptyEntry(@NotNull String[] strings, int index) {
 		while (strings.length >= index) {
 			String temp = strings[index].trim();
 			if (temp.length() > 0) {
@@ -95,9 +101,10 @@ public class PlainText {
 				index++;
 			}
 		}
-		return value;
+		return Pair.of(Strings.EMPTY, index);
 	}
 
+	@NotNull
 	private String normalizeText(String text) {
 		text = text.toLowerCase();
 		text = text.replace("\t", " ");

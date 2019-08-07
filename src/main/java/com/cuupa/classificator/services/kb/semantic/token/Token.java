@@ -1,5 +1,7 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ public abstract class Token {
 
 	public abstract int getDistance();
 
+	@NotNull
 	@Override
 	protected abstract Token clone() throws CloneNotSupportedException;
 	

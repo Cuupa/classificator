@@ -1,7 +1,9 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import java.util.ArrayList;
 import com.cuupa.classificator.services.kb.semantic.PlainText;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 public class OneOf extends Token {
 	
@@ -23,13 +25,15 @@ public class OneOf extends Token {
 		return distance;
 	}
 
+	@NotNull
 	@Override
 	protected Token clone() {
 		Token token = new OneOf();
 		token.setTokenValue(new ArrayList<>(tokenValue));
 		return token;
 	}
-	
+
+	@NotNull
 	@Override
 	public String toString() {
 		return "OneOf " + super.toString();
