@@ -11,7 +11,7 @@ public class Not extends Token {
 	public boolean match(String text) {
 		PlainText plaintext = new PlainText(text);
 		for (String token : tokenValue) {
-			if(plaintext.contains(token)) {
+			if (plaintext.contains(token)) {
 				return false;
 			}
 		}

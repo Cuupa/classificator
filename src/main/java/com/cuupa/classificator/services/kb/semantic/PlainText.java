@@ -23,7 +23,7 @@ public class PlainText {
 			}
 			text = normalizeText(text);
 			String tempPlaintext = normalizeText(plainText);
-			
+
 			if (text.length() == 0 || tempPlaintext.length() == 0) {
 				return false;
 			}
@@ -58,9 +58,9 @@ public class PlainText {
 
 			currentPositionPlainText = pairPlain.getRight();
 			currentPositionSearchString = pairSearch.getRight();
-			
+
 			Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain,
-					currentWordToSearch);
+																			  currentWordToSearch);
 
 			if (distance <= tolerance) {
 				matchingWords++;
@@ -123,7 +123,7 @@ public class PlainText {
 		text = text.replace("ü", "ue");
 		text = text.replace("/", " ");
 		text = text.replace("_", " ");
-		while(text.contains("  ")) {
+		while (text.contains("  ")) {
 			text = text.replace("  ", " ");
 		}
 		return text.trim();

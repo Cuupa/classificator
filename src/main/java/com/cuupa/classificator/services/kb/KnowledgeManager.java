@@ -58,12 +58,14 @@ public class KnowledgeManager {
             Optional<File> regexList = Arrays.stream(files).filter(e -> e.getName().equals("regex")).findFirst();
             final List<Pair<String, String>> regexContent = new ArrayList<>();
             regexList.ifPresent(file -> regexContent.addAll(Arrays.stream(Objects.requireNonNull(file.listFiles()))
-                    .filter(e -> e.getName().endsWith(".regx")).map(this::createRegex).collect(Collectors.toList())));
+                                                                  .filter(e -> e.getName().endsWith(".regx"))
+                                                                  .map(this::createRegex)
+                                                                  .collect(Collectors.toList())));
 
             final List<MetaDataToken> metaDataTokenList = getMetaData(files);
 
             List<Topic> topicList = Arrays.stream(files).filter(e -> e.getName().endsWith(".dsl"))
-                    .map(this::createTopic).collect(Collectors.toList());
+                                          .map(this::createTopic).collect(Collectors.toList());
 
             topicList.forEach(topic -> topic.addMetaDataList(metaDataTokenList));
             topicList
@@ -103,8 +105,10 @@ public class KnowledgeManager {
 
     private List<MetaDataToken> getMetaData(@NotNull File[] files) {
         Optional<File> metadataDir = Arrays.stream(files).filter(e -> e.getName().equals("metadata")).findFirst();
-        return metadataDir.map(file -> Arrays.stream(Objects.requireNonNull(file.listFiles())).filter(e -> e.getName().endsWith(".meta"))
-                .map(this::createMetaData).collect(Collectors.toList())).orElseGet(() -> new ArrayList<>(0));
+        return metadataDir.map(file -> Arrays.stream(Objects.requireNonNull(file.listFiles()))
+                                             .filter(e -> e.getName().endsWith(".meta"))
+                                             .map(this::createMetaData)
+                                             .collect(Collectors.toList())).orElseGet(() -> new ArrayList<>(0));
     }
 
     @Nullable
@@ -121,7 +125,7 @@ public class KnowledgeManager {
     private Pair<String, String> createRegex(@NotNull File regexFile) {
         try {
             return KnowledgeFileParser.parseRegexFile(regexFile.getName(),
-                    FileUtils.readFileToString(regexFile, StandardCharsets.UTF_8));
+                                                      FileUtils.readFileToString(regexFile, StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,17 +143,29 @@ public class KnowledgeManager {
     }
 
     public List<SemanticResult> getResults(final String text) {
-        List<SemanticResult> matchingSemanticResults = topics.stream().parallel().filter(e -> e.match(text))
-                .map(e -> new SemanticResult(e.getName(), e.getMetaData(text))).collect(Collectors.toList());
+        List<SemanticResult> matchingSemanticResults = topics.stream()
+                                                             .parallel()
+                                                             .filter(e -> e.match(text))
+                                                             .map(e -> new SemanticResult(e.getName(),
+                                                                                          e.getMetaData(text)))
+                                                             .collect(Collectors.toList());
 
         if (matchingSemanticResults.isEmpty()) {
-            SemanticResult other = topics.stream().parallel()
-                    .map(e -> new SemanticResult(Topic.OTHER, e.getMetaData(text))).collect(Collectors.toList()).stream()
-                    .filter(e -> e.getMetaData().size() > 0).findFirst().orElse(new SemanticResult(Topic.OTHER, new ArrayList<>(0)));
+            SemanticResult other = topics.stream()
+                                         .parallel()
+                                         .map(e -> new SemanticResult(Topic.OTHER, e.getMetaData(text)))
+                                         .collect(Collectors.toList())
+                                         .stream()
+                                         .filter(e -> e.getMetaData().size() > 0)
+                                         .findFirst()
+                                         .orElse(new SemanticResult(Topic.OTHER, new ArrayList<>(0)));
             matchingSemanticResults.add(other);
         }
 
-        List<SenderToken> sendersFoundInText = this.senderTokens.stream().parallel().filter(e -> e.match(text)).collect(Collectors.toList());
+        List<SenderToken> sendersFoundInText = this.senderTokens.stream()
+                                                                .parallel()
+                                                                .filter(e -> e.match(text))
+                                                                .collect(Collectors.toList());
         String sender = validateSender(matchingSemanticResults, sendersFoundInText);
         matchingSemanticResults.forEach(e -> e.setSender(sender));
         return matchingSemanticResults;
@@ -159,11 +175,19 @@ public class KnowledgeManager {
         final List<Metadata> sendersFromTopic = new ArrayList<>();
 
         for (SemanticResult result : foundTopics) {
-            sendersFromTopic.addAll(result.getMetaData().stream().filter(e -> "sender".equals(e.getName())).collect(Collectors.toList()));
+            sendersFromTopic.addAll(result.getMetaData()
+                                          .stream()
+                                          .filter(e -> "sender".equals(e.getName()))
+                                          .collect(Collectors.toList()));
         }
 
         if (sendersFromTopic.size() > 1) {
-            return sendersFromTopic.stream().map(e -> new SenderToken(e.getValue())).filter(senderTokens::contains).findFirst().orElse(new SenderToken(SenderToken.UNKNOWN)).getName();
+            return sendersFromTopic.stream()
+                                   .map(e -> new SenderToken(e.getValue()))
+                                   .filter(senderTokens::contains)
+                                   .findFirst()
+                                   .orElse(new SenderToken(SenderToken.UNKNOWN))
+                                   .getName();
         } else if (sendersFromTopic.size() == 0 && senderTokens.size() == 1) {
             return senderTokens.get(0).getName();
         }

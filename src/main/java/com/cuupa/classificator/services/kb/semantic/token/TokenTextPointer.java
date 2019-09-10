@@ -8,6 +8,7 @@ public class TokenTextPointer {
 
 	@NotNull
 	private final char[] charArray;
+
 	private final int index;
 
 	public TokenTextPointer(@NotNull char[] charArray, int index) {

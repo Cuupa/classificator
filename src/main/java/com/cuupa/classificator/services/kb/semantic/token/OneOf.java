@@ -6,14 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class OneOf extends Token {
-	
+
 	private int distance;
 
 	@Override
 	public boolean match(String text) {
 		PlainText plainText = new PlainText(text);
 		for (String value : tokenValue) {
-			if(plainText.contains(value)) {
+			if (plainText.contains(value)) {
 				distance = plainText.getDistance();
 				return true;
 			}

@@ -26,8 +26,9 @@ public class Tokens {
 			return new Not();
 		} else if ("all".equals(tokenName)) {
 			return new All();
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	private static String findTokenName(@NotNull final TokenTextPointer pointer) {
@@ -36,8 +37,9 @@ public class Tokens {
 		for (int i = pointer.getIndex() - 1; i > 0; i--) {
 			if (pointer.get(i) != '{' && pointer.get(i) != ',' && pointer.get(i) > 64 && pointer.get(i) < 123) {
 				tokenName = pointer.get(i) + tokenName;
-			} else
+			} else {
 				return tokenName;
+			}
 		}
 		return tokenName;
 	}
@@ -53,9 +55,7 @@ public class Tokens {
 				tokenValue = new StringBuilder();
 			} else if (pointer.get(i) != '"' && pointer.get(i) != ')') {
 				tokenValue.append(pointer.get(i));
-			}
-
-			else if (pointer.get(i) == ')') {
+			} else if (pointer.get(i) == ')') {
 				value.add(tokenValue.toString());
 				return value;
 			}
@@ -64,6 +64,6 @@ public class Tokens {
 	}
 
 	private static boolean isNextToken(@NotNull final TokenTextPointer pointer, final int i) {
-		return pointer.get(i) == ')' && (pointer.get(i + 1) == ',' || pointer.get(i+1) == '\r' || pointer.get(i+1) == '\n');
+		return pointer.get(i) == ')' && (pointer.get(i + 1) == ',' || pointer.get(i + 1) == '\r' || pointer.get(i + 1) == '\n');
 	}
 }

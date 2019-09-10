@@ -11,16 +11,12 @@ public class Topic {
 
 	public static final String OTHER = "OTHER";
 
-	private String topicName;
-
 	private final List<Token> tokenList = new ArrayList<>();
+
+	private String topicName;
 
 	@NotNull
 	private List<MetaDataToken> metaDataToken = new ArrayList<>();
-
-	public void setName(String topicName) {
-		this.topicName = topicName;
-	}
 
 	public void addToken(Token token) {
 		tokenList.add(token);
@@ -28,6 +24,10 @@ public class Topic {
 
 	public String getName() {
 		return topicName;
+	}
+
+	public void setName(String topicName) {
+		this.topicName = topicName;
 	}
 
 	public boolean match(String text) {

@@ -18,15 +18,11 @@ import java.util.stream.IntStream;
 
 public class MetaDataToken {
 
-	private String name;
-
 	private final List<Token> tokenList = new ArrayList<>();
 
-	private List<Pair<String, String>> regexContent;
+	private String name;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	private List<Pair<String, String>> regexContent;
 
 	public void addToken(Token token) {
 		this.tokenList.add(token);
@@ -47,7 +43,8 @@ public class MetaDataToken {
 	private Consumer<Token> getTokenConsumer(String text, @NotNull Map<Metadata, Integer> match) {
 		return token -> {
 			final List<List<Pair<String, String>>> compiledText = token.tokenValue.stream()
-					.map(e -> compileText(text, e)).collect(Collectors.toList());
+																				  .map(e -> compileText(text, e))
+																				  .collect(Collectors.toList());
 
 			if (!compiledText.isEmpty()) {
 				List<Token> tokens = replaceCompiledTextInTokenValue(compiledText, cloneTokens(token, compiledText));
@@ -80,7 +77,11 @@ public class MetaDataToken {
 	@NotNull
 	private List<Token> replaceCompiledTextInTokenValue(@NotNull final List<List<Pair<String, String>>> compiledText, @NotNull final List<Token> tokens) {
         IntStream.range(0, compiledText.size()).forEach(i -> IntStream.range(0, tokens.size())
-                .forEach(j -> tokens.get(j).tokenValue.set(i, compiledText.get(i).get(j).getLeft())));
+																	  .forEach(j -> tokens.get(j).tokenValue.set(i,
+																												 compiledText
+																														 .get(i)
+																														 .get(j)
+																														 .getLeft())));
         return tokens;
     }
 
@@ -88,7 +89,7 @@ public class MetaDataToken {
 	private IntStream getIntStream(int size) {
         IntStream searchStream = IntStream.range(0, size);
         if (size > 50) {
-            searchStream.parallel();
+			return searchStream.parallel();
         }
         return searchStream;
     }
@@ -135,7 +136,7 @@ public class MetaDataToken {
 		});
 
 		return entries.entrySet().stream().min(Comparator.comparing(Map.Entry::getKey)).map(e -> e.getValue())
-				.orElse(new ArrayList<>());
+					  .orElse(new ArrayList<>());
 	}
 
 	@NotNull
@@ -198,6 +199,10 @@ public class MetaDataToken {
 
 	public String getName() {
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@NotNull
