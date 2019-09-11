@@ -123,9 +123,7 @@ public class PlainText {
 		text = text.replace("ü", "ue");
 		text = text.replace("/", " ");
 		text = text.replace("_", " ");
-		while (text.contains("  ")) {
-			text = text.replace("  ", " ");
-		}
+        text = text.replaceAll(" {2}", " ");
 		return text.trim();
 	}
 
