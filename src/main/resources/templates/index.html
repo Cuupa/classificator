@@ -39,6 +39,9 @@
 											</tr>
 										</thead>
 										<tbody>
+                                        <tr>
+                                            <td width="50%"><span th:text="${result.sender}">Sender</span></td>
+                                        </tr>
 											<tr th:each="metaData : ${result.metaData}">
 												<td width="50%"><span th:text="${metaData.name}">Name</span></td>
 												<td width="50%"><span th:text="${metaData.value}">Value</span></td>

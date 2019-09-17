@@ -1,1 +1,1 @@
-((?!Ihre))[A-Z0-9]+[0-9& a-zA-Z]+ (AG\s|ag\s|a.G.\s|GmbH\s|gmbh\s|se\s|SE\s)(?=|\r|\n)
+((?!Ihre))[A-Z0-9]+[0-9& a-zA-Z]+ (AG|ag|a.G.\s|GmbH\s|gmbh\s|se\s|SE\s)(?=|\r|\n)

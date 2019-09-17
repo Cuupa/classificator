@@ -36,4 +36,9 @@ public class SemanticResult {
     public void setSender(String sender) {
         this.sender = sender;
     }
+
+    @Override
+    public String toString() {
+        return "Topic: " + topicName + " Metadata: " + metaData;
+    }
 }

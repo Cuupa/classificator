@@ -13,6 +13,8 @@ public class SenderToken {
 
     public static final String UNKNOWN = "UNKNOWN";
 
+    public static final String SENDER = "sender";
+
     private final List<Token> tokenList = new ArrayList<>();
 
     private String senderName;

@@ -1,200 +1,120 @@
 package com.cuupa.classificator.services.kb;
 
-import com.cuupa.classificator.configuration.application.ApplicationProperties;
 import com.cuupa.classificator.services.kb.semantic.Metadata;
 import com.cuupa.classificator.services.kb.semantic.SenderToken;
 import com.cuupa.classificator.services.kb.semantic.Topic;
-import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.lang.Nullable;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class KnowledgeManager {
 
     private static final Log LOG = LogFactory.getLog(KnowledgeManager.class);
 
-    private final List<Topic> topics = new ArrayList<>();
+    private KnowledgeBase knowledgeBase;
 
-    private final List<SenderToken> senderTokens = new ArrayList<>();
+    private KnowledgeBaseInitiator knowledgeBaseInitiator;
 
-    private ApplicationProperties applicationProperties;
-
-    private long totalTime = 0L;
-
-    public KnowledgeManager(ApplicationProperties applicationProperties) {
-        this.applicationProperties = applicationProperties;
-        initKnowledgeBase();
+    public KnowledgeManager(KnowledgeBaseInitiator knowledgeBaseInitiator) {
+        this.knowledgeBaseInitiator = knowledgeBaseInitiator;
+        knowledgeBase = this.knowledgeBaseInitiator.initKnowledgeBase();
     }
 
     public void reloadKB() {
-        topics.clear();
-        initKnowledgeBase();
-    }
-
-    private void initKnowledgeBase() {
-        try {
-            File knowledgebaseDir = ResourceUtils.getFile(applicationProperties.getKnowledgbaseDir());
-            if (!knowledgebaseDir.isDirectory()) {
-                return;
-            }
-
-            File[] files = knowledgebaseDir.listFiles();
-
-            if (files == null) {
-                return;
-            }
-
-            Optional<File> regexList = Arrays.stream(files).filter(e -> e.getName().equals("regex")).findFirst();
-            final List<Pair<String, String>> regexContent = new ArrayList<>();
-            regexList.ifPresent(file -> regexContent.addAll(Arrays.stream(Objects.requireNonNull(file.listFiles()))
-                                                                  .filter(e -> e.getName().endsWith(".regx"))
-                                                                  .map(this::createRegex)
-                                                                  .collect(Collectors.toList())));
-
-            final List<MetaDataToken> metaDataTokenList = getMetaData(files);
-
-            List<Topic> topicList = Arrays.stream(files).filter(e -> e.getName().endsWith(".dsl"))
-                                          .map(this::createTopic).collect(Collectors.toList());
-
-            topicList.forEach(topic -> topic.addMetaDataList(metaDataTokenList));
-            topicList
-                    .forEach(topic -> topic.getMetaDataList().forEach(token -> token.setRegexContent(regexContent)));
-            topics.addAll(topicList);
-
-            senderTokens.addAll(getSenders(applicationProperties.getSenderFiles()));
-        } catch (FileNotFoundException fnfe) {
-            LOG.error("Error loading files", fnfe);
-        }
-    }
-
-    private List<SenderToken> getSenders(@NotNull String senderFolderString) {
-        List<SenderToken> senderTokens = new ArrayList<>();
-        try {
-            File senderFolder = ResourceUtils.getFile(senderFolderString);
-            File[] senderFiles = senderFolder.listFiles();
-            if (senderFiles == null) {
-                return senderTokens;
-            }
-            senderTokens = Arrays.stream(senderFiles).map(this::createSenderTokens).collect(Collectors.toList());
-        } catch (FileNotFoundException e) {
-            LOG.error("Unable to get senders", e);
-        }
-        return senderTokens;
-    }
-
-    @Nullable
-    private SenderToken createSenderTokens(@NotNull File file) {
-        try {
-            return KnowledgeFileParser.parseSenderFile(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-        } catch (IOException ioe) {
-            LOG.error("Unable to get sendertokens", ioe);
-        }
-        return null;
-    }
-
-    private List<MetaDataToken> getMetaData(@NotNull File[] files) {
-        Optional<File> metadataDir = Arrays.stream(files).filter(e -> e.getName().equals("metadata")).findFirst();
-        return metadataDir.map(file -> Arrays.stream(Objects.requireNonNull(file.listFiles()))
-                                             .filter(e -> e.getName().endsWith(".meta"))
-                                             .map(this::createMetaData)
-                                             .collect(Collectors.toList())).orElseGet(() -> new ArrayList<>(0));
-    }
-
-    @Nullable
-    private MetaDataToken createMetaData(@NotNull File metaFile) {
-        try {
-            return KnowledgeFileParser.parseMetaFile(FileUtils.readFileToString(metaFile, StandardCharsets.UTF_8));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return null;
-    }
-
-    @Nullable
-    private Pair<String, String> createRegex(@NotNull File regexFile) {
-        try {
-            return KnowledgeFileParser.parseRegexFile(regexFile.getName(),
-                                                      FileUtils.readFileToString(regexFile, StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Nullable
-    private Topic createTopic(@NotNull File kbFile) {
-        try {
-            return KnowledgeFileParser.parseTopicFile(FileUtils.readFileToString(kbFile, StandardCharsets.UTF_8));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return null;
+        knowledgeBase.clear();
+        knowledgeBase = knowledgeBaseInitiator.initKnowledgeBase();
     }
 
     public List<SemanticResult> getResults(final String text) {
-        List<SemanticResult> matchingSemanticResults = topics.stream()
-                                                             .parallel()
-                                                             .filter(e -> e.match(text))
-                                                             .map(e -> new SemanticResult(e.getName(),
-                                                                                          e.getMetaData(text)))
-                                                             .collect(Collectors.toList());
+        List<SemanticResult> matchingSemanticResults = getTopicsWithMetadata(text);
 
         if (matchingSemanticResults.isEmpty()) {
-            SemanticResult other = topics.stream()
-                                         .parallel()
-                                         .map(e -> new SemanticResult(Topic.OTHER, e.getMetaData(text)))
-                                         .collect(Collectors.toList())
-                                         .stream()
-                                         .filter(e -> e.getMetaData().size() > 0)
-                                         .findFirst()
-                                         .orElse(new SemanticResult(Topic.OTHER, new ArrayList<>(0)));
+            LOG.debug("Found no matching Topics");
+            SemanticResult other = getMetadatasForTopicOther(text);
             matchingSemanticResults.add(other);
         }
 
-        List<SenderToken> sendersFoundInText = this.senderTokens.stream()
-                                                                .parallel()
-                                                                .filter(e -> e.match(text))
-                                                                .collect(Collectors.toList());
-        String sender = validateSender(matchingSemanticResults, sendersFoundInText);
+        List<SenderToken> sendersFromTokenFoundInText = getSendersFromKnowledgebase(text);
+
+        final String sender = getSender(matchingSemanticResults, sendersFromTokenFoundInText);
         matchingSemanticResults.forEach(e -> e.setSender(sender));
+        matchingSemanticResults.forEach(
+
+                result -> {
+                    boolean senderFound = result.getMetaData()
+                                                .stream()
+                                                .filter(e -> "sender".equals(e.getName()))
+                                                .anyMatch(e -> sender.equals(e.getValue()));
+
+                    if (senderFound) {
+                        result.getMetaData().add(new Metadata("sender", sender));
+                    }
+
+                });
+        LOG.debug(matchingSemanticResults);
         return matchingSemanticResults;
     }
 
-    private String validateSender(@NotNull final List<SemanticResult> foundTopics, @NotNull final List<SenderToken> senderTokens) {
-        final List<Metadata> sendersFromTopic = new ArrayList<>();
+    @NotNull
+    private List<SenderToken> getSendersFromKnowledgebase(String text) {
+        return knowledgeBase.getSenders().stream().parallel().filter(e -> e.match(text)).collect(Collectors.toList());
+    }
 
+    @NotNull
+    private List<SemanticResult> getTopicsWithMetadata(String text) {
+        return knowledgeBase.getTopics()
+                            .stream()
+                            .parallel()
+                            .filter(e -> e.match(text))
+                            .map(e -> new SemanticResult(e.getName(), e.getMetaData(text)))
+                            .collect(Collectors.toList());
+    }
+
+    /**
+     * If no topic is found we still want to get the metadata
+     *
+     * @param text The text to extract Metadata from
+     * @return returns SemanticResult.OTHER with metadata
+     */
+    @NotNull
+    private SemanticResult getMetadatasForTopicOther(String text) {
+        return knowledgeBase.getTopics()
+                            .stream()
+                            .parallel()
+                            .map(e -> new SemanticResult(Topic.OTHER, e.getMetaData(text)))
+                            .collect(Collectors.toList())
+                            .stream()
+                            .filter(e -> e.getMetaData().size() > 0)
+                            .findFirst()
+                            .orElse(new SemanticResult(Topic.OTHER, new ArrayList<>(0)));
+    }
+
+    private String getSender(@NotNull final List<SemanticResult> foundTopics, @NotNull final List<SenderToken> senderTokens) {
+        if (senderTokens.size() == 1) {
+            return senderTokens.get(0).getName();
+        }
+
+        final List<Metadata> sendersFromTopic = new ArrayList<>();
         for (SemanticResult result : foundTopics) {
-            sendersFromTopic.addAll(result.getMetaData()
-                                          .stream()
-                                          .filter(e -> "sender".equals(e.getName()))
+            sendersFromTopic.addAll(result.getMetaData().stream().filter(e -> SenderToken.SENDER.equals(e.getName()))
                                           .collect(Collectors.toList()));
         }
 
-        if (sendersFromTopic.size() > 1) {
-            return sendersFromTopic.stream()
-                                   .map(e -> new SenderToken(e.getValue()))
-                                   .filter(senderTokens::contains)
-                                   .findFirst()
-                                   .orElse(new SenderToken(SenderToken.UNKNOWN))
-                                   .getName();
-        } else if (sendersFromTopic.size() == 0 && senderTokens.size() == 1) {
-            return senderTokens.get(0).getName();
-        }
-        return SenderToken.UNKNOWN;
+        return sendersFromTopic.stream()
+                               .map(e -> new SenderToken(e.getValue()))
+                               .filter(senderTokens::contains)
+                               .findFirst()
+                               .orElse(new SenderToken(SenderToken.UNKNOWN))
+                               .getName();
     }
 
-    public void manualParse(Topic parse) {
-        topics.add(parse);
+    public void manualParse(Topic parseTopic) {
+        List<Topic> topics = new ArrayList<>(1);
+        topics.add(parseTopic);
+        knowledgeBase.setTopics(topics);
     }
 }

@@ -18,4 +18,9 @@ public class Metadata {
 	public String getValue() {
 		return value;
 	}
+
+    @Override
+    public String toString() {
+        return "name: " + name + " value: " + value;
+    }
 }
