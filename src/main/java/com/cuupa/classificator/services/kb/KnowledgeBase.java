@@ -6,30 +6,30 @@ import com.cuupa.classificator.services.kb.semantic.Topic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KnowledgeBase {
+class KnowledgeBase {
 
     private List<Topic> topicList;
 
     private List<SenderToken> senders;
 
-    public void clear() {
+    void clear() {
         topicList.clear();
         senders.clear();
     }
 
-    public List<SenderToken> getSenders() {
+    List<SenderToken> getSenders() {
         return new ArrayList<>(senders);
     }
 
-    public void setSenders(List<SenderToken> senders) {
+    void setSenders(List<SenderToken> senders) {
         this.senders = senders;
     }
 
-    public List<Topic> getTopics() {
+    List<Topic> getTopics() {
         return new ArrayList<>(topicList);
     }
 
-    public void setTopics(List<Topic> topicList) {
+    void setTopics(List<Topic> topicList) {
         this.topicList = topicList;
     }
 }

@@ -2,6 +2,7 @@ import com.cuupa.classificator.services.kb.KnowledgeFileParser;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.kb.SemanticResult;
 import com.cuupa.classificator.services.kb.semantic.Metadata;
+import com.cuupa.classificator.services.kb.semantic.Topic;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,8 @@ public class KBTest {
 
 		results = knowledgeManager
 				.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€. Dies ist die letzte Mahnung");
-		assertEquals(0, results.size());
+		assertEquals(1, results.size());
+		assertEquals(Topic.OTHER, results.get(0).getTopicName());
 	}
 
 	@Test

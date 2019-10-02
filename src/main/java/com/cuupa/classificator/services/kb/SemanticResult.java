@@ -33,7 +33,7 @@ public class SemanticResult {
         return sender;
     }
 
-    public void setSender(String sender) {
+    void setSender(String sender) {
         this.sender = sender;
     }
 

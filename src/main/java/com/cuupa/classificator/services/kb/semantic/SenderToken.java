@@ -1,5 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic;
 
+import com.cuupa.classificator.services.kb.semantic.token.CountToken;
 import com.cuupa.classificator.services.kb.semantic.token.Token;
 import org.springframework.lang.Nullable;
 
@@ -19,9 +20,7 @@ public class SenderToken {
 
     private String senderName;
 
-    public SenderToken(String senderName) {
-        this.senderName = senderName;
-    }
+    private int numberOfOccurences;
 
     public SenderToken() {
     }
@@ -57,8 +56,16 @@ public class SenderToken {
             if (senderTokenToCompare.getName() == null && senderName == null) {
                 return true;
             }
-            return senderTokenToCompare.getName().equals(senderName);
+            return senderName.equals(senderTokenToCompare.getName());
         }
         return false;
+    }
+
+    public void countNumberOfOccurences(String text) {
+        numberOfOccurences = new CountToken().countOccurences(senderName, text);
+    }
+
+    public int countNumberOfOccurences() {
+        return numberOfOccurences;
     }
 }

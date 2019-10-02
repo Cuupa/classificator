@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import com.cuupa.classificator.services.kb.semantic.PlainText;
+import com.cuupa.classificator.services.kb.semantic.text.PlainText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

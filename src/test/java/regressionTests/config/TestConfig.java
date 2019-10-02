@@ -2,6 +2,7 @@ package regressionTests.config;
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties;
 import com.cuupa.classificator.services.Classificator;
+import com.cuupa.classificator.services.kb.KnowledgeBaseExecutorService;
 import com.cuupa.classificator.services.kb.KnowledgeBaseInitiator;
 import com.cuupa.classificator.services.kb.KnowledgeManager;
 import com.cuupa.classificator.services.stripper.PdfAnalyser;
@@ -18,8 +19,15 @@ public class TestConfig {
     @NotNull
     @Bean
     public KnowledgeManager knowledgeManager() {
-        return new KnowledgeManager(knowledgeBaseInitiator());
+        return new KnowledgeManager(knowledgeBaseInitiator(), knowledgeBaseExecutorService());
     }
+
+    @NotNull
+    @Bean
+    public KnowledgeBaseExecutorService knowledgeBaseExecutorService() {
+        return new KnowledgeBaseExecutorService();
+    }
+
 
     @NotNull
     @Bean

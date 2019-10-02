@@ -39,5 +39,4 @@ public class DateExtract extends Extract {
 		return day + "." + month + "." + year;
 
 	}
-
 }

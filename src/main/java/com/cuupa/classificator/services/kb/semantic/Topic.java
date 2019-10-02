@@ -9,61 +9,52 @@ import java.util.List;
 
 public class Topic {
 
-	public static final String OTHER = "OTHER";
+    public static final String OTHER = "OTHER";
 
-	private final List<Token> tokenList = new ArrayList<>();
+    private final List<Token> tokenList = new ArrayList<>();
 
-	private String topicName;
+    private String topicName;
 
-	@NotNull
-	private List<MetaDataToken> metaDataToken = new ArrayList<>();
+    private List<Metadata> metadata = new ArrayList<>();
 
-	public void addToken(Token token) {
-		tokenList.add(token);
-	}
+    @NotNull
+    private List<MetaDataToken> metaDataToken = new ArrayList<>();
 
-	public String getName() {
-		return topicName;
-	}
+    public void addToken(Token token) {
+        tokenList.add(token);
+    }
 
-	public void setName(String topicName) {
-		this.topicName = topicName;
-	}
+    public String getName() {
+        return topicName;
+    }
 
-	public boolean match(String text) {
-		for (Token token : tokenList) {
-			if (!token.match(text)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    public void setName(String topicName) {
+        this.topicName = topicName;
+    }
 
-	public void addMetaData(MetaDataToken metadata) {
-		this.metaDataToken.add(metadata);
-	}
+    public boolean match(String text) {
+        return tokenList.stream().allMatch(token -> token.match(text));
+    }
 
-	@NotNull
-	public List<Metadata> getMetaData(final String text) {
-		List<Metadata> metadata = new ArrayList<>();
-		for (MetaDataToken data : metaDataToken) {
-			List<Metadata> extract = data.extract(text);
-			metadata.addAll(extract);
-		}
+    public void addMetaData(MetaDataToken metadata) {
+        this.metaDataToken.add(metadata);
+    }
 
-		return metadata;
-	}
+    @NotNull
+    public List<Metadata> getMetaData(final String text) {
+        if (metadata.isEmpty()) {
+            metaDataToken.stream().map(data -> data.extract(text)).forEach(metadata::addAll);
+        }
+        return metadata;
+    }
 
-	@NotNull
-	public List<MetaDataToken> getMetaDataList() {
-		return metaDataToken;
-	}
+    @NotNull
+    public List<MetaDataToken> getMetaDataList() {
+        return metaDataToken;
+    }
 
-	public void setMetaDataList(@NotNull List<MetaDataToken> metaDataTokenList) {
-		this.metaDataToken = new ArrayList<>(metaDataTokenList);
-	}
 
-	public void addMetaDataList(@NotNull List<MetaDataToken> metaDataTokenList) {
-		metaDataToken.addAll(metaDataTokenList);
-	}
+    public void addMetaDataList(@NotNull List<MetaDataToken> metaDataTokenList) {
+        metaDataToken.addAll(metaDataTokenList);
+    }
 }

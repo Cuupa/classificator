@@ -62,8 +62,4 @@ public class Tokens {
 		}
 		return value;
 	}
-
-	private static boolean isNextToken(@NotNull final TokenTextPointer pointer, final int i) {
-		return pointer.get(i) == ')' && (pointer.get(i + 1) == ',' || pointer.get(i + 1) == '\r' || pointer.get(i + 1) == '\n');
-	}
 }

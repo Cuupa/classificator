@@ -16,7 +16,7 @@ public class TokenTextPointer {
 		this.index = index;
 	}
 
-	public int getIndex() {
+	int getIndex() {
 		return index;
 	}
 
@@ -24,7 +24,7 @@ public class TokenTextPointer {
 		return charArray[i];
 	}
 
-	public int getCharSize() {
+	int getCharSize() {
 		return charArray.length;
 	}
 }

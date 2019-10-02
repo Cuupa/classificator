@@ -57,17 +57,9 @@ public class MetaDataToken {
                         if (tokens.get(value).match(text)) {
                             String metadataValue = compiledText.get(0).get(value).getRight();
 
-                            if (match.entrySet()
-                                     .stream()
-                                     .noneMatch(e -> name.equals(e.getKey().getName()) && e.getKey()
-                                                                                           .getValue()
-                                                                                           .equals(metadataValue))) {
+                            if (isMetadataAlreadyRegistered(match, metadataValue)) {
                                 synchronized (MetaDataToken.class) {
-                                    if (match.entrySet()
-                                             .stream()
-                                             .noneMatch(e -> name.equals(e.getKey().getName()) && e.getKey()
-                                                                                                   .getValue()
-                                                                                                   .equals(metadataValue))) {
+                                    if (isMetadataAlreadyRegistered(match, metadataValue)) {
                                         Metadata metadata = new Metadata(name, metadataValue);
                                         match.put(metadata, tokens.get(value).getDistance());
                                     }
@@ -78,6 +70,12 @@ public class MetaDataToken {
                 }
             }
         };
+    }
+
+    private boolean isMetadataAlreadyRegistered(@NotNull Map<Metadata, Integer> match, String metadataValue) {
+        return match.entrySet()
+                    .stream()
+                    .noneMatch(e -> name.equals(e.getKey().getName()) && e.getKey().getValue().equals(metadataValue));
     }
 
     @NotNull
@@ -108,44 +106,37 @@ public class MetaDataToken {
     @NotNull
     private List<Token> cloneTokens(@NotNull Token token, @NotNull List<List<Pair<String, String>>> compiledText) {
         List<Token> tokens = new ArrayList<>();
-        IntStream.range(0, compiledText.get(0).size()).forEach(i -> {
-            try {
-                tokens.add(token.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        });
+        IntStream.range(0, compiledText.get(0).size()).forEach(i -> tokens.add(token.clone()));
         return tokens;
     }
 
     private List<Token> createTempList() {
-        return tokenList.stream().map(e -> {
-            try {
-                return e.clone();
-            } catch (CloneNotSupportedException e1) {
-                e1.printStackTrace();
-            }
-            return null;
-        }).collect(Collectors.toList());
+        return tokenList.stream().map(Token::clone).collect(Collectors.toList());
     }
 
     private List<Metadata> findMostFittingResult(@NotNull Map<Metadata, Integer> match) {
-        Map<Integer, List<Metadata>> entries = new HashMap<>();
-        match.entrySet().forEach(entry -> {
-            if (entries.containsKey(entry.getValue())) {
-                entries.get(entry.getValue()).add(entry.getKey());
-            } else {
-                ArrayList<Metadata> list = new ArrayList<>();
-                list.add(entry.getKey());
-                entries.put(entry.getValue(), list);
-            }
-        });
+        Map<Integer, List<Metadata>> entries = getMatchesMap(match);
 
         return entries.entrySet()
                       .stream()
                       .min(Comparator.comparing(Map.Entry::getKey))
                       .map(Map.Entry::getValue)
                       .orElse(new ArrayList<>());
+    }
+
+    @NotNull
+    private Map<Integer, List<Metadata>> getMatchesMap(@NotNull Map<Metadata, Integer> match) {
+        Map<Integer, List<Metadata>> entries = new HashMap<>();
+        match.forEach((key, value) -> {
+            if (entries.containsKey(value)) {
+                entries.get(value).add(key);
+            } else {
+                ArrayList<Metadata> list = new ArrayList<>();
+                list.add(key);
+                entries.put(value, list);
+            }
+        });
+        return entries;
     }
 
     @NotNull
@@ -212,11 +203,6 @@ public class MetaDataToken {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @NotNull
-    public List<Token> getTokenList() {
-        return tokenList;
     }
 
     public void setRegexContent(List<Pair<String, String>> regexContent) {
