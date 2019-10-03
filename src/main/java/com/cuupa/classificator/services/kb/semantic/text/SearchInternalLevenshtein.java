@@ -1,13 +1,12 @@
 package com.cuupa.classificator.services.kb.semantic.text;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.jetbrains.annotations.NotNull;
 
-public class SearchInternalLevenshtein {
+class SearchInternalLevenshtein {
 
-    private final String[] splitPlain;
+    private final PlainText plainText;
 
-    private String[] wordsToSearch;
+    private SearchText wordsToSearch;
 
     private int tolerance;
 
@@ -21,10 +20,10 @@ public class SearchInternalLevenshtein {
 
     private int distance;
 
-    SearchInternalLevenshtein(@NotNull String[] wordsToSearch, int tolerance, String[] splitPlain) {
+    SearchInternalLevenshtein(SearchText wordsToSearch, PlainText plaintText, int tolerance) {
         this.wordsToSearch = wordsToSearch;
         this.tolerance = tolerance;
-        this.splitPlain = splitPlain;
+        this.plainText = plaintText;
         continueSearch = true;
     }
 
@@ -41,8 +40,8 @@ public class SearchInternalLevenshtein {
     }
 
     SearchInternalLevenshtein invoke() {
-        String currentWordFromPlain = splitPlain[currentPositionPlainText];
-        String currentWordToSearch = wordsToSearch[currentPositionSearchString];
+        String currentWordFromPlain = plainText.get(currentPositionPlainText);
+        String currentWordToSearch = wordsToSearch.get(currentPositionSearchString);
 
         Integer distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain, currentWordToSearch);
 
@@ -55,7 +54,7 @@ public class SearchInternalLevenshtein {
             matchingWords = 0;
             currentPositionSearchString = 0;
             this.distance = 0;
-            currentWordToSearch = wordsToSearch[currentPositionSearchString];
+            currentWordToSearch = wordsToSearch.get(currentPositionSearchString);
             distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain, currentWordToSearch);
 
             if (distance <= tolerance) {

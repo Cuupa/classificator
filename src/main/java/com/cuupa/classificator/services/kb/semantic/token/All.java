@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import com.cuupa.classificator.services.kb.semantic.text.PlainText;
+import com.cuupa.classificator.services.kb.semantic.text.TextSearch;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ public class All extends Token {
 
     @Override
     public boolean match(String text) {
-        PlainText plainText = new PlainText(text);
-        boolean isMatching = tokenValue.stream().allMatch(plainText::contains);
-        distance = plainText.getDistance();
+        TextSearch textSearch = new TextSearch(text);
+        boolean isMatching = tokenValue.stream().allMatch(textSearch::contains);
+        distance = textSearch.getDistance();
         return isMatching;
     }
 

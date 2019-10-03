@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import com.cuupa.classificator.services.kb.semantic.text.PlainText;
+import com.cuupa.classificator.services.kb.semantic.text.TextSearch;
 import org.jetbrains.annotations.NotNull;
 
 public class CountToken extends Token {
@@ -22,7 +22,7 @@ public class CountToken extends Token {
     }
 
     public int countOccurences(String name, String text) {
-        PlainText plainText = new PlainText(text);
-        return plainText.countOccurence(text);
+        TextSearch textSearch = new TextSearch(text);
+        return textSearch.countOccurence(text);
     }
 }

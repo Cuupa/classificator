@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import com.cuupa.classificator.services.kb.semantic.text.PlainText;
+import com.cuupa.classificator.services.kb.semantic.text.TextSearch;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ public class Not extends Token {
 
 	@Override
 	public boolean match(String text) {
-		PlainText plaintext = new PlainText(text);
+        TextSearch plaintext = new TextSearch(text);
 		for (String token : tokenValue) {
 			if (plaintext.contains(token)) {
 				return false;

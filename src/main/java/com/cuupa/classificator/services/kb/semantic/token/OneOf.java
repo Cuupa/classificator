@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.token;
 
-import com.cuupa.classificator.services.kb.semantic.text.PlainText;
+import com.cuupa.classificator.services.kb.semantic.text.TextSearch;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ public class OneOf extends Token {
 
 	@Override
 	public boolean match(String text) {
-		PlainText plainText = new PlainText(text);
+        TextSearch textSearch = new TextSearch(text);
 		for (String value : tokenValue) {
-			if (plainText.contains(value)) {
-				distance = plainText.getDistance();
+            if (textSearch.contains(value)) {
+                distance = textSearch.getDistance();
 				return true;
 			}
 		}
