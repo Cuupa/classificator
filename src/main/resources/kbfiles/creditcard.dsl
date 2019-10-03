@@ -1,4 +1,4 @@
 CREDITCARD = {
 	oneOf("Abrechnung", "Saldenmitteilung"),
-	oneOf("MasterCard")
+	oneOf("MasterCard", "VISA")
 }
