@@ -11,8 +11,8 @@ public class TextSearch {
 
     private int distance;
 
-    public TextSearch(PlainText plainText) {
-        this.plainText = plainText;
+    public TextSearch(String plainText) {
+        this.plainText = new PlainText(plainText);
     }
 
     public boolean contains(@Nullable String text, int tolerance) {
