@@ -1,4 +1,4 @@
 Stadtsparkasse Düsseldorf = {
     oneOf("Stadtsparkasse Düsseldorf", "Stadt Sparkasse Düsseldorf"),
-    not("IBAN:", "BIC:");
+    oneOf("UST-ID DE119260423")
 }
