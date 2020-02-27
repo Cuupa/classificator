@@ -1,89 +1,76 @@
-import com.cuupa.classificator.services.stripper.LocationAndSizeStripper;
-import com.cuupa.classificator.services.stripper.TextAndPosition;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import com.cuupa.classificator.services.stripper.LocationAndSizeStripper
+import com.cuupa.classificator.services.stripper.TextAndPosition
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.junit.Test
+import java.io.File
+import java.io.IOException
+import java.util.*
+import java.util.stream.Collectors
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class TextAndPositionTest {
-
-    @NotNull
-    private File testFile = new File("C:/Users/Simon/Desktop/Testdaten/BRN3C2AF4402B24_20181206_205721_001340.pdf");
-
+class TextAndPositionTest {
+    private val testFile = File("C:/Users/Simon/Desktop/Testdaten/BRN3C2AF4402B24_20181206_205721_001340.pdf")
     @Test
-    public void dingens() {
-        try (PDDocument document = PDDocument.load(testFile)) {
-            LocationAndSizeStripper stripper = new LocationAndSizeStripper();
-            stripper.setStartPage(1);
-            stripper.setEndPage(1);
-            List<TextAndPosition> textAndPositions = stripper.getTextAndPositions(document);
-
-            PDPage page = document.getPage(1);
-            PDRectangle cropBox = page.getCropBox();
-
-            List<List<TextAndPosition>> lists = splitVerticaly(cropBox, textAndPositions);
-            splitHorizontly(cropBox, lists.get(0));
-            splitHorizontly(cropBox, lists.get(1));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void splitHorizontly(@NotNull PDRectangle cropBox, @NotNull List<TextAndPosition> textAndPositions) {
-
-        int sizePerPart = Math.round(cropBox.getHeight() / 3);
-        int top = sizePerPart;
-        int middle = sizePerPart + top;
-        int bottom = middle + sizePerPart;
-
-        List<TextAndPosition> topText = getTextOfHeight(textAndPositions, 0, top);
-        List<TextAndPosition> middleText = getTextOfHeight(textAndPositions, top, middle);
-        List<TextAndPosition> bottomText = getTextOfHeight(textAndPositions, middle, bottom);
-
-        for (TextAndPosition text : topText) {
-            System.out.println(text.getValue());
-        }
-
-        for (TextAndPosition text : middleText) {
-            System.out.println(text.getValue());
-        }
-
-        for (TextAndPosition text : bottomText) {
-            System.out.println(text.getValue());
+    fun dingens() {
+        try {
+            PDDocument.load(testFile).use { document ->
+                val stripper = LocationAndSizeStripper()
+                stripper.startPage = 1
+                stripper.endPage = 1
+                val textAndPositions = stripper.getTextAndPositions(document)
+                val page = document.getPage(1)
+                val cropBox = page.cropBox
+                val lists = splitVerticaly(cropBox, textAndPositions)
+                splitHorizontly(cropBox, lists[0])
+                splitHorizontly(cropBox, lists[1])
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
-    @NotNull
-    private List<List<TextAndPosition>> splitVerticaly(@NotNull PDRectangle cropBox, @NotNull List<TextAndPosition> textAndPositions) {
-        int leftSide = Math.round(cropBox.getWidth() / 2);
-        int rightSide = Math.round(cropBox.getWidth() - leftSide);
-
-        List<TextAndPosition> textLeftSide = getTextOfWidth(textAndPositions, 0, leftSide);
-        List<TextAndPosition> textRightSide = getTextOfWidth(textAndPositions, rightSide, Math.round(cropBox.getWidth()));
-
-        List<List<TextAndPosition>> value = new ArrayList<>();
-        value.add(textLeftSide);
-        value.add(textRightSide);
-        return value;
+    private fun splitHorizontly(cropBox: PDRectangle,
+                                textAndPositions: List<TextAndPosition>) {
+        val sizePerPart = Math.round(cropBox.height / 3)
+        val middle = sizePerPart + sizePerPart
+        val bottom = middle + sizePerPart
+        val topText = getTextOfHeight(textAndPositions, 0, sizePerPart)
+        val middleText = getTextOfHeight(textAndPositions, sizePerPart, middle)
+        val bottomText = getTextOfHeight(textAndPositions, middle, bottom)
+        for (text in topText) {
+            println(text.value)
+        }
+        for (text in middleText) {
+            println(text.value)
+        }
+        for (text in bottomText) {
+            println(text.value)
+        }
     }
 
-    private List<TextAndPosition> getTextOfWidth(@NotNull List<TextAndPosition> textAndPositions, int start, int end) {
+    private fun splitVerticaly(cropBox: PDRectangle,
+                               textAndPositions: List<TextAndPosition>): List<List<TextAndPosition>> {
+        val leftSide = Math.round(cropBox.width / 2)
+        val rightSide = Math.round(cropBox.width - leftSide)
+        val textLeftSide = getTextOfWidth(textAndPositions, 0, leftSide)
+        val textRightSide = getTextOfWidth(textAndPositions, rightSide, Math.round(cropBox.width))
+        val value: MutableList<List<TextAndPosition>> = ArrayList()
+        value.add(textLeftSide)
+        value.add(textRightSide)
+        return value
+    }
+
+    private fun getTextOfWidth(textAndPositions: List<TextAndPosition>, start: Int,
+                               end: Int): List<TextAndPosition> {
         return textAndPositions.stream()
-                .filter(e -> e.getX() >= start && e.getX() <= end)
-                .collect(Collectors.toList());
+                .filter { e: TextAndPosition -> e.x >= start && e.x <= end }
+                .collect(Collectors.toList())
     }
 
-    private List<TextAndPosition> getTextOfHeight(@NotNull List<TextAndPosition> textAndPositions, int start, int end) {
+    private fun getTextOfHeight(textAndPositions: List<TextAndPosition>, start: Int,
+                                end: Int): List<TextAndPosition> {
         return textAndPositions.stream()
-                .filter(e -> e.getY() >= start && e.getY() <= end)
-                .collect(Collectors.toList());
+                .filter { e: TextAndPosition -> e.y >= start && e.y <= end }
+                .collect(Collectors.toList())
     }
 }

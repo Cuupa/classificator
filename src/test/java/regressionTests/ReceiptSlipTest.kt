@@ -1,52 +1,45 @@
-package regressionTests;
+package regressionTests
 
-import com.cuupa.classificator.services.Classificator;
-import com.cuupa.classificator.services.kb.SemanticResult;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import regressionTests.config.TestConfig;
-
-import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.cuupa.classificator.services.Classificator
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit4.SpringRunner
+import regressionTests.config.TestConfig
 
 /**
  * @author Simon Thiel (https://github.com/cuupa)
  */
-@SpringBootTest(classes = TestConfig.class)
+@SpringBootTest(classes = [TestConfig::class])
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
-public class ReceiptSlipTest extends RegressionTest {
-
+@RunWith(SpringRunner::class)
+class ReceiptSlipTest : RegressionTest() {
     @Autowired
-    private Classificator classificator;
-
-    @Value("${test.paths.receipt_slip}")
-    private String path;
+    private val classificator: Classificator? = null
+    @Value("\${test.paths.receipt_slip}")
+    private val path: String? = null
 
     @Test
-    public void pathShouldNotBeEmpty() {
-        assertNotNull(path);
+    fun pathShouldNotBeEmpty() {
+        Assert.assertNotNull(path)
     }
 
     @Test
-    public void shouldBeReceiptSlip() throws Exception {
-        List<List<SemanticResult>> semanticResults = callSemantik(path);
-
-        for (List<SemanticResult> results : semanticResults) {
-            boolean found = false;
-            for (SemanticResult result : results) {
-                if (result.getTopicName().equals("RECEIPT_SLIP")) {
-                    found = true;
+    @Throws(Exception::class)
+    fun shouldBeReceiptSlip() {
+        val semanticResults = callSemantik(path!!)
+        for (results in semanticResults) {
+            var found = false
+            for ((topicName) in results) {
+                if (topicName == "RECEIPT_SLIP") {
+                    found = true
                 }
             }
-            assertTrue(found);
+            Assert.assertTrue(found)
         }
     }
 }

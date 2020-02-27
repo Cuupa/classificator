@@ -1,16 +1,13 @@
-package com.cuupa.classificator.services.kb.semantic.token;
+package com.cuupa.classificator.services.kb.semantic.token
 
-public class InvalidTokenException extends RuntimeException {
+class InvalidTokenException : RuntimeException {
+    constructor(string: String?) : super(string) {}
+    constructor() {}
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-
-    public InvalidTokenException(String string) {
-        super(string);
-    }
-
-    public InvalidTokenException() {
+    companion object {
+        /**
+         *
+         */
+        private const val serialVersionUID = 1L
     }
 }

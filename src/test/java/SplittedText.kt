@@ -1,23 +1,18 @@
-import java.util.List;
+import com.cuupa.classificator.services.stripper.TextAndPosition
 
-import com.cuupa.classificator.services.stripper.TextAndPosition;
+class SplittedText {
+    private var topText: List<TextAndPosition>? = null
+    private var middleText: List<TextAndPosition>? = null
+    private var bottomText: List<TextAndPosition>? = null
+    fun setTopText(topText: List<TextAndPosition>?) {
+        this.topText = topText
+    }
 
-public class SplittedText {
+    fun setMiddleText(middleText: List<TextAndPosition>?) {
+        this.middleText = middleText
+    }
 
-	private List<TextAndPosition> topText;
-	private List<TextAndPosition> middleText;
-	private List<TextAndPosition> bottomText;
-
-	public void setTopText(List<TextAndPosition> topText) {
-		this.topText = topText;
-	}
-
-	public void setMiddleText(List<TextAndPosition> middleText) {
-		this.middleText = middleText;
-	}
-
-	public void setBottomText(List<TextAndPosition> bottomText) {
-		this.bottomText = bottomText;
-	}
-
+    fun setBottomText(bottomText: List<TextAndPosition>?) {
+        this.bottomText = bottomText
+    }
 }

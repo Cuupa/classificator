@@ -1,4 +1,4 @@
-package regressionTests.config
+package com.cuupa.classificator.configuration.spring
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties
 import com.cuupa.classificator.services.Classificator
@@ -9,11 +9,14 @@ import com.cuupa.classificator.services.stripper.PdfAnalyser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-/**
- * @author Simon Thiel (https://github.com/cuupa)
- */
 @Configuration
-open class TestConfig {
+open class ApplicationConfiguration {
+
+    @Bean
+    open fun classificator(): Classificator {
+        return Classificator(knowledgeManager(), analyser())
+    }
+
     @Bean
     open fun knowledgeManager(): KnowledgeManager {
         return KnowledgeManager(knowledgeBaseInitiator(), knowledgeBaseExecutorService())
@@ -32,11 +35,6 @@ open class TestConfig {
     @Bean
     open fun applicationProperties(): ApplicationProperties {
         return ApplicationProperties()
-    }
-
-    @Bean
-    open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser())
     }
 
     @Bean
