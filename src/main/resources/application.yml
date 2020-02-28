@@ -1,8 +1,8 @@
 server:
-  port: 8081
+  port: 8080
 
 classificator:
-  kbfiles: classpath:kbfiles
-  metadatafiles: classpath:kbfiles/metadata
-  regexfiles: classpath:kbfiles/regex
-  senderFiles: classpath:kbfiles/senders
+  kbfiles: classpath:/kbfiles
+  metadatafiles: classpath:/kbfiles/metadata
+  regexfiles: classpath:/kbfiles/regex
+  senderFiles: classpath:/kbfiles/senders

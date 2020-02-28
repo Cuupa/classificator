@@ -10,9 +10,9 @@ class ApplicationProperties {
     @Value("\${classificator.kbfiles}")
     val knowledgbaseDir: String? = null
     @Value("\${classificator.metadatafiles}")
-    private val metadataFiles: String? = null
+    val metadataFiles: String? = null
     @Value("\${classificator.regexfiles}")
-    private val regexFiles: String? = null
+    val regexFiles: String? = null
     @Value("\${classificator.senderfiles}")
     val senderFiles: String? = null
 

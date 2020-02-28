@@ -3,37 +3,32 @@ package com.cuupa.classificator.services.kb
 import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
+import kotlinx.coroutines.*
 import org.apache.commons.logging.LogFactory
 import java.util.*
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 import java.util.function.Consumer
-import java.util.function.Supplier
 import java.util.stream.Collectors
 
 class KnowledgeBaseExecutorService {
 
-    private val executorServicePool = Executors.newCachedThreadPool()
-
     fun submit(topics: List<Topic>, senderTokens: List<SenderToken>, text: String): List<SemanticResult> {
-        val futureTopics: CompletableFuture<MutableList<SemanticResult>> = CompletableFuture.supplyAsync(Supplier {
-            getTopics(topics,
-                    text)
-        }, executorServicePool)
+        var semanticResults: MutableList<SemanticResult> = mutableListOf()
+        var mostFittingSender: String? = null
+        runBlocking {
+            val job = GlobalScope.launch {
+                val asyncTopics: Deferred<MutableList<SemanticResult>> = GlobalScope.async { getTopics(topics, text) }
+                val asyncSenders = GlobalScope.async { getSenders(senderTokens, text) }
 
-        val futureSenders = CompletableFuture.supplyAsync(Supplier {
-            getSenders(senderTokens,
-                    text)
-        }, executorServicePool)
+                val senders = GlobalScope.async { getNumberOfOccurences(asyncSenders.await(), text) }.await()
+                mostFittingSender = senders
+                        .maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })!!.name
 
-
-        futureSenders.thenAcceptAsync { getNumberOfOccurences(senderTokens, text) }
-
-        val senders = futureSenders.get()
-        var mostFittingSender = senders
-                .maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })?.name
-
-        val semanticResults = futureTopics.get()
+                semanticResults = asyncTopics.await()
+            }
+            while (job.isActive) {
+                delay(10)
+            }
+        }
 
         if (semanticResults.isEmpty()) {
             LOG.debug("Found no matching Topics")
@@ -62,7 +57,7 @@ class KnowledgeBaseExecutorService {
                             .filter { (name) -> "sender" == name }
                             .any { (_, value) -> finalMostFittingSender == value }
                     if (senderFound) {
-                        metaData.add(Metadata("sender", finalMostFittingSender))
+                        metaData.add(Metadata("sender", finalMostFittingSender!!))
                     }
                 })
         LOG.debug(semanticResults)

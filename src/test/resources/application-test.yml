@@ -1,7 +1,8 @@
 classificator:
-  kbfiles: classpath:kbfiles
-  metadatafiles: classpath:kbfiles/metadata
-  regexfiles: classpath:kbfiles/regex
+  kbfiles: kbfiles
+  metadatafiles: kbfiles/metadata
+  regexfiles: kbfiles/regex
+  senderFiles: kbfiles/senders
 
 test:
   paths:

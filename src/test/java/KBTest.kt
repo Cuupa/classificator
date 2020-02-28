@@ -2,17 +2,11 @@ import com.cuupa.classificator.services.kb.KnowledgeFileParser.parseTopic
 import com.cuupa.classificator.services.kb.KnowledgeManager
 import com.cuupa.classificator.services.kb.semantic.Topic
 import org.junit.Assert
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
-import regressionTests.config.TestConfig
 
-@SpringBootTest(classes = [TestConfig::class])
-@ActiveProfiles("test")
-@RunWith(SpringRunner::class)
+//@SpringBootTest(classes = [TestConfig::class])
+//@ActiveProfiles("test")
+//@RunWith(SpringRunner::class)
 class KBTest {
     @Autowired
     private val knowledgeManager: KnowledgeManager? = null
@@ -28,12 +22,12 @@ class KBTest {
             + "	all(\"arbeitsunfähig seit\", \"voraussichtlich arbeitsunfähig bis einschließlich oder letzter Tag der Arbeitsunfähigkeit\", \"festgestellt am\")\r\n"
             + "}")
 
-    @Test
+    //@Test
     fun parseTest() {
         parseTopic(bill)
     }
 
-    @Test
+    //@Test
     fun parseText() {
         knowledgeManager!!.manualParse(parseTopic(bill))
         var results = knowledgeManager.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€")
@@ -44,7 +38,6 @@ class KBTest {
         Assert.assertEquals(Topic.OTHER, results[0].topicName)
     }
 
-    @Test
     fun parseWarning() {
         knowledgeManager!!.manualParse(parseTopic(warning))
         val results = knowledgeManager.getResults(
