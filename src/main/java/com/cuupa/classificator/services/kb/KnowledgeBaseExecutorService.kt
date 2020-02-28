@@ -5,9 +5,7 @@ import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
 import kotlinx.coroutines.*
 import org.apache.commons.logging.LogFactory
-import java.util.*
 import java.util.function.Consumer
-import java.util.stream.Collectors
 
 class KnowledgeBaseExecutorService {
 
@@ -60,6 +58,10 @@ class KnowledgeBaseExecutorService {
                         metaData.add(Metadata("sender", finalMostFittingSender!!))
                     }
                 })
+
+        semanticResults.forEach(Consumer { result ->
+            result.metaData = result.metaData.distinctBy { it.value }.toMutableList()
+        })
         LOG.debug(semanticResults)
         return semanticResults
     }
@@ -71,13 +73,13 @@ class KnowledgeBaseExecutorService {
      * @return returns SemanticResult.OTHER with metadata
      */
     private fun getMetadatasForTopicOther(topics: List<Topic>, text: String): SemanticResult {
-        return topics.stream()
+        val result = topics
                 .map { e: Topic -> SemanticResult(Topic.OTHER, e.getMetaData(text)) }
-                .collect(Collectors.toList())
-                .stream()
+
                 .filter { (_, _, metaData) -> metaData.isNotEmpty() }
-                .findFirst()
-                .orElse(SemanticResult(Topic.OTHER, ArrayList(0)))
+                .firstOrNull()
+
+        return result ?: SemanticResult(Topic.OTHER, mutableListOf())
     }
 
     private fun getSenders(senders: List<SenderToken>, text: String): List<SenderToken> {
