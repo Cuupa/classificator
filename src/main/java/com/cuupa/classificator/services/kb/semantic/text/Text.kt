@@ -62,6 +62,12 @@ open class Text internal constructor(var text: String) {
         return true
     }
 
+    override fun hashCode(): Int {
+        var result = text.hashCode()
+        result = 31 * result + (stringArray?.contentHashCode() ?: 0)
+        return result
+    }
+
     companion object {
         private const val BLANK = " "
     }

@@ -6,6 +6,4 @@ data class SemanticResult(val topicName: String, var sender: String?, var metaDa
 
     constructor(topicName: String,
                 metaData: MutableList<Metadata>) : this(topicName, null, metaData)
-
-    constructor(topicName: String) : this(topicName, null, mutableListOf())
 }

@@ -33,7 +33,7 @@ object KnowledgeFileParser {
         val charArray = kbFile.toCharArray()
         for (index in charArray.indices) {
             if (charArray[index] == '(') {
-                senderToken.addToken(Tokens.get(TokenTextPointer(charArray, index)))
+                senderToken.addToken(Tokens[TokenTextPointer(charArray, index)])
             }
             if (charArray[index] == '}') {
                 break
@@ -54,7 +54,7 @@ object KnowledgeFileParser {
             if (charArray[index] == '$') {
                 metadata.name = findExtractName(charArray, index)
             } else if (charArray[index] == '(' && metadata.name.isNotEmpty()) {
-                metadata.addToken(Tokens.get(TokenTextPointer(charArray, index)))
+                metadata.addToken(Tokens[TokenTextPointer(charArray, index)])
             }
         }
         return metadata
@@ -69,7 +69,7 @@ object KnowledgeFileParser {
         val charArray = kbFile.toCharArray()
         for (index in charArray.indices) {
             if (charArray[index] == '(') {
-                topic.addToken(Tokens.get(TokenTextPointer(charArray, index)))
+                topic.addToken(Tokens[TokenTextPointer(charArray, index)])
             }
             if (charArray[index] == '}') {
                 break
@@ -82,7 +82,7 @@ object KnowledgeFileParser {
                 if (charArray[index] == '$') {
                     metadata.name = findExtractName(charArray, index)
                 } else if (charArray[index] == '(' && metadata.name.isNotEmpty()) {
-                    metadata.addToken(Tokens.get(TokenTextPointer(charArray, index)))
+                    metadata.addToken(Tokens[TokenTextPointer(charArray, index)])
                     topic.addMetaData(metadata)
                     metadata = MetaDataToken()
                 }
@@ -113,21 +113,26 @@ object KnowledgeFileParser {
         var normalOpenBrackets = 0
         var normalCloseBrackets = 0
         for (c in charArray) {
-            if (c == '{') {
-                curlyOpenBrackets++
-            } else if (c == '}') {
-                curlyCloseBrackets++
-            } else if (c == '(') {
-                normalOpenBrackets++
-            } else if (c == ')') {
-                normalCloseBrackets++
+            when (c) {
+                '{' -> {
+                    curlyOpenBrackets++
+                }
+                '}' -> {
+                    curlyCloseBrackets++
+                }
+                '(' -> {
+                    normalOpenBrackets++
+                }
+                ')' -> {
+                    normalCloseBrackets++
+                }
             }
         }
         if (curlyCloseBrackets != curlyOpenBrackets || normalCloseBrackets != normalOpenBrackets) {
             throw InvalidTokenException("invalid bracket count")
         }
         if (!kbFile.contains("=")) {
-            throw InvalidTokenException()
+            throw InvalidTokenException("invalid file definition")
         }
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ClassificatorController(private val classificator: Classificator) {
 
-    private val LOG: Log = LogFactory.getLog(ClassificatorController::class.java)
+    private val log: Log = LogFactory.getLog(ClassificatorController::class.java)
 
     @RequestMapping("/ping")
     fun ping(): ResponseEntity<String> {
@@ -28,7 +28,7 @@ class ClassificatorController(private val classificator: Classificator) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(gson.toJson(result))
         } catch (e: Exception) {
-            LOG.error(e)
+            log.error(e)
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
     }
@@ -40,7 +40,7 @@ class ClassificatorController(private val classificator: Classificator) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(gson.toJson(result))
         } catch (e: Exception) {
-            LOG.error(e)
+            log.error(e)
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
     }

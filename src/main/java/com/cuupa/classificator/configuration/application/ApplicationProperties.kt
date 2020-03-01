@@ -18,32 +18,32 @@ class ApplicationProperties {
 
     @PostConstruct
     fun init() {
-        _initServerEnvironment()
+        initServerEnvironment()
     }
 
-    private fun _initServerEnvironment() {
+    private fun initServerEnvironment() {
         if (System.getProperty("jboss.server.config.dir") != null) {
-            _setJBoss()
+            setJBoss()
         } else if (System.getProperty("catalina.base") != null) {
-            _setTomcat()
+            setTomcat()
         }
         LOG.debug("detected environment: " + serverProperties.getProperty("serverEnvironment"))
         LOG.debug("set config dir to : " + serverProperties.getProperty("configDir"))
     }
 
-    private fun _setTomcat() {
+    private fun setTomcat() {
         serverProperties.setProperty("serverEnvironment", "tomcat")
         serverProperties.setProperty("configDir", System.getProperty("catalina.base") + fileSeperator + "conf"
                 + fileSeperator + "classificator" + fileSeperator)
     }
 
-    private fun _setJBoss() {
+    private fun setJBoss() {
         serverProperties.setProperty("serverEnvironment", "jboss")
         serverProperties.setProperty("configDir", System.getProperty("jboss.server.config.dir") + fileSeperator
                 + "classificator" + fileSeperator)
     }
 
-    val fileSeperator: String
+    private val fileSeperator: String
         get() = System.getProperty("file.separator")
 
     companion object {

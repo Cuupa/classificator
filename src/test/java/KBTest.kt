@@ -31,7 +31,7 @@ class KBTest {
     fun parseText() {
         knowledgeManager!!.manualParse(parseTopic(bill))
         var results = knowledgeManager.getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€")
-        Assert.assertTrue(results.size > 0)
+        Assert.assertTrue(results.isNotEmpty())
         results = knowledgeManager
                 .getResults("Im Anhang finden Sie die Rechnung für den Betrag von 31€. Dies ist die letzte Mahnung")
         Assert.assertEquals(1, results.size.toLong())

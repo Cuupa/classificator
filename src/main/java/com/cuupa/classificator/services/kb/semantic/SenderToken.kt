@@ -45,6 +45,13 @@ class SenderToken {
         return numberOfOccurences
     }
 
+    override fun hashCode(): Int {
+        var result = tokenList.hashCode()
+        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + numberOfOccurences
+        return result
+    }
+
     companion object {
         const val UNKNOWN = "UNKNOWN"
         const val SENDER = "sender"

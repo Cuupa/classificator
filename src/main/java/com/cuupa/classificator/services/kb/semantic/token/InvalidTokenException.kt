@@ -1,8 +1,7 @@
 package com.cuupa.classificator.services.kb.semantic.token
 
 class InvalidTokenException : RuntimeException {
-    constructor(string: String?) : super(string) {}
-    constructor() {}
+    constructor(string: String?) : super(string)
 
     companion object {
         /**

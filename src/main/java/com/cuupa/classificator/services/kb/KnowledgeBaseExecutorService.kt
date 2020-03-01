@@ -17,7 +17,7 @@ class KnowledgeBaseExecutorService {
                 val asyncTopics: Deferred<MutableList<SemanticResult>> = GlobalScope.async { getTopics(topics, text) }
                 val asyncSenders = GlobalScope.async { getSenders(senderTokens, text) }
 
-                val senders = GlobalScope.async { getNumberOfOccurences(asyncSenders.await(), text) }.await()
+                val senders = withContext(Dispatchers.Default) { getNumberOfOccurences(asyncSenders.await(), text) }
                 mostFittingSender = senders
                         .maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })!!.name
 
@@ -75,9 +75,7 @@ class KnowledgeBaseExecutorService {
     private fun getMetadatasForTopicOther(topics: List<Topic>, text: String): SemanticResult {
         val result = topics
                 .map { e: Topic -> SemanticResult(Topic.OTHER, e.getMetaData(text)) }
-
-                .filter { (_, _, metaData) -> metaData.isNotEmpty() }
-                .firstOrNull()
+                .firstOrNull { (_, _, metaData) -> metaData.isNotEmpty() }
 
         return result ?: SemanticResult(Topic.OTHER, mutableListOf())
     }
