@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${server_port}
 
 classificator:
   kbfiles: classpath:kbfiles
