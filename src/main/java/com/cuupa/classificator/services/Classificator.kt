@@ -2,6 +2,7 @@ package com.cuupa.classificator.services
 
 import com.cuupa.classificator.services.kb.KnowledgeManager
 import com.cuupa.classificator.services.kb.SemanticResult
+import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.stripper.PdfAnalyser
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
@@ -12,8 +13,8 @@ import java.util.*
 class Classificator(private val manager: KnowledgeManager, private val analyser: PdfAnalyser) {
 
     fun classify(text: String?): List<SemanticResult> {
-        return if (text == null || text.isEmpty()) {
-            listOf()
+        return if (text.isNullOrBlank()) {
+            listOf(SemanticResult(Topic.OTHER, mutableListOf()))
         } else manager.getResults(text)
     }
 

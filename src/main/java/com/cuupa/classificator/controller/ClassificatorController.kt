@@ -6,9 +6,9 @@ import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -16,12 +16,12 @@ class ClassificatorController(private val classificator: Classificator) {
 
     private val log: Log = LogFactory.getLog(ClassificatorController::class.java)
 
-    @RequestMapping("/ping")
+    @GetMapping(value = ["/api/rest/1.0/ping"])
     fun ping(): ResponseEntity<String> {
         return ResponseEntity.ok().body("200")
     }
 
-    @RequestMapping(value = ["/classifyText"], method = [RequestMethod.POST])
+    @PostMapping(value = ["/api/rest/1.0/classifyText"])
     fun classify(@RequestBody text: String?): ResponseEntity<String?> {
         try {
             val result = classificator.classify(text)
@@ -33,7 +33,7 @@ class ClassificatorController(private val classificator: Classificator) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
     }
 
-    @RequestMapping(value = ["/classify"], method = [RequestMethod.POST])
+    @PostMapping(value = ["/api/rest/1.0/classify"])
     fun classify(@RequestBody content: ByteArray?): ResponseEntity<String?> {
         try {
             val result = classificator.classify(content)
@@ -48,5 +48,4 @@ class ClassificatorController(private val classificator: Classificator) {
     companion object {
         private val gson = Gson()
     }
-
 }

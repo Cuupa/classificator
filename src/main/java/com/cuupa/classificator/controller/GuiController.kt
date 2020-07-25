@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 
 @Controller
 class GuiController(private val classificator: Classificator, private val manager: KnowledgeManager) {
+
     @RequestMapping(value = ["/", "/index"], method = [RequestMethod.GET])
     fun index(model: Model): String {
         model.addAttribute("guiProcess", GuiProcess())

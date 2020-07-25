@@ -1,6 +1,10 @@
 server:
   port: ${server_port}
 
+logging.level:
+  root: ERROR
+  com.cuupa.classificator: DEBUG
+
 classificator:
   kbfiles: classpath:kbfiles
   metadatafiles: classpath:kbfiles/metadata

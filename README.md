@@ -1,11 +1,14 @@
-### Java Spring template project
+# classificator
+## About this project
+This project is a simple classification engine.
 
-This project is based on a GitLab [Project Template](https://docs.gitlab.com/ee/gitlab-basics/create-project.html).
+This project is provided via the MIT-licence, which is free of charge. But if you want to support me, you can spend me a beer or a coffee.
+If you want to participate, feel free to create pull requests, fork this project or hit me up with suggestions or code reviews.
 
-Improvements can be proposed in the [original project](https://gitlab.com/gitlab-org/project-templates/spring).
+THIS IS A WORK IN PROGRESS and done in my spare time.
 
-### CI/CD with Auto DevOps
+## How it works
+Currently it is just a keyword classification engine with some tweaks. It uses the levensthein algorithm to counter spelling or OCR errors.
 
-This template is compatible with [Auto DevOps](https://docs.gitlab.com/ee/topics/autodevops/).
-
-If Auto DevOps is not already enabled for this project, you can [turn it on](https://docs.gitlab.com/ee/topics/autodevops/#enabling-auto-devops) in the project settings.
+It tries to match the topics, sender and metadata, provided in "src/main/resources/kbfiles".
+Currently I'm working on lemmatizing and different languages.

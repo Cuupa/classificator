@@ -12,10 +12,7 @@ class KnowledgeManager(private val knowledgeBaseInitiator: KnowledgeBaseInitiato
         knowledgeBase = knowledgeBaseInitiator.initKnowledgeBase()
     }
 
-    fun getResults(text: String?): List<SemanticResult> {
-        if (text.isNullOrBlank()) {
-            return listOf()
-        }
+    fun getResults(text: String): List<SemanticResult> {
         return knowledgeBaseExecutorService.submit(knowledgeBase.topicList, knowledgeBase.senders, text)
     }
 
