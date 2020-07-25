@@ -1,6 +1,6 @@
 SEPA = {
-	oneOf("sepa-lastschriftmandat", "einzugsermaechtigung", "sepa-überweisung/ zahlschein"),
-	oneOf("ermaechtige"),
-	oneOf("einzuziehen", "einziehen"),
-	not("Zahlungsformular für sie vorbereitet")
+	oneOf("sepa-lastschriftmandat","sepa-lastschriftmandats", "einzugsermaechtigung", "sepa-überweisung/ zahlschein"),
+	oneOf("ermaechtige", "erteilung", "erteilte"),
+	oneOf("einzuziehen", "einziehen", "einzug"),
+	not("Zahlungsformular für sie vorbereitet", "quittung", "gesamtsumme")
 }

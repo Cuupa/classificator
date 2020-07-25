@@ -42,22 +42,27 @@ class KnowledgeBaseExecutorService {
             sendersFromTopic.addAll(senderTokens
                     .map { e: SenderToken -> Metadata("sender", e.name!!) })
 
-            mostFittingSender = sendersFromTopic
-                    .map(Metadata::name).first()
+            val filteredText = sendersFromTopic.filter { text.contains(it.value) }.groupingBy { it.value }.eachCount()
+            val sortedBy = filteredText.entries.sortedBy { it.value }
+            // Need more than one occurence to bypass simple mentions like on sicknotes
+            if (sortedBy.first().value > 1) {
+                mostFittingSender = sortedBy.first().key
+            }
         }
 
-        // ToDo: Senders from metadata
-        val finalMostFittingSender = mostFittingSender
-        semanticResults.forEach(Consumer { result: SemanticResult -> result.sender = finalMostFittingSender })
-        semanticResults.forEach(
-                Consumer { (_, _, metaData) ->
-                    val senderFound = metaData
-                            .filter { (name) -> "sender" == name }
-                            .any { (_, value) -> finalMostFittingSender == value }
-                    if (senderFound) {
-                        metaData.add(Metadata("sender", finalMostFittingSender!!))
-                    }
-                })
+        if (mostFittingSender.isNullOrEmpty()) {
+            mostFittingSender = "UNKNOWN"
+        }
+        val finalMostFittingSender = mostFittingSender!!
+        semanticResults.forEach { result: SemanticResult -> result.sender = finalMostFittingSender }
+        semanticResults.forEach { (_, _, metaData) ->
+            val senderFound = metaData
+                    .filter { (name) -> "sender" == name }
+                    .any { (_, value) -> finalMostFittingSender == value }
+            if (senderFound) {
+                metaData.add(Metadata("sender", finalMostFittingSender))
+            }
+        }
 
         semanticResults.forEach(Consumer { result ->
             result.metaData = result.metaData.distinctBy { it.value }.toMutableList()
