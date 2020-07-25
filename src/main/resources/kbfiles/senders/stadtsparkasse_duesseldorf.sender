@@ -1,4 +1,4 @@
 Stadtsparkasse Düsseldorf = {
     oneOf("Stadtsparkasse Düsseldorf", "Stadt Sparkasse Düsseldorf"),
-    oneOf("UST-ID DE119260423")
+    oneOf("www.sskduesseldorf.de")
 }

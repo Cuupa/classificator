@@ -1,7 +1,7 @@
 BILL = {
-	oneOf("rechnung", "jahresrechnung"),
+	oneOf("rechnung", "jahresrechnung", "Zahlung der", "zahlen Sie den Betrag"),
 	oneOf("eur, "euro", "€"),
-	not("mahnung", "beitragsrechnung")
-	not("dauerauftrag", "kontoauszug", "auszug", "kontostand", "quittungsbeleg"),
+	not("mahnung", "beitragsrechnung"),
+	not("dauerauftrag", "auszug", "quittungsbeleg"),
 	not("versicherungsschein", "versicherungs-nr")
 }
