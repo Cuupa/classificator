@@ -19,7 +19,7 @@ class KnowledgeBaseExecutorService {
 
                 val senders = withContext(Dispatchers.Default) { getNumberOfOccurences(asyncSenders.await(), text) }
                 mostFittingSender = senders
-                        .maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })!!.name
+                        .maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })?.name
 
                 semanticResults = asyncTopics.await()
             }
