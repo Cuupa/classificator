@@ -5,5 +5,6 @@ TERMINATION = {
 	not("vorzeitiger kuendigung"),
 	not("Kündigung kann frühestens"),
 	not("Überschussbeteiligung"),
-	not("eine Kündigung zugegangen ist.")
+	not("eine Kündigung zugegangen ist")
+	not("bei einer kündigung")
 }
