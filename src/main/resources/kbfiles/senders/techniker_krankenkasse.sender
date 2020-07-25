@@ -1,3 +1,4 @@
 Techniker Krankenkasse = {
     oneOf("Techniker Krankenkasse")
+    not("Krankenkasse bzw. Kostenträger", "Kostenträger"),
 }
