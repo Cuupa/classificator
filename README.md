@@ -1,4 +1,7 @@
 # classificator
+
+![CI](https://github.com/Cuupa/classificator/workflows/CI/badge.svg)
+
 ## About this project
 This project is a simple classification engine.
 

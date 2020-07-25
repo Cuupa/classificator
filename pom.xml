@@ -6,7 +6,7 @@
     <groupId>com.cuupa</groupId>
     <artifactId>classificator</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>classificator</name>
     <description>Demo project for Spring Boot</description>
