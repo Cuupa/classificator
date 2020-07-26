@@ -9,57 +9,36 @@ import org.apache.commons.lang3.tuple.Pair
 import org.apache.commons.logging.LogFactory
 import org.springframework.util.ResourceUtils
 import java.io.File
-import java.io.FileNotFoundException
 import java.nio.charset.StandardCharsets
-import java.util.function.Consumer
 
 class KnowledgeBaseInitiator(private val applicationProperties: ApplicationProperties) {
     private val log = LogFactory.getLog(KnowledgeBaseInitiator::class.java)
 
     fun initKnowledgeBase(): KnowledgeBase {
         val kb = KnowledgeBase()
-        try {
-            val knowledgebaseDir = ResourceUtils.getFile(applicationProperties.knowledgbaseDir)
+        val knowledgebaseDir = ResourceUtils.getFile(applicationProperties.knowledgbaseDir)
 
-            if (!knowledgebaseDir.isDirectory) {
-                return kb
-            }
-
-            val files = knowledgebaseDir.listFiles() ?: return kb
-            val regexList = files.first { e: File -> e.name == "regex" }
-            val listedFiles = regexList.listFiles() ?: return kb
-
-            val regexContent: List<Pair<String, String>> = listedFiles.filter { e: File ->
-                e.name.endsWith(".regx")
-            }.map { regexFile: File -> createRegex(regexFile) }
-
-            val metaDataTokenList = getMetaData(files)
-
-            val topicList: List<Topic> = files
-                    .filter { e: File ->
-                        e.name.endsWith(".dsl")
-                    }
-                    .map { kbFile: File -> createTopic(kbFile) }
-
-            topicList.forEach(Consumer { topic: Topic -> topic.addMetaDataList(metaDataTokenList) })
-            topicList.forEach(Consumer { topic: Topic ->
-                topic.metaDataList
-                        .forEach(Consumer { token: MetaDataToken -> token.setRegexContent(regexContent) })
-            })
-            kb.topicList = topicList.toMutableList()
-            kb.senders = getSenders(applicationProperties.senderFiles!!).toMutableList()
-        } catch (fnfe: FileNotFoundException) {
-            log.error("Error loading files", fnfe)
+        if (!knowledgebaseDir.isDirectory) {
+            return kb
         }
+
+        val files = knowledgebaseDir.listFiles() ?: return kb
+        val listedFiles = files.first { it.name == "regex" }.listFiles() ?: return kb
+        val regexContent = listedFiles.filter { it.name.endsWith(".regx") }.map { createRegex(it) }
+        val metaDataTokenList = getMetaData(files)
+        val topicList = files.filter { it.name.endsWith(".dsl") }.map { createTopic(it) }
+
+        topicList.forEach { it.addMetaDataList(metaDataTokenList) }
+        topicList.forEach { topic: Topic -> topic.metaDataList.forEach { it.setRegexContent(regexContent) } }
+        kb.topicList = topicList.toMutableList()
+        kb.senders = getSenders(applicationProperties.senderFiles).toMutableList()
         return kb
     }
 
     private fun getMetaData(files: Array<File>): List<MetaDataToken> {
-        val metadataDir = files.first { e: File -> e.name == "metadata" }
-        val metadataFiles = metadataDir.listFiles() ?: return emptyList()
-        return metadataFiles.filter { e: File ->
-            e.name.endsWith(".meta")
-        }.map { metaFile: File -> createMetaData(metaFile) }
+        val metadataDir = files.first { it.name == "metadata" }
+        val metadataFiles = metadataDir.listFiles() ?: return listOf()
+        return metadataFiles.filter { it.name.endsWith(".meta") }.map { createMetaData(it) }
     }
 
     private fun createMetaData(metaFile: File): MetaDataToken {
@@ -68,7 +47,7 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
 
     private fun createRegex(regexFile: File): Pair<String, String> {
         return KnowledgeFileParser.parseRegexFile(regexFile.name,
-                FileUtils.readFileToString(regexFile, StandardCharsets.UTF_8))
+                                                  FileUtils.readFileToString(regexFile, StandardCharsets.UTF_8))
     }
 
     private fun createTopic(kbFile: File): Topic {
@@ -82,7 +61,6 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
     private fun getSenders(senderFolderString: String): MutableList<SenderToken> {
         val senderFolder = ResourceUtils.getFile(senderFolderString)
         val senderFiles = senderFolder.listFiles() ?: return mutableListOf()
-        return senderFiles
-                .map { file: File -> createSenderTokens(file) }.toMutableList()
+        return senderFiles.map { createSenderTokens(it) }.toMutableList()
     }
 }

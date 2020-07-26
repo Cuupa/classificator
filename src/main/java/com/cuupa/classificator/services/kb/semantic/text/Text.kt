@@ -2,12 +2,11 @@ package com.cuupa.classificator.services.kb.semantic.text
 
 open class Text internal constructor(var text: String) {
 
-    private val stringArray: Array<String>?
+    private val stringArray: Array<String>
 
     init {
         text = normalizeText(text)
-        stringArray = text.split(BLANK)
-                .toTypedArray()
+        stringArray = text.split(BLANK).toTypedArray()
     }
 
     private fun normalizeText(text: String): String {
@@ -34,15 +33,15 @@ open class Text internal constructor(var text: String) {
     }
 
     fun length(): Int {
-        return stringArray?.size ?: 0
+        return stringArray.size
     }
 
     operator fun get(currentPositionSearchString: Int): String {
-        return stringArray!![currentPositionSearchString]
+        return stringArray[currentPositionSearchString]
     }
 
     val isEmpty: Boolean
-        get() = stringArray == null || stringArray.isEmpty()
+        get() = stringArray.isEmpty()
 
     override fun equals(other: Any?): Boolean {
         if (other !is Array<*>) {
@@ -51,7 +50,7 @@ open class Text internal constructor(var text: String) {
         if (stringArray == other) {
             return true
         }
-        if (stringArray!!.size != other.size) {
+        if (stringArray.size != other.size) {
             return false
         }
         for (i in stringArray.indices) {
@@ -64,7 +63,7 @@ open class Text internal constructor(var text: String) {
 
     override fun hashCode(): Int {
         var result = text.hashCode()
-        result = 31 * result + (stringArray?.contentHashCode() ?: 0)
+        result = 31 * result + (stringArray.contentHashCode() ?: 0)
         return result
     }
 

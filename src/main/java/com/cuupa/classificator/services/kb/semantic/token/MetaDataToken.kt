@@ -8,7 +8,6 @@ import org.apache.logging.log4j.util.Strings
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.IntPredicate
-import java.util.stream.Collectors
 import java.util.stream.IntStream
 
 class MetaDataToken {
@@ -16,6 +15,7 @@ class MetaDataToken {
     private val tokenList: MutableList<Token> = mutableListOf()
     var name: String = ""
     private var regexContent: List<Pair<String, String>>? = null
+
     fun addToken(token: Token) {
         tokenList.add(token)
     }
@@ -24,22 +24,22 @@ class MetaDataToken {
         return findMostFittingResult(findMetaData(text, createTempList()))
     }
 
-    private fun findMetaData(text: String,
-                             temporaryTokenList: List<Token>): Map<Metadata, Int> {
-        val match: MutableMap<Metadata, Int> = HashMap()
+    private fun findMetaData(text: String, temporaryTokenList: List<Token>): Map<Metadata, Int> {
+        val match = HashMap<Metadata, Int>()
         temporaryTokenList.forEach(getTokenConsumer(text, match))
         return match
     }
 
-    private fun getTokenConsumer(text: String,
-                                 match: MutableMap<Metadata, Int>): Consumer<Token> {
-        return Consumer { token: Token ->
-            val compiledText: List<List<Pair<String, String>>> = token.tokenValue
-                    .map { e: String -> compileText(text, e) }
+    private fun getTokenConsumer(text: String, match: MutableMap<Metadata, Int>): Consumer<Token> {
+        return Consumer {
+            val compiledText: List<List<Pair<String, String>>> = it.tokenValue.map { e: String ->
+                compileText(text, e)
+            }
+
             if (compiledText.isNotEmpty()) {
-                val tokens = replaceCompiledTextInTokenValue(compiledText, cloneTokens(token, compiledText))
+                val tokens = replaceCompiledTextInTokenValue(compiledText, cloneTokens(it, compiledText))
                 var searchStream = getIntStream(tokens.size)
-                if (searchStream.noneMatch(getPredicateNotTokenMatching(text, token, tokens))) {
+                if (searchStream.noneMatch(getPredicateNotTokenMatching(text, it, tokens))) {
                     searchStream = getIntStream(tokens.size)
                     searchStream.forEach { value: Int ->
                         if (tokens[value].match(text)) {
@@ -59,23 +59,17 @@ class MetaDataToken {
         }
     }
 
-    private fun isMetadataAlreadyRegistered(
-            match: Map<Metadata, Int>,
-            metadataValue: String): Boolean {
-        return match.entries
-                .stream()
-                .noneMatch { e: Map.Entry<Metadata, Int> -> name == e.key.name && e.key.value == metadataValue }
+    private fun isMetadataAlreadyRegistered(match: Map<Metadata, Int>, metadataValue: String): Boolean {
+        return match.entries.stream().noneMatch { name == it.key.name && it.key.value == metadataValue }
     }
 
     private fun replaceCompiledTextInTokenValue(compiledText: List<List<Pair<String, String>>>,
                                                 tokens: List<Token>): List<Token> {
-        IntStream.range(0, compiledText.size)
-                .forEach { i: Int ->
-                    IntStream.range(0, tokens.size)
-                            .forEach { j: Int ->
-                                tokens[j].tokenValue[i] = compiledText[i][j].left
-                            }
-                }
+        IntStream.range(0, compiledText.size).forEach { i: Int ->
+            IntStream.range(0, tokens.size).forEach { j: Int ->
+                tokens[j].tokenValue[i] = compiledText[i][j].left
+            }
+        }
         return tokens
     }
 
@@ -86,64 +80,53 @@ class MetaDataToken {
         } else searchStream
     }
 
-    private fun getPredicateNotTokenMatching(text: String,
-                                             token: Token,
-                                             tokens: List<Token>): IntPredicate {
-        return IntPredicate { value: Int -> token is Not && tokens[value].match(text) }
+    private fun getPredicateNotTokenMatching(text: String, token: Token, tokens: List<Token>): IntPredicate {
+        return IntPredicate { token is Not && tokens[it].match(text) }
     }
 
-    private fun cloneTokens(token: Token,
-                            compiledText: List<List<Pair<String, String>>>): List<Token> {
+    private fun cloneTokens(token: Token, compiledText: List<List<Pair<String, String>>>): List<Token> {
         val tokens: MutableList<Token> = ArrayList()
-        IntStream.range(0, compiledText[0].size).forEach { i: Int -> tokens.add(token.clone()) }
+        IntStream.range(0, compiledText[0].size).forEach { tokens.add(token.clone()) }
         return tokens
     }
 
     private fun createTempList(): List<Token> {
-        return tokenList.stream()
-                .map { obj: Token -> obj.clone() }
-                .collect(Collectors.toList())
+        return tokenList.map { it.clone() }
     }
 
-    private fun findMostFittingResult(
-            match: Map<Metadata, Int>): List<Metadata> {
+    private fun findMostFittingResult(match: Map<Metadata, Int>): List<Metadata> {
         val entries = getMatchesMap(match)
-        return entries.entries
-                .minWith(compareBy {
-                    it.key
-                })?.value ?: listOf()
+        return entries.entries.minWith(compareBy {
+            it.key
+        })?.value ?: listOf()
     }
 
     private fun getMatchesMap(match: Map<Metadata, Int>): Map<Int, MutableList<Metadata>> {
-
-        val entries: MutableMap<Int, MutableList<Metadata>> = mutableMapOf()
+        val entries = mutableMapOf<Int, MutableList<Metadata>>()
         match.forEach { (key: Metadata, value: Int) ->
             if (entries.containsKey(value)) {
                 entries[value]!!.add(key)
             } else {
-                val list = ArrayList<Metadata>()
-                list.add(key)
-                entries[value] = list
+                entries[value] = mutableListOf(key)
             }
         }
         return entries
     }
 
-    private fun compileText(text: String?,
-                            tokenValue: String): List<Pair<String, String>> {
-        val value: MutableList<Pair<String, String>> = mutableListOf()
+    private fun compileText(text: String?, tokenValue: String): List<Pair<String, String>> {
         if (text == null || !hasVariable(tokenValue)) {
-            value.add(ImmutablePair(tokenValue, tokenValue))
-            return value
+            return listOf(ImmutablePair(tokenValue, tokenValue))
         }
         val split = tokenValue.split("\\[".toPattern())
         val textBeforeToken = split[0]
         var variable = "[" + split[1]
         val textAfterToken = getTextAfterToken(variable)
         variable = variable.split("]".toPattern())[0] + "]"
+
         val extract = getExtractForName(variable)
-        val pattern = extract.pattern
-        val matcher = pattern.matcher(text)
+        val matcher = extract.pattern.matcher(text)
+
+        val value: MutableList<Pair<String, String>> = mutableListOf()
         while (matcher.find()) {
             val normalizedValue = extract.normalize(matcher.group())
             value.add(ImmutablePair(textBeforeToken + normalizedValue + textAfterToken, normalizedValue))
@@ -182,8 +165,7 @@ class MetaDataToken {
         return text.contains("[") && text.contains("]")
     }
 
-    fun setRegexContent(
-            regexContent: List<Pair<String, String>>?) {
+    fun setRegexContent(regexContent: List<Pair<String, String>>?) {
         this.regexContent = regexContent
     }
 }

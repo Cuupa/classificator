@@ -1,13 +1,14 @@
 package com.cuupa.classificator.services.kb.semantic.token
 
 class TokenTextPointer(charArray: CharArray, val index: Int) {
-    private val charArray: CharArray = charArray.copyOf(charArray.size)
+
+    private val charArrayIntern: CharArray = charArray.copyOf(charArray.size)
 
     operator fun get(i: Int): Char {
-        return charArray[i]
+        return charArrayIntern[i]
     }
 
     val charSize: Int
-        get() = charArray.size
+        get() = charArrayIntern.size
 
 }

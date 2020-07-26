@@ -5,7 +5,8 @@ import org.apache.commons.logging.LogFactory
 
 class KnowledgeManager(private val knowledgeBaseInitiator: KnowledgeBaseInitiator,
                        private val knowledgeBaseExecutorService: KnowledgeBaseExecutorService) {
-    private var knowledgeBase: KnowledgeBase
+
+    private var knowledgeBase = knowledgeBaseInitiator.initKnowledgeBase()
 
     fun reloadKB() {
         knowledgeBase.clear()
@@ -24,9 +25,5 @@ class KnowledgeManager(private val knowledgeBaseInitiator: KnowledgeBaseInitiato
 
     companion object {
         private val LOG = LogFactory.getLog(KnowledgeManager::class.java)
-    }
-
-    init {
-        knowledgeBase = knowledgeBaseInitiator.initKnowledgeBase()
     }
 }

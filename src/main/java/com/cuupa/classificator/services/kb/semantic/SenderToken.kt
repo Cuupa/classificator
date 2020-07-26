@@ -9,7 +9,7 @@ import com.cuupa.classificator.services.kb.semantic.token.Token
 class SenderToken {
 
     private val tokenList: MutableList<Token> = mutableListOf()
-    var name: String? = null
+    var name: String = ""
     private var numberOfOccurences = 0
 
     fun addToken(token: Token) {
@@ -30,9 +30,7 @@ class SenderToken {
             return false
         }
         if (other is SenderToken) {
-            return if (other.name == null && name == null) {
-                true
-            } else name == other.name
+            return name == other.name
         }
         return false
     }
@@ -47,7 +45,7 @@ class SenderToken {
 
     override fun hashCode(): Int {
         var result = tokenList.hashCode()
-        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + (name.hashCode() ?: 0)
         result = 31 * result + numberOfOccurences
         return result
     }

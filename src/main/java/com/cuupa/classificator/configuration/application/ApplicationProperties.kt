@@ -5,13 +5,16 @@ import org.springframework.beans.factory.annotation.Value
 
 class ApplicationProperties {
     @Value("\${classificator.kbfiles}")
-    val knowledgbaseDir: String? = null
+    val knowledgbaseDir: String = ""
+
     @Value("\${classificator.metadatafiles}")
-    val metadataFiles: String? = null
+    val metadataFiles: String = ""
+
     @Value("\${classificator.regexfiles}")
-    val regexFiles: String? = null
+    val regexFiles: String = ""
+
     @Value("\${classificator.senderfiles}")
-    val senderFiles: String? = null
+    val senderFiles: String = ""
 
     companion object {
         private val LOG = LogFactory.getLog(ApplicationProperties::class.java)

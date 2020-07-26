@@ -5,22 +5,19 @@ import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
 import kotlinx.coroutines.*
 import org.apache.commons.logging.LogFactory
-import java.util.function.Consumer
 
 class KnowledgeBaseExecutorService {
 
     fun submit(topics: List<Topic>, senderTokens: List<SenderToken>, text: String): List<SemanticResult> {
-        var semanticResults: MutableList<SemanticResult> = mutableListOf()
+        var semanticResults = mutableListOf<SemanticResult>()
         var mostFittingSender: String? = null
         runBlocking {
             val job = GlobalScope.launch {
-                val asyncTopics: Deferred<MutableList<SemanticResult>> = GlobalScope.async { getTopics(topics, text) }
+                val asyncTopics = GlobalScope.async { getTopics(topics, text) }
                 val asyncSenders = GlobalScope.async { getSenders(senderTokens, text) }
 
                 val senders = withContext(Dispatchers.Default) { getNumberOfOccurences(asyncSenders.await(), text) }
-                mostFittingSender = senders
-                        .maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })?.name
-
+                mostFittingSender = senders.maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })?.name
                 semanticResults = asyncTopics.await()
             }
             while (job.isActive) {
@@ -30,45 +27,48 @@ class KnowledgeBaseExecutorService {
 
         if (semanticResults.isEmpty()) {
             LOG.debug("Found no matching Topics")
-            val other = getMetadatasForTopicOther(topics, text)
-            semanticResults.add(other)
+            semanticResults.add(getMetadatasForTopicOther(topics, text))
         }
+
         if (mostFittingSender == null) {
-            val sendersFromTopic: MutableList<Metadata> = mutableListOf()
+            val sendersFromTopic = mutableListOf<Metadata>()
             for ((_, _, metaData) in semanticResults) {
-                sendersFromTopic.addAll(metaData
-                        .filter { (name) -> SenderToken.SENDER == name })
+                sendersFromTopic.addAll(metaData.filter { (name) -> SenderToken.SENDER == name })
             }
-            sendersFromTopic.addAll(senderTokens
-                    .map { e: SenderToken -> Metadata("sender", e.name!!) })
+
+            sendersFromTopic.addAll(senderTokens.map { Metadata("sender", it.name!!) })
 
             val filteredText = sendersFromTopic.filter { text.contains(it.value) }.groupingBy { it.value }.eachCount()
             val sortedBy = filteredText.entries.sortedBy { it.value }
             // Need more than one occurence to bypass simple mentions like on sicknotes
-            if (sortedBy.first().value > 1) {
+            if (sortedBy.isNotEmpty() && sortedBy.first().value > 1) {
                 mostFittingSender = sortedBy.first().key
             }
         }
 
         if (mostFittingSender.isNullOrEmpty()) {
-            mostFittingSender = "UNKNOWN"
-        }
-        val finalMostFittingSender = mostFittingSender!!
-        semanticResults.forEach { result: SemanticResult -> result.sender = finalMostFittingSender }
-        semanticResults.forEach { (_, _, metaData) ->
-            val senderFound = metaData
-                    .filter { (name) -> "sender" == name }
-                    .any { (_, value) -> finalMostFittingSender == value }
-            if (senderFound) {
-                metaData.add(Metadata("sender", finalMostFittingSender))
-            }
+            mostFittingSender = SenderToken.UNKNOWN
         }
 
-        semanticResults.forEach(Consumer { result ->
+        val finalMostFittingSender = mostFittingSender!!
+        semanticResults.forEach { it.sender = finalMostFittingSender }
+        semanticResults.forEach { (_, _, metaData) ->
+            findAndSetSender(metaData, finalMostFittingSender)
+        }
+
+        semanticResults.forEach { result ->
             result.metaData = result.metaData.distinctBy { it.value }.toMutableList()
-        })
+        }
         LOG.debug(semanticResults)
         return semanticResults
+    }
+
+    private fun findAndSetSender(metaData: MutableList<Metadata>, finalMostFittingSender: String) {
+        val senderFound = metaData.filter { (name) -> "sender" == name }
+                .any { (_, value) -> finalMostFittingSender == value }
+        if (senderFound) {
+            metaData.add(Metadata("sender", finalMostFittingSender))
+        }
     }
 
     /**
@@ -78,28 +78,23 @@ class KnowledgeBaseExecutorService {
      * @return returns SemanticResult.OTHER with metadata
      */
     private fun getMetadatasForTopicOther(topics: List<Topic>, text: String): SemanticResult {
-        val result = topics
-                .map { e: Topic -> SemanticResult(Topic.OTHER, e.getMetaData(text)) }
+        val result = topics.map { SemanticResult(Topic.OTHER, it.getMetaData(text)) }
                 .firstOrNull { (_, _, metaData) -> metaData.isNotEmpty() }
 
         return result ?: SemanticResult(Topic.OTHER, mutableListOf())
     }
 
     private fun getSenders(senders: List<SenderToken>, text: String): List<SenderToken> {
-        return senders
-                .filter { e: SenderToken -> e.match(text) }
+        return senders.filter { it.match(text) }
     }
 
-    private fun getNumberOfOccurences(senders: List<SenderToken>,
-                                      text: String): List<SenderToken> {
-        senders.forEach(Consumer { senderToken: SenderToken -> senderToken.countNumberOfOccurences(text) })
+    private fun getNumberOfOccurences(senders: List<SenderToken>, text: String): List<SenderToken> {
+        senders.forEach { senderToken: SenderToken -> senderToken.countNumberOfOccurences(text) }
         return senders
     }
 
     private fun getTopics(topics: List<Topic>, text: String): MutableList<SemanticResult> {
-        return topics
-                .filter { e: Topic -> e.match(text) }
-                .map { e: Topic -> SemanticResult(e.name!!, e.getMetaData(text)) }.toMutableList()
+        return topics.filter { it.match(text) }.map { SemanticResult(it.name!!, it.getMetaData(text)) }.toMutableList()
     }
 
     companion object {

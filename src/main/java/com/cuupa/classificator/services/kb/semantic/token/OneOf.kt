@@ -4,6 +4,7 @@ import com.cuupa.classificator.services.kb.semantic.text.TextSearch
 import java.util.*
 
 class OneOf : Token() {
+
     override var distance = 0
         private set
 

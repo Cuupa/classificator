@@ -4,13 +4,13 @@ import com.cuupa.classificator.services.kb.semantic.text.TextSearch
 import java.util.*
 
 class All : Token() {
+
     override var distance = 0
         private set
 
     override fun match(text: String?): Boolean {
         val textSearch = TextSearch(text)
-        val isMatching = tokenValue.stream()
-                .allMatch { value: String? -> textSearch.contains(value) }
+        val isMatching = tokenValue.all { textSearch.contains(it) }
         distance = textSearch.distance
         return isMatching
     }

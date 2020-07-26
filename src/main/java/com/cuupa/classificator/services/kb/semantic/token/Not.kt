@@ -4,6 +4,7 @@ import com.cuupa.classificator.services.kb.semantic.text.TextSearch
 import java.util.*
 
 class Not : Token() {
+
     override fun match(text: String?): Boolean {
         val plaintext = TextSearch(text)
         for (token in tokenValue) {

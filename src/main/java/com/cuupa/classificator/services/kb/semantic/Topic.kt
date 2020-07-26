@@ -6,7 +6,7 @@ import com.cuupa.classificator.services.kb.semantic.token.Token
 class Topic {
 
     private val tokenList: MutableList<Token> = mutableListOf()
-    var name: String? = null
+    var name: String = ""
     private val metadata: MutableList<Metadata> = mutableListOf()
     private val metaDataToken: MutableList<MetaDataToken> = mutableListOf()
 
@@ -15,8 +15,7 @@ class Topic {
     }
 
     fun match(text: String): Boolean {
-        return tokenList.stream()
-                .allMatch { token: Token -> token.match(text) }
+        return tokenList.stream().allMatch { it.match(text) }
     }
 
     fun addMetaData(metadata: MetaDataToken) {
@@ -25,9 +24,7 @@ class Topic {
 
     fun getMetaData(text: String): MutableList<Metadata> {
         if (metadata.isEmpty()) {
-            metaDataToken
-                    .map { data: MetaDataToken -> data.extract(text) }
-                    .forEach { collection: List<Metadata> -> metadata.addAll(collection) }
+            metaDataToken.map { it.extract(text) }.forEach { metadata.addAll(it) }
         }
         return metadata
     }

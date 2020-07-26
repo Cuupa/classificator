@@ -3,22 +3,18 @@ package com.cuupa.classificator.services.kb.semantic.text
 class TextSearch(plainText: String?) {
 
     private val plainText: PlainText = PlainText(plainText ?: "")
+
     var distance = 0
         private set
 
     fun contains(text: String?, tolerance: Int): Boolean {
-        return try {
-            val searchText = SearchText(text ?: "")
-            if (searchText.isEmpty || plainText.isEmpty) {
-                return false
-            }
-            if (searchText.text == plainText.text) {
-                true
-            } else search(plainText, searchText, tolerance)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
+        val searchText = SearchText(text ?: "")
+        if (searchText.isEmpty || plainText.isEmpty) {
+            return false
         }
+        return if (searchText.text == plainText.text) {
+            true
+        } else search(plainText, searchText, tolerance)
     }
 
     operator fun contains(text: String?): Boolean {
@@ -32,33 +28,29 @@ class TextSearch(plainText: String?) {
         } else count(plainText, searchText, 1)
     }
 
-    private fun count(plainText: PlainText, wordsToSearch: SearchText,
-                      tolerance: Int): Int {
+    private fun count(plainText: PlainText, wordsToSearch: SearchText, tolerance: Int): Int {
         var numberOfOccurences = 0
         var searchInternal = SearchInternalLevenshtein(wordsToSearch, plainText, tolerance)
+
         while (searchInternal.isToSearch) {
             searchInternal = searchInternal.invoke()
             if (searchInternal.currentPositionSearchString + 1 > wordsToSearch.length()) {
                 numberOfOccurences++
                 searchInternal.resetCurrentPositionSearchString()
             }
-            if (searchInternal.currentPositionPlainText + 1 > plainText.length() || searchInternal.currentPositionSearchString + 1 > wordsToSearch
-                            .length()) {
+            if (searchInternal.currentPositionPlainText + 1 > plainText.length() || searchInternal.currentPositionSearchString + 1 > wordsToSearch.length()) {
                 searchInternal.cancelSearch()
             }
         }
         return numberOfOccurences
     }
 
-    private fun search(tempPlaintext: PlainText,
-                       wordsToSearch: SearchText, tolerance: Int): Boolean {
-        var searchInternal = SearchInternalLevenshtein(wordsToSearch,
-                tempPlaintext,
-                tolerance)
+    private fun search(tempPlaintext: PlainText, wordsToSearch: SearchText, tolerance: Int): Boolean {
+        var searchInternal = SearchInternalLevenshtein(wordsToSearch, tempPlaintext, tolerance)
+
         while (searchInternal.isToSearch) {
             searchInternal = searchInternal.invoke()
-            if (searchInternal.currentPositionPlainText + 1 > tempPlaintext.length() || searchInternal.currentPositionSearchString + 1 > wordsToSearch
-                            .length()) {
+            if (searchInternal.currentPositionPlainText + 1 > tempPlaintext.length() || searchInternal.currentPositionSearchString + 1 > wordsToSearch.length()) {
                 searchInternal.cancelSearch()
             }
         }
@@ -69,5 +61,4 @@ class TextSearch(plainText: String?) {
     companion object {
         private const val BLANK = " "
     }
-
 }
