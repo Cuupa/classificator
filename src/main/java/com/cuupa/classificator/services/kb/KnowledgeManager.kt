@@ -14,7 +14,9 @@ class KnowledgeManager(private val knowledgeBaseInitiator: KnowledgeBaseInitiato
     }
 
     fun getResults(text: String): List<SemanticResult> {
-        return knowledgeBaseExecutorService.submit(knowledgeBase.topicList, knowledgeBase.senders, text)
+        return knowledgeBaseExecutorService.submit(knowledgeBase.topicList.toList(),
+                                                   knowledgeBase.senders.toList(),
+                                                   text)
     }
 
     fun manualParse(parseTopic: Topic) {
