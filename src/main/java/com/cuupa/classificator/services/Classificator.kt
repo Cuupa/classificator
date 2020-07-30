@@ -4,6 +4,7 @@ import com.cuupa.classificator.services.kb.KnowledgeManager
 import com.cuupa.classificator.services.kb.SemanticResult
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.stripper.PdfAnalyser
+import org.apache.juli.logging.LogFactory
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import java.io.ByteArrayInputStream
@@ -30,7 +31,7 @@ class Classificator(private val manager: KnowledgeManager, private val analyser:
                 val resultFromStructure = analyser.getResults(document)
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            log.error(e)
         }
         return results
     }
@@ -45,9 +46,13 @@ class Classificator(private val manager: KnowledgeManager, private val analyser:
                 pages.add(stripper.getText(document))
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            log.error(e)
         }
         return pages
+    }
+
+    companion object {
+        private val log = LogFactory.getLog(Classificator::class.java)
     }
 
 }

@@ -18,9 +18,7 @@ class KnowledgeManager(private val knowledgeBaseInitiator: KnowledgeBaseInitiato
     }
 
     fun manualParse(parseTopic: Topic) {
-        val topics: MutableList<Topic> = mutableListOf()
-        topics.add(parseTopic)
-        knowledgeBase.topicList = topics
+        knowledgeBase.topicList = mutableListOf(parseTopic)
     }
 
     companion object {

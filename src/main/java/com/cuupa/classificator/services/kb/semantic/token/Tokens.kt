@@ -23,6 +23,9 @@ object Tokens {
             "all" -> {
                 All()
             }
+            "wildcardBefore" -> {
+                WildcardBefore()
+            }
             else -> {
                 Invalid()
             }

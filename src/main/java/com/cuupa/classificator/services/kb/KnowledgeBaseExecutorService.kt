@@ -17,7 +17,7 @@ class KnowledgeBaseExecutorService {
                 val asyncSenders = GlobalScope.async { getSenders(senderTokens, text) }
 
                 val senders = withContext(Dispatchers.Default) { getNumberOfOccurences(asyncSenders.await(), text) }
-                mostFittingSender = senders.maxWith(compareBy { obj: SenderToken -> obj.countNumberOfOccurences() })?.name
+                mostFittingSender = senders.maxWith(compareBy { it.countNumberOfOccurences() })?.name
                 semanticResults = asyncTopics.await()
             }
             while (job.isActive) {
@@ -94,7 +94,7 @@ class KnowledgeBaseExecutorService {
     }
 
     private fun getTopics(topics: List<Topic>, text: String): MutableList<SemanticResult> {
-        return topics.filter { it.match(text) }.map { SemanticResult(it.name!!, it.getMetaData(text)) }.toMutableList()
+        return topics.filter { it.match(text) }.map { SemanticResult(it.name, it.getMetaData(text)) }.toMutableList()
     }
 
     companion object {

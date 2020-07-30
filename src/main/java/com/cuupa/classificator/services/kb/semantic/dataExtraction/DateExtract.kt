@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 class DateExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
     override fun normalize(value: String): String {
-        val split = value.split("\\.".toPattern())
+        val split = value.split(dotPattern)
         var day = split[0]
         var month = split[1]
         var year = split[2]
@@ -19,5 +19,9 @@ class DateExtract(regex: String) : Extract(Pattern.compile(regex)) {
             year = "20$year"
         }
         return "$day.$month.$year"
+    }
+
+    companion object {
+        val dotPattern = "\\.".toPattern()
     }
 }
