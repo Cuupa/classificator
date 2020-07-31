@@ -36,7 +36,7 @@ class KnowledgeBaseExecutorService {
                 sendersFromTopic.addAll(metaData.filter { (name) -> SenderToken.SENDER == name })
             }
 
-            sendersFromTopic.addAll(senderTokens.map { Metadata("sender", it.name!!) })
+            sendersFromTopic.addAll(senderTokens.map { Metadata("sender", it.name) })
 
             val filteredText = sendersFromTopic.filter { text.contains(it.value) }.groupingBy { it.value }.eachCount()
             val sortedBy = filteredText.entries.sortedBy { it.value }
@@ -88,6 +88,7 @@ class KnowledgeBaseExecutorService {
         return senders.filter { it.match(text) }
     }
 
+    // EVIL. Works on the original list and therefore altered the senderdefinition from knowledgebase
     private fun getNumberOfOccurences(senders: List<SenderToken>, text: String): List<SenderToken> {
         senders.forEach { senderToken: SenderToken -> senderToken.countNumberOfOccurences(text) }
         return senders
