@@ -1,7 +1,6 @@
 package com.cuupa.classificator.services.kb
 
 import com.cuupa.classificator.services.kb.semantic.Topic
-import org.apache.commons.logging.LogFactory
 
 class KnowledgeManager(private val knowledgeBaseInitiator: KnowledgeBaseInitiator,
                        private val knowledgeBaseExecutorService: KnowledgeBaseExecutorService) {
@@ -21,9 +20,5 @@ class KnowledgeManager(private val knowledgeBaseInitiator: KnowledgeBaseInitiato
 
     fun manualParse(parseTopic: Topic) {
         knowledgeBase.topicList = mutableListOf(parseTopic)
-    }
-
-    companion object {
-        private val LOG = LogFactory.getLog(KnowledgeManager::class.java)
     }
 }

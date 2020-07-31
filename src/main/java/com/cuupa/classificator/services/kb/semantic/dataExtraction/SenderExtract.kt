@@ -10,4 +10,8 @@ class SenderExtract(regex: String) : Extract(Pattern.compile(regex)) {
     override fun normalize(value: String): String {
         return value.trim()
     }
+
+    companion object {
+        const val name = "[SENDER]"
+    }
 }

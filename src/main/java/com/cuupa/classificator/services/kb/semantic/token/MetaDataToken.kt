@@ -1,5 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.token
 
+import com.cuupa.classificator.constants.RegexConstants
 import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.*
 import org.apache.commons.lang3.tuple.ImmutablePair
@@ -13,7 +14,7 @@ import java.util.stream.IntStream
 class MetaDataToken {
 
     private val tokenList: MutableList<Token> = mutableListOf()
-    var name: String = ""
+    var name: String = Strings.EMPTY
     private var regexContent: List<Pair<String, String>>? = null
 
     fun addToken(token: Token) {
@@ -125,11 +126,11 @@ class MetaDataToken {
         if (text == null || !hasVariable(tokenValue)) {
             return listOf(ImmutablePair(tokenValue, tokenValue))
         }
-        val split = tokenValue.split("\\[".toPattern())
+        val split = tokenValue.split(RegexConstants.squareBracketOpenPattern)
         val textBeforeToken = split[0]
         var variable = "[" + split[1]
         val textAfterToken = getTextAfterToken(variable)
-        variable = variable.split("]".toPattern())[0] + "]"
+        variable = variable.split(RegexConstants.squareBracketClosePattern)[0] + "]"
 
         val extract = getExtractForName(variable)
         val matcher = extract.pattern.matcher(text)
@@ -144,13 +145,13 @@ class MetaDataToken {
 
     private fun getExtractForName(name: String): Extract {
         for (pair in regexContent!!) {
-            if ("[DATE]" == name && name.contains(pair.left)) {
+            if (DateExtract.name == name && name.contains(pair.left)) {
                 return DateExtract(pair.right)
             }
-            if ("[IBAN]" == name && name.contains(pair.left)) {
+            if (IbanExtract.name == name && name.contains(pair.left)) {
                 return IbanExtract(pair.right)
             }
-            if ("[SENDER]" == name && name.contains(pair.left)) {
+            if (SenderExtract.name == name && name.contains(pair.left)) {
                 return SenderExtract(pair.right)
             }
             if (name.contains(pair.left)) {

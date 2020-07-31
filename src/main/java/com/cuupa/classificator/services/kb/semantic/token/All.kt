@@ -24,4 +24,8 @@ class All : Token() {
     override fun toString(): String {
         return "ALL " + super.toString()
     }
+
+    companion object {
+        const val name = "all"
+    }
 }

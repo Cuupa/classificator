@@ -27,4 +27,8 @@ class Not : Token() {
     override fun toString(): String {
         return "NOT " + super.toString()
     }
+
+    companion object {
+        const val name = "not"
+    }
 }

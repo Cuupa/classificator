@@ -1,5 +1,7 @@
 package com.cuupa.classificator.services.kb
 
+import com.cuupa.classificator.constants.RegexConstants
+import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException
@@ -9,8 +11,6 @@ import com.cuupa.classificator.services.kb.semantic.token.Tokens
 import org.apache.commons.lang3.tuple.Pair
 
 object KnowledgeFileParser {
-
-    val equalPattern = "=".toPattern()
 
     fun parseTopicFile(kbFile: String): Topic {
         validateToken(kbFile)
@@ -29,7 +29,7 @@ object KnowledgeFileParser {
 
     private fun parseSender(kbFile: String): SenderToken {
         val senderToken = fillToken(kbFile)
-        senderToken.name = kbFile.split(equalPattern)[0].trim()
+        senderToken.name = kbFile.split(RegexConstants.equalPattern)[0].trim()
         return senderToken
     }
 
@@ -48,7 +48,7 @@ object KnowledgeFileParser {
     }
 
     fun parseRegexFile(filename: String, content: String): Pair<String, String> {
-        return Pair.of(filename.split("\\.".toPattern())[0], content)
+        return Pair.of(filename.split(RegexConstants.dotPattern)[0], content)
     }
 
     private fun parseMetaData(kbFile: String): MetaDataToken {
@@ -66,8 +66,8 @@ object KnowledgeFileParser {
 
     @JvmStatic
     fun parseTopic(kbFile: String): Topic {
-        val split = kbFile.split("=".toPattern())
-        val topicName = split[0].trim { it <= ' ' }
+        val split = kbFile.split(RegexConstants.equalPattern)
+        val topicName = split[0].trim()
         val topic = Topic()
         topic.name = topicName
         val charArray = kbFile.toCharArray()
@@ -80,7 +80,7 @@ object KnowledgeFileParser {
             }
         }
         // these are the metadata which is only applicable for the specific topic
-        if (kbFile.contains("$")) {
+        if (kbFile.contains(StringConstants.dollar)) {
             var metadata = MetaDataToken()
             for (index in charArray.indices) {
                 if (charArray[index] == '$') {
@@ -107,7 +107,7 @@ object KnowledgeFileParser {
                 }
             }
         }
-        return extractName.toString().trim { it <= ' ' }
+        return extractName.toString().trim()
     }
 
     private fun validateToken(kbFile: String) {

@@ -1,11 +1,12 @@
 package com.cuupa.classificator.services.kb.semantic.dataExtraction
 
+import com.cuupa.classificator.constants.RegexConstants
 import java.util.regex.Pattern
 
 class DateExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
     override fun normalize(value: String): String {
-        val dateFields = value.split(dotPattern)
+        val dateFields = value.split(RegexConstants.dotPattern)
         var day = dateFields[0]
         var month = dateFields[1]
         var year = dateFields[2]
@@ -22,6 +23,6 @@ class DateExtract(regex: String) : Extract(Pattern.compile(regex)) {
     }
 
     companion object {
-        val dotPattern = "\\.".toPattern()
+        const val name = "[DATE]"
     }
 }

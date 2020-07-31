@@ -28,4 +28,8 @@ class OneOf : Token() {
     override fun toString(): String {
         return "OneOf " + super.toString()
     }
+
+    companion object {
+        const val name = "oneOf"
+    }
 }

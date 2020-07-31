@@ -1,5 +1,6 @@
 package com.cuupa.classificator.services.kb
 
+import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
@@ -48,10 +49,10 @@ class KnowledgeBaseExecutorService {
                                        text: String): String {
         val sendersFromTopic = mutableListOf<Metadata>()
         for ((_, _, metaData) in semanticResults) {
-            sendersFromTopic.addAll(metaData.filter { (name) -> SenderToken.SENDER == name })
+            sendersFromTopic.addAll(metaData.filter { (name) -> StringConstants.sender == name })
         }
 
-        sendersFromTopic.addAll(senderTokens.map { Metadata("sender", it.name) })
+        sendersFromTopic.addAll(senderTokens.map { Metadata(StringConstants.sender, it.name) })
 
         val filteredText = sendersFromTopic.filter { text.contains(it.value) }
         val mutableMapOf = mutableMapOf<String, Int>()

@@ -2,6 +2,7 @@ package com.cuupa.classificator.services.kb.semantic
 
 import com.cuupa.classificator.services.kb.semantic.token.CountToken
 import com.cuupa.classificator.services.kb.semantic.token.Token
+import jdk.internal.joptsimple.internal.Strings
 
 /**
  * @author Simon Thiel (https://github.com/cuupa)
@@ -9,7 +10,7 @@ import com.cuupa.classificator.services.kb.semantic.token.Token
 class SenderToken {
 
     private val tokenList: MutableList<Token> = mutableListOf()
-    var name: String = ""
+    var name: String = Strings.EMPTY
     private var numberOfOccurences = 0
 
     fun addToken(token: Token) {
@@ -45,13 +46,12 @@ class SenderToken {
 
     override fun hashCode(): Int {
         var result = tokenList.hashCode()
-        result = 31 * result + (name.hashCode() ?: 0)
+        result = 31 * result + name.hashCode()
         result = 31 * result + numberOfOccurences
         return result
     }
 
     companion object {
         const val UNKNOWN = "UNKNOWN"
-        const val SENDER = "sender"
     }
 }

@@ -1,6 +1,9 @@
 package com.cuupa.classificator.services.kb.semantic.token
 
+import com.cuupa.classificator.constants.RegexConstants
+import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.text.TextSearch
+import jdk.internal.joptsimple.internal.Strings
 import java.util.*
 
 class WildcardBefore : Token() {
@@ -24,7 +27,9 @@ class WildcardBefore : Token() {
             return text
         }
 
-        val words = text.replace("\n", emptyString).replace("\r", emptyString).split(emptyStringRegex)
+        val words = text.replace(StringConstants.newLine, Strings.EMPTY)
+            .replace(StringConstants.carriageReturn, Strings.EMPTY)
+            .split(RegexConstants.emptyStringRegex)
 
         val stringBuilder = StringBuilder()
         tokenValue.forEach { token ->
@@ -34,7 +39,7 @@ class WildcardBefore : Token() {
                     processWord = processWord.substring(1)
                 }
                 stringBuilder.append(processWord)
-                stringBuilder.append(emptyString)
+                stringBuilder.append(Strings.EMPTY)
             }
 
         }
@@ -48,7 +53,6 @@ class WildcardBefore : Token() {
     }
 
     companion object {
-        private const val emptyString = " "
-        private val emptyStringRegex = emptyString.toRegex()
+        const val name = "wildcardBefore"
     }
 }

@@ -1,33 +1,35 @@
 package com.cuupa.classificator.services.kb.semantic.text
 
+import com.cuupa.classificator.constants.RegexConstants
+import com.cuupa.classificator.constants.StringConstants
+
 open class Text internal constructor(var text: String) {
 
     private val stringArray: Array<String>
 
     init {
         text = normalizeText(text)
-        stringArray = text.split(BLANK).toTypedArray()
+        stringArray = text.split(StringConstants.blank).toTypedArray()
     }
 
     private fun normalizeText(text: String): String {
         return text.toLowerCase()
-            .replace("\t", BLANK)
-            .replace("\n\r", BLANK)
-            .replace("\r\n", BLANK)
-            .replace("\r", BLANK)
-            .replace("\n", BLANK)
-            .replace("\t", BLANK)
-            //		text = text.replace("-", BLANK);
-            .replace(",", BLANK)
-            .replace(": ", BLANK)
+            .replace(StringConstants.tabstop, StringConstants.blank)
+            .replace("\n\r", StringConstants.blank)
+            .replace("\r\n", StringConstants.blank)
+            .replace(StringConstants.carriageReturn, StringConstants.blank)
+            .replace(StringConstants.newLine, StringConstants.blank)
+            //		text = text.replace("-", StringConstants.BLANK);
+            .replace(",", StringConstants.blank)
+            .replace(": ", StringConstants.blank)
             .replace("€", " €")
             .replace("Ãœ", "ae")
             .replace("ä", "ae")
             .replace("ã¼", "ue")
             .replace("ü", "ue")
-            .replace("/", BLANK)
-            .replace("_", BLANK)
-            .replace(twoBlanksRegex, BLANK)
+            .replace("/", StringConstants.blank)
+            .replace("_", StringConstants.blank)
+            .replace(RegexConstants.twoBlanksRegex, StringConstants.blank)
             .trim()
     }
 
@@ -64,10 +66,5 @@ open class Text internal constructor(var text: String) {
         var result = text.hashCode()
         result = 31 * result + stringArray.contentHashCode()
         return result
-    }
-
-    companion object {
-        private const val BLANK = " "
-        private val twoBlanksRegex = " {2}".toRegex()
     }
 }

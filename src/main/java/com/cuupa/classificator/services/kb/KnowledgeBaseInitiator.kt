@@ -1,6 +1,7 @@
 package com.cuupa.classificator.services.kb
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties
+import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
@@ -23,10 +24,10 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         }
 
         val files = knowledgebaseDir.listFiles() ?: return kb
-        val listedFiles = files.first { it.name == "regex" }.listFiles() ?: return kb
-        val regexContent = listedFiles.filter { it.name.endsWith(".regx") }.map { createRegex(it) }
+        val listedFiles = files.first { it.name == StringConstants.regex }.listFiles() ?: return kb
+        val regexContent = listedFiles.filter { it.name.endsWith(StringConstants.regxSuffix) }.map { createRegex(it) }
         val metaDataTokenList = getMetaData(files)
-        val topicList = files.filter { it.name.endsWith(".dsl") }.map { createTopic(it) }
+        val topicList = files.filter { it.name.endsWith(StringConstants.dslSuffix) }.map { createTopic(it) }
 
         topicList.forEach { it.addMetaDataList(metaDataTokenList) }
         topicList.forEach { topic: Topic -> topic.metaDataList.forEach { it.setRegexContent(regexContent) } }
@@ -38,7 +39,7 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
     private fun getMetaData(files: Array<File>): List<MetaDataToken> {
         val metadataDir = files.first { it.name == "metadata" }
         val metadataFiles = metadataDir.listFiles() ?: return listOf()
-        return metadataFiles.filter { it.name.endsWith(".meta") }.map { createMetaData(it) }
+        return metadataFiles.filter { it.name.endsWith(StringConstants.metaSuffix) }.map { createMetaData(it) }
     }
 
     private fun createMetaData(metaFile: File): MetaDataToken {

@@ -2,11 +2,12 @@ package com.cuupa.classificator.services.kb.semantic
 
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 import com.cuupa.classificator.services.kb.semantic.token.Token
+import jdk.internal.joptsimple.internal.Strings
 
 class Topic {
 
     private val tokenList: MutableList<Token> = mutableListOf()
-    var name: String = ""
+    var name: String = Strings.EMPTY
     private val metadata: MutableList<Metadata> = mutableListOf()
     private val metaDataToken: MutableList<MetaDataToken> = mutableListOf()
 

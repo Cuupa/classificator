@@ -1,15 +1,17 @@
 package com.cuupa.classificator.services.kb.semantic.dataExtraction
 
+import com.cuupa.classificator.constants.StringConstants
+import org.apache.logging.log4j.util.Strings
 import java.util.regex.Pattern
 
 class IbanExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
     override fun normalize(value: String): String {
-        val charArray = value.replace(blank, empty).toCharArray()
+        val charArray = value.replace(StringConstants.blank, Strings.EMPTY).toCharArray()
         val sb = StringBuilder()
         for (i in charArray.indices) {
             if (i > 0 && i % 4 == 0) {
-                sb.append(blank)
+                sb.append(Strings.EMPTY)
             }
             sb.append(charArray[i])
         }
@@ -17,7 +19,6 @@ class IbanExtract(regex: String) : Extract(Pattern.compile(regex)) {
     }
 
     companion object {
-        private const val blank = " "
-        private const val empty = ""
+        const val name = "[IBAN]"
     }
 }

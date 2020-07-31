@@ -1,14 +1,16 @@
 package com.cuupa.classificator.services.kb.semantic.text
 
+import jdk.internal.joptsimple.internal.Strings
+
 class TextSearch(plainText: String?) {
 
-    private val plainText: PlainText = PlainText(plainText ?: emptyString)
+    private val plainText: PlainText = PlainText(plainText ?: Strings.EMPTY)
 
     var distance = 0
         private set
 
     fun contains(text: String?, tolerance: Int): Boolean {
-        val searchText = SearchText(text ?: emptyString)
+        val searchText = SearchText(text ?: Strings.EMPTY)
         if (searchText.isEmpty || plainText.isEmpty) {
             return false
         }
@@ -22,7 +24,7 @@ class TextSearch(plainText: String?) {
     }
 
     fun countOccurence(text: String?): Int {
-        val searchText = SearchText(text ?: emptyString)
+        val searchText = SearchText(text ?: Strings.EMPTY)
         return if (searchText.isEmpty || plainText.isEmpty) {
             0
         } else count(plainText, searchText, 1)
@@ -57,9 +59,5 @@ class TextSearch(plainText: String?) {
         }
         distance = searchInternal.distance
         return searchInternal.matchingWords == wordsToSearch.length() && searchInternal.distance <= tolerance
-    }
-
-    companion object {
-        private const val emptyString = ""
     }
 }
