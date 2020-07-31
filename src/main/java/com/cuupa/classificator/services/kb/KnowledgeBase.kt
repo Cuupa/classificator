@@ -5,11 +5,11 @@ import com.cuupa.classificator.services.kb.semantic.Topic
 
 class KnowledgeBase {
 
-    var topicList: MutableList<Topic> = mutableListOf()
-    var senders: MutableList<SenderToken> = mutableListOf()
+    var topicList: List<Topic> = listOf()
+    var senders: List<SenderToken> = listOf()
 
     fun clear() {
-        topicList.clear()
-        senders.clear()
+        topicList = listOf()
+        senders = listOf()
     }
 }

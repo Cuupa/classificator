@@ -8,6 +8,6 @@ import java.util.regex.Pattern
 class SenderExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
     override fun normalize(value: String): String {
-        return value.trim { it <= ' ' }
+        return value.trim()
     }
 }

@@ -12,14 +12,13 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 
 class KnowledgeBaseInitiator(private val applicationProperties: ApplicationProperties) {
-    private val log = LogFactory.getLog(KnowledgeBaseInitiator::class.java)
 
     fun initKnowledgeBase(): KnowledgeBase {
         val kb = KnowledgeBase()
         val knowledgebaseDir = ResourceUtils.getFile(applicationProperties.knowledgbaseDir)
 
         if (!knowledgebaseDir.isDirectory) {
-            log.error("No knowledgbase found for ${knowledgebaseDir}")
+            log.error("No knowledgbase found for $knowledgebaseDir")
             return kb
         }
 
@@ -31,8 +30,8 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
 
         topicList.forEach { it.addMetaDataList(metaDataTokenList) }
         topicList.forEach { topic: Topic -> topic.metaDataList.forEach { it.setRegexContent(regexContent) } }
-        kb.topicList = topicList.toMutableList()
-        kb.senders = getSenders(applicationProperties.senderFiles).toMutableList()
+        kb.topicList = topicList
+        kb.senders = getSenders(applicationProperties.senderFiles)
         return kb
     }
 
@@ -59,9 +58,13 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         return KnowledgeFileParser.parseSenderFile(FileUtils.readFileToString(file, StandardCharsets.UTF_8))
     }
 
-    private fun getSenders(senderFolderString: String): MutableList<SenderToken> {
+    private fun getSenders(senderFolderString: String): List<SenderToken> {
         val senderFolder = ResourceUtils.getFile(senderFolderString)
-        val senderFiles = senderFolder.listFiles() ?: return mutableListOf()
-        return senderFiles.map { createSenderTokens(it) }.toMutableList()
+        val senderFiles = senderFolder.listFiles() ?: return listOf()
+        return senderFiles.map { createSenderTokens(it) }
+    }
+
+    companion object {
+        private val log = LogFactory.getLog(KnowledgeBaseInitiator::class.java)
     }
 }

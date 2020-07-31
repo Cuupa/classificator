@@ -25,8 +25,7 @@ class ClassificatorController(private val classificator: Classificator) {
     fun classify(@RequestBody text: String?): ResponseEntity<String?> {
         try {
             val result = classificator.classify(text)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(gson.toJson(result))
+            return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(result))
         } catch (e: Exception) {
             log.error(e)
         }
@@ -37,8 +36,7 @@ class ClassificatorController(private val classificator: Classificator) {
     fun classify(@RequestBody content: ByteArray?): ResponseEntity<String?> {
         try {
             val result = classificator.classify(content)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(gson.toJson(result))
+            return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(result))
         } catch (e: Exception) {
             log.error(e)
         }

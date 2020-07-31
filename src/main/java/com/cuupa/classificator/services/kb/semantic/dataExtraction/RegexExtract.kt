@@ -6,6 +6,10 @@ import java.util.regex.Pattern
 class RegexExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
     override fun normalize(value: String): String {
-        return value.replace(" ", Strings.EMPTY)
+        return value.replace(blank, Strings.EMPTY)
+    }
+
+    companion object {
+        private const val blank = " "
     }
 }

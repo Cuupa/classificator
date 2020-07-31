@@ -4,9 +4,7 @@ import com.cuupa.classificator.services.kb.semantic.text.TextSearch
 
 class CountToken : Token() {
 
-    override fun match(text: String?): Boolean {
-        return false
-    }
+    override fun match(text: String?): Boolean = false
 
     override val distance: Int
         get() = 0

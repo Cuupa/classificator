@@ -1,9 +1,9 @@
 package com.cuupa.classificator.configuration.application
 
-import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value
 
 class ApplicationProperties {
+
     @Value("\${classificator.kbfiles}")
     val knowledgbaseDir: String = ""
 
@@ -15,8 +15,4 @@ class ApplicationProperties {
 
     @Value("\${classificator.senderfiles}")
     val senderFiles: String = ""
-
-    companion object {
-        private val LOG = LogFactory.getLog(ApplicationProperties::class.java)
-    }
 }

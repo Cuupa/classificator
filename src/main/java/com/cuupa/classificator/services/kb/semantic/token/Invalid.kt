@@ -1,9 +1,8 @@
 package com.cuupa.classificator.services.kb.semantic.token
 
 class Invalid : Token() {
-    override fun match(text: String?): Boolean {
-        return false
-    }
+
+    override fun match(text: String?): Boolean = false
 
     override val distance: Int
         get() = Int.MAX_VALUE

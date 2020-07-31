@@ -4,26 +4,29 @@ import org.apache.logging.log4j.util.Strings
 
 object Tokens {
 
+    private const val oneOf = "oneOf"
+    private const val not = "not"
+    private const val all = "all"
+    private const val wildcardBefore = "wildcardBefore"
+
     operator fun get(tokenTextPointer: TokenTextPointer): Token {
-        val tokenName = findTokenName(tokenTextPointer)
-        val tokenValues = findTokenValue(tokenTextPointer)
-        val token = get(tokenName)
-        token.tokenValue = tokenValues
+        val token = get(findTokenName(tokenTextPointer))
+        token.tokenValue = findTokenValue(tokenTextPointer)
         return token
     }
 
     private operator fun get(tokenName: String): Token {
         return when (tokenName) {
-            "oneOf" -> {
+            oneOf -> {
                 OneOf()
             }
-            "not" -> {
+            not -> {
                 Not()
             }
-            "all" -> {
+            all -> {
                 All()
             }
-            "wildcardBefore" -> {
+            wildcardBefore -> {
                 WildcardBefore()
             }
             else -> {

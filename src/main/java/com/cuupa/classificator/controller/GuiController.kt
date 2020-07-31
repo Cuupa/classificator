@@ -30,5 +30,4 @@ class GuiController(private val classificator: Classificator, private val manage
         manager.reloadKB()
         return "index"
     }
-
 }

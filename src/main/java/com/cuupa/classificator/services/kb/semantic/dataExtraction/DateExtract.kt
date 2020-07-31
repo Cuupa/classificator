@@ -5,10 +5,10 @@ import java.util.regex.Pattern
 class DateExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
     override fun normalize(value: String): String {
-        val split = value.split(dotPattern)
-        var day = split[0]
-        var month = split[1]
-        var year = split[2]
+        val dateFields = value.split(dotPattern)
+        var day = dateFields[0]
+        var month = dateFields[1]
+        var year = dateFields[2]
         if (day.length == 1) {
             day = "0$day"
         }

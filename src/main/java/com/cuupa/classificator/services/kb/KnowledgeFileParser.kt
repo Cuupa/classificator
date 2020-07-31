@@ -10,6 +10,8 @@ import org.apache.commons.lang3.tuple.Pair
 
 object KnowledgeFileParser {
 
+    val equalPattern = "=".toPattern()
+
     fun parseTopicFile(kbFile: String): Topic {
         validateToken(kbFile)
         return parseTopic(kbFile)
@@ -26,24 +28,26 @@ object KnowledgeFileParser {
     }
 
     private fun parseSender(kbFile: String): SenderToken {
-        val split = kbFile.split("=".toPattern())
-        val topicName = split[0].trim { it <= ' ' }
-        val senderToken = SenderToken()
-        senderToken.name = topicName
+        val senderToken = fillToken(kbFile)
+        senderToken.name = kbFile.split(equalPattern)[0].trim()
+        return senderToken
+    }
+
+    private fun fillToken(kbFile: String): SenderToken {
+        val token = SenderToken()
         val charArray = kbFile.toCharArray()
         for (index in charArray.indices) {
             if (charArray[index] == '(') {
-                senderToken.addToken(Tokens[TokenTextPointer(charArray, index)])
+                token.addToken(Tokens[TokenTextPointer(charArray, index)])
             }
             if (charArray[index] == '}') {
                 break
             }
         }
-        return senderToken
+        return token
     }
 
-    fun parseRegexFile(filename: String,
-                       content: String): Pair<String, String> {
+    fun parseRegexFile(filename: String, content: String): Pair<String, String> {
         return Pair.of(filename.split("\\.".toPattern())[0], content)
     }
 

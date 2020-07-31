@@ -24,7 +24,7 @@ class WildcardBefore : Token() {
             return text
         }
 
-        val words = text.replace("\n", " ").replace("\r", " ").split(" ".toRegex())
+        val words = text.replace("\n", emptyString).replace("\r", emptyString).split(emptyStringRegex)
 
         val stringBuilder = StringBuilder()
         tokenValue.forEach { token ->
@@ -34,7 +34,7 @@ class WildcardBefore : Token() {
                     processWord = processWord.substring(1)
                 }
                 stringBuilder.append(processWord)
-                stringBuilder.append(" ")
+                stringBuilder.append(emptyString)
             }
 
         }
@@ -45,5 +45,10 @@ class WildcardBefore : Token() {
         val token: Token = WildcardBefore()
         token.tokenValue = ArrayList(tokenValue)
         return token
+    }
+
+    companion object {
+        private const val emptyString = " "
+        private val emptyStringRegex = emptyString.toRegex()
     }
 }

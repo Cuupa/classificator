@@ -10,26 +10,25 @@ open class Text internal constructor(var text: String) {
     }
 
     private fun normalizeText(text: String): String {
-        var value = text
-        value = value.toLowerCase()
-        value = value.replace("\t", BLANK)
-        value = value.replace("\n\r", BLANK)
-        value = value.replace("\r\n", BLANK)
-        value = value.replace("\r", BLANK)
-        value = value.replace("\n", BLANK)
-        value = value.replace("\t", BLANK)
-        //		text = text.replace("-", BLANK);
-        value = value.replace(",", BLANK)
-        value = value.replace(": ", BLANK)
-        value = value.replace("€", " €")
-        value = value.replace("Ãœ", "ae")
-        value = value.replace("ä", "ae")
-        value = value.replace("ã¼", "ue")
-        value = value.replace("ü", "ue")
-        value = value.replace("/", BLANK)
-        value = value.replace("_", BLANK)
-        value = value.replace(" {2}".toRegex(), " ")
-        return value.trim { it <= ' ' }
+        return text.toLowerCase()
+            .replace("\t", BLANK)
+            .replace("\n\r", BLANK)
+            .replace("\r\n", BLANK)
+            .replace("\r", BLANK)
+            .replace("\n", BLANK)
+            .replace("\t", BLANK)
+            //		text = text.replace("-", BLANK);
+            .replace(",", BLANK)
+            .replace(": ", BLANK)
+            .replace("€", " €")
+            .replace("Ãœ", "ae")
+            .replace("ä", "ae")
+            .replace("ã¼", "ue")
+            .replace("ü", "ue")
+            .replace("/", BLANK)
+            .replace("_", BLANK)
+            .replace(twoBlanksRegex, BLANK)
+            .trim()
     }
 
     fun length(): Int {
@@ -69,5 +68,6 @@ open class Text internal constructor(var text: String) {
 
     companion object {
         private const val BLANK = " "
+        private val twoBlanksRegex = " {2}".toRegex()
     }
 }

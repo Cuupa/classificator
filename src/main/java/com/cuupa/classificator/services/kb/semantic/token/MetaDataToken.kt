@@ -42,20 +42,26 @@ class MetaDataToken {
 
             val tokens = replaceCompiledTextInTokenValue(compiledText, cloneTokens(it, compiledText))
             var searchStream = getIntStream(tokens.size)
+
             if (searchStream.noneMatch(getPredicateNotTokenMatching(text, it, tokens))) {
                 searchStream = getIntStream(tokens.size)
                 searchStream.forEach { value: Int ->
                     if (tokens[value].match(text)) {
                         val metadataValue = compiledText[0][value].right
-                        if (isMetadataAlreadyRegistered(match, metadataValue)) {
-                            synchronized(MetaDataToken::class.java) {
-                                if (isMetadataAlreadyRegistered(match, metadataValue)) {
-                                    val metadata = Metadata(name, metadataValue)
-                                    match[metadata] = tokens[value].distance
-                                }
-                            }
-                        }
+                        addMetadataSynchronized(match, metadataValue, tokens, value)
                     }
+                }
+            }
+        }
+    }
+
+    private fun addMetadataSynchronized(match: MutableMap<Metadata, Int>, metadataValue: String, tokens: List<Token>,
+                                        value: Int) {
+        if (isMetadataAlreadyRegistered(match, metadataValue)) {
+            synchronized(MetaDataToken::class.java) {
+                if (isMetadataAlreadyRegistered(match, metadataValue)) {
+                    val metadata = Metadata(name, metadataValue)
+                    match[metadata] = tokens[value].distance
                 }
             }
         }

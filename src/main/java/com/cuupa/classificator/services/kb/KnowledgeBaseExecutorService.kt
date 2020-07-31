@@ -87,14 +87,12 @@ class KnowledgeBaseExecutorService {
     }
 
     private fun getTopics(topics: List<Topic>, text: String): MutableList<SemanticResult> {
-        return topics.filter(matches(text)).map(toSemanticResult(text)).toMutableList()
+        return topics.filter { it.match(text) }.map(toSemanticResult(text)).toMutableList()
     }
 
     private fun toSemanticResult(text: String): (Topic) -> SemanticResult = {
         SemanticResult(it.name, it.getMetaData(text))
     }
-
-    private fun matches(text: String): (Topic) -> Boolean = { it.match(text) }
 
     companion object {
         private val LOG = LogFactory.getLog(KnowledgeBaseExecutorService::class.java)
