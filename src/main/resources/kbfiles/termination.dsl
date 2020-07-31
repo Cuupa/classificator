@@ -8,5 +8,6 @@ TERMINATION = {
 	not("eine Kündigung zugegangen ist"),
 	not("bei einer kündigung"),
 	not("erfolgten kündigung"),
-	not("ohne kündigung fällig")
+	not("ohne kündigung fällig"),
+	not("erstmalige Kündigung nach")
 }
