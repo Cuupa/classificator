@@ -22,7 +22,6 @@ class Topic {
         metaDataToken.add(metadata)
     }
 
-    // This is the cause of persistent metadata
     fun getMetaData(text: String): MutableList<Metadata> {
         metadata.clear()
         metaDataToken.map { it.extract(text) }.forEach { metadata.addAll(it) }
