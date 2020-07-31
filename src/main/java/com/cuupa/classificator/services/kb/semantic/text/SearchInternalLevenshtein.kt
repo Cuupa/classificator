@@ -2,8 +2,7 @@ package com.cuupa.classificator.services.kb.semantic.text
 
 import org.apache.commons.text.similarity.LevenshteinDistance
 
-internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText,
-                                         private val plainText: PlainText,
+internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, private val plainText: PlainText,
                                          private val tolerance: Int) {
     var currentPositionPlainText = 0
         private set

@@ -3,6 +3,7 @@ package com.cuupa.classificator.services.kb
 import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
+import com.cuupa.classificator.services.kb.semantic.token.CountToken
 import kotlinx.coroutines.*
 import org.apache.commons.logging.LogFactory
 
@@ -16,7 +17,7 @@ class KnowledgeBaseExecutorService {
                 val asyncTopics = GlobalScope.async { getTopics(topics, text) }
                 val asyncSenders = GlobalScope.async { getSenders(senderTokens, text) }
 
-                val senders = withContext(Dispatchers.Default) { getNumberOfOccurences(asyncSenders.await(), text) }
+                val senders = getNumberOfOccurences(asyncSenders.await(), text)
                 mostFittingSender = senders.maxWith(compareBy { it.countNumberOfOccurences() })?.name
                 semanticResults = asyncTopics.await()
             }
@@ -30,31 +31,11 @@ class KnowledgeBaseExecutorService {
             semanticResults.add(getMetadatasForTopicOther(topics, text))
         }
 
-        if (mostFittingSender == null) {
-            val sendersFromTopic = mutableListOf<Metadata>()
-            for ((_, _, metaData) in semanticResults) {
-                sendersFromTopic.addAll(metaData.filter { (name) -> SenderToken.SENDER == name })
-            }
-
-            sendersFromTopic.addAll(senderTokens.map { Metadata("sender", it.name) })
-
-            val filteredText = sendersFromTopic.filter { text.contains(it.value) }.groupingBy { it.value }.eachCount()
-            val sortedBy = filteredText.entries.sortedBy { it.value }
-            // Need more than one occurence to bypass simple mentions like on sicknotes
-            if (sortedBy.isNotEmpty() && sortedBy.first().value > 1) {
-                mostFittingSender = sortedBy.first().key
-            }
-        }
-
         if (mostFittingSender.isNullOrEmpty()) {
-            mostFittingSender = SenderToken.UNKNOWN
+            mostFittingSender = findSenderFromMetadata(semanticResults, senderTokens, text)
         }
 
-        val finalMostFittingSender = mostFittingSender!!
-        semanticResults.forEach { it.sender = finalMostFittingSender }
-        semanticResults.forEach { (_, _, metaData) ->
-            findAndSetSender(metaData, finalMostFittingSender)
-        }
+        semanticResults.forEach { it.sender = mostFittingSender ?: SenderToken.UNKNOWN }
 
         semanticResults.forEach { result ->
             result.metaData = result.metaData.distinctBy { it.value }.toMutableList()
@@ -63,12 +44,25 @@ class KnowledgeBaseExecutorService {
         return semanticResults
     }
 
-    private fun findAndSetSender(metaData: MutableList<Metadata>, finalMostFittingSender: String) {
-        val senderFound = metaData.filter { (name) -> "sender" == name }
-                .any { (_, value) -> finalMostFittingSender == value }
-        if (senderFound) {
-            metaData.add(Metadata("sender", finalMostFittingSender))
+    private fun findSenderFromMetadata(semanticResults: MutableList<SemanticResult>, senderTokens: List<SenderToken>,
+                                       text: String): String {
+        val sendersFromTopic = mutableListOf<Metadata>()
+        for ((_, _, metaData) in semanticResults) {
+            sendersFromTopic.addAll(metaData.filter { (name) -> SenderToken.SENDER == name })
         }
+
+        sendersFromTopic.addAll(senderTokens.map { Metadata("sender", it.name) })
+
+        val filteredText = sendersFromTopic.filter { text.contains(it.value) }
+        val mutableMapOf = mutableMapOf<String, Int>()
+        filteredText.forEach(weightSenders(mutableMapOf, text))
+        return mutableMapOf.filter(lessOrEqualFiveSpaces()).maxBy { it.value }?.key ?: SenderToken.UNKNOWN
+    }
+
+    private fun lessOrEqualFiveSpaces(): (Map.Entry<String, Int>) -> Boolean = { it.key.count { char -> ' ' == char } <= 5 }
+
+    private fun weightSenders(mutableMapOf: MutableMap<String, Int>, text: String): (Metadata) -> Unit = {
+        mutableMapOf[it.value] = CountToken().countOccurences(it.value, text) * it.value.length
     }
 
     /**
@@ -78,25 +72,29 @@ class KnowledgeBaseExecutorService {
      * @return returns SemanticResult.OTHER with metadata
      */
     private fun getMetadatasForTopicOther(topics: List<Topic>, text: String): SemanticResult {
-        val result = topics.map { SemanticResult(Topic.OTHER, it.getMetaData(text)) }
-                .firstOrNull { (_, _, metaData) -> metaData.isNotEmpty() }
+        return topics.map { SemanticResult(Topic.OTHER, it.getMetaData(text)) }
+            .firstOrNull { (_, _, it) -> it.isNotEmpty() } ?: SemanticResult(Topic.OTHER, mutableListOf())
 
-        return result ?: SemanticResult(Topic.OTHER, mutableListOf())
     }
 
     private fun getSenders(senders: List<SenderToken>, text: String): List<SenderToken> {
         return senders.filter { it.match(text) }
     }
 
-    // EVIL. Works on the original list and therefore altered the senderdefinition from knowledgebase
     private fun getNumberOfOccurences(senders: List<SenderToken>, text: String): List<SenderToken> {
-        senders.forEach { senderToken: SenderToken -> senderToken.countNumberOfOccurences(text) }
+        senders.forEach { it.countNumberOfOccurences(text) }
         return senders
     }
 
     private fun getTopics(topics: List<Topic>, text: String): MutableList<SemanticResult> {
-        return topics.filter { it.match(text) }.map { SemanticResult(it.name, it.getMetaData(text)) }.toMutableList()
+        return topics.filter(matches(text)).map(toSemanticResult(text)).toMutableList()
     }
+
+    private fun toSemanticResult(text: String): (Topic) -> SemanticResult = {
+        SemanticResult(it.name, it.getMetaData(text))
+    }
+
+    private fun matches(text: String): (Topic) -> Boolean = { it.match(text) }
 
     companion object {
         private val LOG = LogFactory.getLog(KnowledgeBaseExecutorService::class.java)

@@ -15,8 +15,8 @@ class CountToken : Token() {
         return CountToken()
     }
 
-    fun countOccurences(name: String?, text: String?): Int {
+    fun countOccurences(textToSearch: String?, text: String?): Int {
         val textSearch = TextSearch(text)
-        return textSearch.countOccurence(text)
+        return textSearch.countOccurence(textToSearch)
     }
 }

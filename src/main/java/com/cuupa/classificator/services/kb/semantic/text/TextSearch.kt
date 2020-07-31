@@ -28,6 +28,7 @@ class TextSearch(plainText: String?) {
         } else count(plainText, searchText, 1)
     }
 
+    //TODO: This is still a little bit buggy. Need to redesign this
     private fun count(plainText: PlainText, wordsToSearch: SearchText, tolerance: Int): Int {
         var numberOfOccurences = 0
         var searchInternal = SearchInternalLevenshtein(wordsToSearch, plainText, tolerance)
