@@ -2,7 +2,7 @@ package com.cuupa.classificator.services.kb.semantic
 
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 import com.cuupa.classificator.services.kb.semantic.token.Token
-import jdk.internal.joptsimple.internal.Strings
+import org.apache.logging.log4j.util.Strings
 
 class Topic {
 
@@ -30,7 +30,7 @@ class Topic {
     }
 
     val metaDataList: List<MetaDataToken>
-        get() = metaDataToken
+        get() = metaDataToken.toList()
 
     fun addMetaDataList(metaDataTokenList: List<MetaDataToken>) {
         metaDataToken.addAll(metaDataTokenList)

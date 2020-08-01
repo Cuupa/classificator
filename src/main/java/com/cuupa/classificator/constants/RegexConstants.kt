@@ -1,6 +1,6 @@
 package com.cuupa.classificator.constants
 
-import jdk.internal.joptsimple.internal.Strings
+import org.apache.logging.log4j.util.Strings
 
 object RegexConstants {
     val squareBracketOpenPattern = "\\[".toPattern()

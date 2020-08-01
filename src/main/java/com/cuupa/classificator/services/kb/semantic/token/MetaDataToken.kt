@@ -145,28 +145,32 @@ class MetaDataToken {
 
     private fun getExtractForName(name: String): Extract {
         for (pair in regexContent!!) {
-            if (DateExtract.name == name && name.contains(pair.left)) {
-                return DateExtract(pair.right)
-            }
-            if (IbanExtract.name == name && name.contains(pair.left)) {
-                return IbanExtract(pair.right)
-            }
-            if (SenderExtract.name == name && name.contains(pair.left)) {
-                return SenderExtract(pair.right)
-            }
-            if (name.contains(pair.left)) {
-                return RegexExtract(pair.right)
+            when {
+                isDateExtract(name, pair) -> return DateExtract(pair.right)
+                isIbanExtract(name, pair) -> return IbanExtract(pair.right)
+                isSenderExtract(name, pair) -> return SenderExtract(pair.right)
+                isRegexExtract(name, pair) -> return RegexExtract(pair.right)
             }
         }
         throw RuntimeException("There is no extract specified")
     }
 
+    private fun isRegexExtract(name: String, pair: Pair<String, String>) = name.contains(pair.left)
+
+    private fun isSenderExtract(name: String, pair: Pair<String, String>) = SenderExtract.name == name && name.contains(
+        pair.left)
+
+    private fun isIbanExtract(name: String,
+                              pair: Pair<String, String>) = IbanExtract.name == name && name.contains(pair.left)
+
+    private fun isDateExtract(name: String,
+                              pair: Pair<String, String>) = DateExtract.name == name && name.contains(pair.left)
+
     private fun getTextAfterToken(value: String): String {
         val split = value.split("]".toPattern())
-        return if (split.size >= 2) {
-            split[1]
-        } else {
-            Strings.EMPTY
+        return when (split.size) {
+            in 2..Int.MAX_VALUE -> split[1]
+            else -> Strings.EMPTY
         }
     }
 

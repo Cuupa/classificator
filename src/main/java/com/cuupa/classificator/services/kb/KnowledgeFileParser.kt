@@ -118,18 +118,11 @@ object KnowledgeFileParser {
         var normalCloseBrackets = 0
         for (c in charArray) {
             when (c) {
-                '{' -> {
-                    curlyOpenBrackets++
-                }
-                '}' -> {
-                    curlyCloseBrackets++
-                }
-                '(' -> {
-                    normalOpenBrackets++
-                }
-                ')' -> {
-                    normalCloseBrackets++
-                }
+                '{' -> curlyOpenBrackets++
+                '}' -> curlyCloseBrackets++
+                '(' -> normalOpenBrackets++
+                ')' -> normalCloseBrackets++
+
             }
         }
         if (curlyCloseBrackets != curlyOpenBrackets || normalCloseBrackets != normalOpenBrackets) {

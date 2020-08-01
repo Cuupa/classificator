@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.kb.semantic.text
 
-import jdk.internal.joptsimple.internal.Strings
+import org.apache.logging.log4j.util.Strings
 
 class TextSearch(plainText: String?) {
 

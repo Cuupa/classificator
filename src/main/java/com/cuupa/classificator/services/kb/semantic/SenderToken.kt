@@ -2,7 +2,7 @@ package com.cuupa.classificator.services.kb.semantic
 
 import com.cuupa.classificator.services.kb.semantic.token.CountToken
 import com.cuupa.classificator.services.kb.semantic.token.Token
-import jdk.internal.joptsimple.internal.Strings
+import org.apache.logging.log4j.util.Strings
 
 /**
  * @author Simon Thiel (https://github.com/cuupa)
@@ -27,13 +27,11 @@ class SenderToken {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other == null) {
-            return false
+        return when (other) {
+            null -> false
+            is SenderToken -> name == other.name
+            else -> false
         }
-        if (other is SenderToken) {
-            return name == other.name
-        }
-        return false
     }
 
     fun countNumberOfOccurences(text: String?) {

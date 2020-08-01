@@ -3,7 +3,7 @@ package com.cuupa.classificator.services.kb.semantic.token
 import com.cuupa.classificator.constants.RegexConstants
 import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.text.TextSearch
-import jdk.internal.joptsimple.internal.Strings
+import org.apache.logging.log4j.util.Strings
 import java.util.*
 
 class WildcardBefore : Token() {

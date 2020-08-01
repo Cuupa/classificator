@@ -12,21 +12,11 @@ object Tokens {
 
     private operator fun get(tokenName: String): Token {
         return when (tokenName) {
-            OneOf.name -> {
-                OneOf()
-            }
-            Not.name -> {
-                Not()
-            }
-            All.name -> {
-                All()
-            }
-            WildcardBefore.name -> {
-                WildcardBefore()
-            }
-            else -> {
-                Invalid()
-            }
+            OneOf.name -> OneOf()
+            Not.name -> Not()
+            All.name -> All()
+            WildcardBefore.name -> WildcardBefore()
+            else -> Invalid()
         }
     }
 

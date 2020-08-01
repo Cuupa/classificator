@@ -63,8 +63,6 @@ open class Text internal constructor(var text: String) {
     }
 
     override fun hashCode(): Int {
-        var result = text.hashCode()
-        result = 31 * result + stringArray.contentHashCode()
-        return result
+        return 31 * text.hashCode() + stringArray.contentHashCode()
     }
 }
