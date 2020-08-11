@@ -5,7 +5,10 @@ import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.semantic.token.CountToken
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.logging.LogFactory
 
 class KnowledgeBaseExecutorService {
@@ -14,17 +17,21 @@ class KnowledgeBaseExecutorService {
         var semanticResults = mutableListOf<SemanticResult>()
         var mostFittingSender: String? = null
         runBlocking {
-            val job = GlobalScope.launch {
-                val asyncTopics = GlobalScope.async { getTopics(topics, text) }
-                val asyncSenders = GlobalScope.async { getSenders(senderTokens, text) }
+            val job = launch(Dispatchers.Default) {
+                val asyncTopics = async {
+                    println("I'm Thread ${Thread.currentThread()}")
+                    getTopics(topics, text)
+                }
+                val asyncSenders = async {
+                    println("I'm Thread ${Thread.currentThread()}")
+                    getSenders(senderTokens, text)
+                }
 
-                val senders = getNumberOfOccurences(asyncSenders.await(), text)
+                val senders = getNumberOfOccurrences(asyncSenders.await(), text)
                 mostFittingSender = senders.maxWith(compareBy { it.countNumberOfOccurences() })?.name
                 semanticResults = asyncTopics.await()
             }
-            while (job.isActive) {
-                delay(10)
-            }
+            job.join()
         }
 
         if (semanticResults.isEmpty()) {
@@ -33,6 +40,7 @@ class KnowledgeBaseExecutorService {
         }
 
         if (mostFittingSender.isNullOrEmpty()) {
+            LOG.debug("Looking for senders in metadata")
             mostFittingSender = findSenderFromMetadata(semanticResults, senderTokens, text)
         }
 
@@ -82,7 +90,7 @@ class KnowledgeBaseExecutorService {
         return senders.filter { it.match(text) }
     }
 
-    private fun getNumberOfOccurences(senders: List<SenderToken>, text: String): List<SenderToken> {
+    private fun getNumberOfOccurrences(senders: List<SenderToken>, text: String): List<SenderToken> {
         senders.forEach { it.countNumberOfOccurences(text) }
         return senders
     }

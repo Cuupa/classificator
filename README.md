@@ -36,4 +36,6 @@ It tries to match the topics, sender and metadata, provided in "src/main/resourc
 
 If no sender matches, it tries to determine the sender via REGEX, removing the ones with more then six words, counting the occurences in the text and taking the occurences times the length of the String.
 
+There is a simple test GUI at http://addressofyour.server/
+
 Currently I'm working on lemmatizing and different languages.
