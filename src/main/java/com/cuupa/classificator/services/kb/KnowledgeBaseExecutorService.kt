@@ -28,7 +28,7 @@ class KnowledgeBaseExecutorService {
                 }
 
                 val senders = getNumberOfOccurrences(asyncSenders.await(), text)
-                mostFittingSender = senders.maxWith(compareBy { it.countNumberOfOccurences() })?.name
+                mostFittingSender = senders.maxWithOrNull(compareBy { it.countNumberOfOccurences() })?.name
                 semanticResults = asyncTopics.await()
             }
             job.join()
@@ -65,7 +65,7 @@ class KnowledgeBaseExecutorService {
         val filteredText = sendersFromTopic.filter { text.contains(it.value) }
         val mutableMapOf = mutableMapOf<String, Int>()
         filteredText.forEach(weightSenders(mutableMapOf, text))
-        return mutableMapOf.filter(lessOrEqualFiveSpaces()).maxBy { it.value }?.key ?: SenderToken.UNKNOWN
+        return mutableMapOf.filter(lessOrEqualFiveSpaces()).maxByOrNull { it.value }?.key ?: SenderToken.UNKNOWN
     }
 
     private fun lessOrEqualFiveSpaces(): (Map.Entry<String, Int>) -> Boolean = { it.key.count { char -> ' ' == char } <= 5 }
@@ -82,7 +82,7 @@ class KnowledgeBaseExecutorService {
      */
     private fun getMetadatasForTopicOther(topics: List<Topic>, text: String): SemanticResult {
         return topics.map { SemanticResult(Topic.OTHER, it.getMetaData(text)) }
-            .firstOrNull { (_, _, it) -> it.isNotEmpty() } ?: SemanticResult(Topic.OTHER, mutableListOf())
+                .firstOrNull { (_, _, it) -> it.isNotEmpty() } ?: SemanticResult(Topic.OTHER)
 
     }
 

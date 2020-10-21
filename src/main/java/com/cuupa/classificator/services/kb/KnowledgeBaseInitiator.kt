@@ -24,8 +24,7 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         }
 
         val files = knowledgebaseDir.listFiles() ?: return kb
-        val listedFiles = files.first { it.name == StringConstants.regex }.listFiles() ?: return kb
-        val regexContent = listedFiles.filter { it.name.endsWith(StringConstants.regxSuffix) }.map { createRegex(it) }
+        val regexContent = getRegexContent(files)
         val metaDataTokenList = getMetaData(files)
         val topicList = files.filter { it.name.endsWith(StringConstants.dslSuffix) }.map { createTopic(it) }
 
@@ -34,6 +33,11 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         kb.topicList = topicList
         kb.senders = getSenders(applicationProperties.senderFiles)
         return kb
+    }
+
+    private fun getRegexContent(files: Array<out File>): List<Pair<String, String>> {
+        val listedFiles = files.first { it.name == StringConstants.regex }.listFiles() ?: return listOf()
+        return listedFiles.filter { it.name.endsWith(StringConstants.regxSuffix) }.map { createRegex(it) }
     }
 
     private fun getMetaData(files: Array<File>): List<MetaDataToken> {
