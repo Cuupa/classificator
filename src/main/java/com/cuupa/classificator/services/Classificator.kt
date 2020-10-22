@@ -1,5 +1,6 @@
 package com.cuupa.classificator.services
 
+import com.cuupa.classificator.monitor.Monitor
 import com.cuupa.classificator.services.kb.KnowledgeManager
 import com.cuupa.classificator.services.kb.SemanticResult
 import com.cuupa.classificator.services.kb.semantic.Topic
@@ -9,14 +10,27 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import java.io.ByteArrayInputStream
 import java.io.IOException
+import java.time.LocalDateTime
 import java.util.*
 
-class Classificator(private val manager: KnowledgeManager, private val analyser: PdfAnalyser) {
+class Classificator(private val manager: KnowledgeManager, private val analyser: PdfAnalyser,
+                    private val monitor: Monitor) {
 
     fun classify(text: String?): List<SemanticResult> {
+        val start = LocalDateTime.now()
+        var result = getResultFromInputText(text)
+        val done = LocalDateTime.now()
+        monitor.writeEvent(text, result, start, done)
+
+        return result
+    }
+
+    private fun getResultFromInputText(text: String?): List<SemanticResult> {
         return if (text.isNullOrBlank()) {
             listOf(SemanticResult(Topic.OTHER, mutableListOf()))
-        } else manager.getResults(text)
+        } else {
+            manager.getResults(text)
+        }
     }
 
     fun classify(content: ByteArray?): List<SemanticResult> {

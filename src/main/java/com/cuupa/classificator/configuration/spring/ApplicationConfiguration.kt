@@ -1,6 +1,9 @@
 package com.cuupa.classificator.configuration.spring
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties
+import com.cuupa.classificator.monitor.EventStorage
+import com.cuupa.classificator.monitor.FileEventStorage
+import com.cuupa.classificator.monitor.Monitor
 import com.cuupa.classificator.services.Classificator
 import com.cuupa.classificator.services.kb.KnowledgeBaseExecutorService
 import com.cuupa.classificator.services.kb.KnowledgeBaseInitiator
@@ -14,7 +17,17 @@ open class ApplicationConfiguration {
 
     @Bean
     open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser())
+        return Classificator(knowledgeManager(), analyser(), monitor())
+    }
+
+    @Bean
+    open fun monitor(): Monitor {
+        return Monitor(eventStorage())
+    }
+
+    @Bean
+    open fun eventStorage(): EventStorage {
+        return FileEventStorage()
     }
 
     @Bean

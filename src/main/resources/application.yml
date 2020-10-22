@@ -12,3 +12,9 @@ classificator:
   metadatafiles: classpath:kbfiles/metadata
   regexfiles: classpath:kbfiles/regex
   senderFiles: classpath:kbfiles/senders
+
+
+  monitor:
+    enabled: true
+    logText: true
+    fileeventstorage.path: /opt/classificator/monitor/data
