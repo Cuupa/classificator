@@ -1,6 +1,6 @@
 package com.cuupa.classificator.monitor
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 abstract class EventStorage {
 
@@ -8,5 +8,5 @@ abstract class EventStorage {
 
     abstract fun write(event: Event)
 
-    abstract fun get(start: LocalDateTime?, end: LocalDateTime?): List<Event>
+    abstract fun get(start: LocalDate?, end: LocalDate?): List<Event>
 }

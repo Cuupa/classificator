@@ -17,4 +17,4 @@ classificator:
   monitor:
     enabled: true
     logText: true
-    fileeventstorage.path: /opt/classificator/monitor/data
+    fileeventstorage.path: /home/simon/IdeaProjects/classificator/

@@ -1,10 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Monitor</title>
+    <meta charset="UTF-8"/>
+    <title>Testing</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
 </head>
+
 <body>
 
+<!--/*@thymesVar id="monitorProcess" type="com.cuupa.classificator.gui.MonitorProcess"*/-->
+<form action="#" method="POST" th:action="@{monitorWithFilter}" th:object="${monitorProcess}">
+    <!--<table class="table">
+        <tr>
+            <td>Filter</td>
+        </tr>
+        <tr>
+            <td>Date from</td>
+            <td>Date to</td>
+            <td><input type="submit" /></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="date" th:field="${monitorProcess.from}">
+            </td>
+            <td>
+                <input type="date" th:field="${monitorProcess.to}">
+            </td>
+        </tr>
+    </table>
+    -->
+    <table border="1" class="table table-striped" width="100%">
+        <thead class="thead-dark">
+        <tr>
+            <th width="16%">RECEIVED</th>
+            <th width="16%">PROCESSED</th>
+            <th width="16%">TEXT</th>
+            <th width="16%">TOPICS</th>
+            <th width="16%">SENDER</th>
+            <th width="16%">METADATA</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="result : ${monitorProcess.events}">
+            <td width="16%"><span th:text="${result.start}">Start</span></td>
+            <td width="16%"><span th:text="${result.end}">End</span></td>
+            <td width="16%"><span th:text="${result.senders}">Senders</span></td>
+            <td width="16%"><span th:text="${result.results}">Results</span></td>
+            <td width="16%"><span th:text="${result.metadata}">Metadata</span></td>
+            <td width="16%"><span th:text="${result.text}">Text</span></td>
+        </tbody>
+    </table>
+    </td>
+    </tr>
+    </table>
+</form>
 </body>
 </html>

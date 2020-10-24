@@ -11,7 +11,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Controller
 class GuiController(private val classificator: Classificator, private val manager: KnowledgeManager,
@@ -24,24 +24,37 @@ class GuiController(private val classificator: Classificator, private val manage
     }
 
     @RequestMapping(value = ["/guiProcess"], method = [RequestMethod.POST])
-    fun guiProcess(@ModelAttribute guiProcess: GuiProcess): String {
+    fun guiProcess(@ModelAttribute guiProcess: GuiProcess, model: Model): String {
         val result = classificator.classify(guiProcess.inputText)
         guiProcess.result = result
+        model.addAttribute("guiProcess", guiProcess)
         return "index"
     }
 
     @RequestMapping(value = ["/reloadKB"], method = [RequestMethod.POST])
-    fun reloadKB(): String {
+    fun reloadKB(@ModelAttribute guiProcess: GuiProcess, model: Model): String {
         manager.reloadKB()
+        model.addAttribute("guiProcess", guiProcess)
         return "index"
     }
 
     @RequestMapping(value = ["/monitor"], method = [RequestMethod.GET])
-    fun monitor(@ModelAttribute monitorProcess: MonitorProcess): String {
-        val start: LocalDateTime? = monitorProcess.from
-        val end: LocalDateTime? = monitorProcess.to
-        val listOfEvents: List<Event> = monitor.getEvents(start, end)
-        monitorProcess.events = listOfEvents
+    fun monitor(model: Model): String {
+        val monitorProcess = MonitorProcess()
+        monitorProcess.events = load(monitorProcess)
+        model.addAttribute("monitorProcess", monitorProcess)
         return "monitor"
+    }
+
+    @RequestMapping(value = ["/monitorWithFilter"], method = [RequestMethod.POST])
+    fun monitorWithFilter(@ModelAttribute monitorProcess: MonitorProcess): String {
+        monitorProcess.events = load(monitorProcess)
+        return "monitor"
+    }
+
+    private fun load(monitorProcess: MonitorProcess): List<Event> {
+        val start: LocalDate? = monitorProcess.from
+        val end: LocalDate? = monitorProcess.to
+        return monitor.getEvents(start, end)
     }
 }

@@ -7,6 +7,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.stream.Collectors
@@ -16,31 +17,69 @@ class FileEventStorage : EventStorage() {
     @Value("\${classificator.monitor.fileeventstorage.path}")
     var path: String? = null
 
+    private var lastModifiedEventStorage = 0L
+
+    private var cachedEventList = listOf<Event>()
+
     override fun write(event: Event) {
         val path = Paths.get(getFilename(event))
+        if (directoryExists(path)) {
+            createDirectories(path)
+        }
+
         if (!Files.exists(path)) {
             Files.writeString(path, getFileHeader())
         }
+
         Files.writeString(path, getEventData(event), StandardOpenOption.APPEND)
         if (log.isDebugEnabled) {
             log.debug("Wrote event $event to ${path.toFile().absolutePath}")
         }
     }
 
-    override fun get(start: LocalDateTime?, end: LocalDateTime?): List<Event> {
-        val listOfAllFiles = Files.list(Path.of(getDirectoryOfFiles())).filter { inBetween(it, start, end) }
-        return listOfAllFiles.map { Files.readAllLines(it) }
-                .collect(Collectors.toList())
-                .flatten()
-                .map { maptToEvent(it) }
+    private fun createDirectories(path: Path) {
+        path.toFile().parentFile.mkdirs()
     }
 
-    private fun inBetween(path: Path, start: LocalDateTime?, end: LocalDateTime?): Boolean {
-        val filename = path.toFile().name.split(".").first()
-        val dateTimeOfLog = LocalDateTime.parse(filename, formatter)
-        val startLocal = start ?: LocalDateTime.MIN
-        val endLocal = end ?: LocalDateTime.MAX
-        return dateTimeOfLog.isAfter(startLocal).and(dateTimeOfLog.isBefore(endLocal))
+    private fun directoryExists(path: Path) = path.toFile().parentFile.exists()
+
+    override fun get(start: LocalDate?, end: LocalDate?): List<Event> {
+        val directoryOfFiles = Paths.get(getDirectoryOfFiles())
+
+        if (!Files.exists(directoryOfFiles)) {
+            return listOf()
+        }
+
+        val lastModified = directoryOfFiles.toFile()
+                .lastModified()
+        if (lastModifiedEventStorage >= lastModified) {
+            return cachedEventList
+        }
+        lastModifiedEventStorage = lastModified
+        val listOfAllFiles = Files.list(directoryOfFiles)
+                .collect(Collectors.toList())
+                .filterNotNull()
+                .filter { isCsv(it) }
+                .filter { inBetween(it, start, end) }
+        cachedEventList = listOfAllFiles.map { Files.readAllLines(it) }
+                .flatten()
+                .filter { isNotHeadline(it) }
+                .map { maptToEvent(it) }
+        return cachedEventList
+    }
+
+    private fun isNotHeadline(line: String) = line != getFileHeader().replace("\n", "")
+
+    private fun isCsv(path: Path) = path.toFile().name.endsWith(".csv")
+
+    private fun inBetween(path: Path, start: LocalDate?, end: LocalDate?): Boolean {
+        val filename = path.toFile().name.split(".")
+                .first()
+        val dateTimeOfLog = LocalDate.parse(filename, formatter)
+        val startLocal = start ?: LocalDate.MIN
+        val endLocal = end ?: LocalDate.MAX
+        return dateTimeOfLog.isAfter(startLocal)
+                .and(dateTimeOfLog.isBefore(endLocal))
     }
 
     private fun maptToEvent(data: String): Event {
