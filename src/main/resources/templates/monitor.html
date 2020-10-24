@@ -8,6 +8,10 @@
 
 <body>
 
+<form action="#" method="POST" th:action="@{exportAsPdf}" th:object="${monitorProcess}">
+    <input type="submit" value="Export as PDF"/>
+</form>
+
 <!--/*@thymesVar id="monitorProcess" type="com.cuupa.classificator.gui.MonitorProcess"*/-->
 <form action="#" method="POST" th:action="@{monitorWithFilter}" th:object="${monitorProcess}">
     <!--<table class="table">
@@ -32,18 +36,19 @@
     <table border="1" class="table table-striped" width="100%">
         <thead class="thead-dark">
         <tr>
-            <th width="16%">RECEIVED</th>
-            <th width="16%">PROCESSED</th>
-            <th width="16%">TEXT</th>
-            <th width="16%">TOPICS</th>
-            <th width="16%">SENDER</th>
-            <th width="16%">METADATA</th>
+            <th width="16%">Received</th>
+            <th width="16%">Processing Time</th>
+            <th width="16%">Topics</th>
+            <th width="16%">Senders</th>
+            <th width="16%">Metadata</th>
+            <th width="16%">Analyzed Text</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="result : ${monitorProcess.events}">
-            <td width="16%"><span th:text="${result.start}">Start</span></td>
-            <td width="16%"><span th:text="${result.end}">End</span></td>
+            <td align="right" width="16%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
+            </td>
+            <td align="right" width="16%"><span th:text="${result.processingTime}">Processing time</span></td>
             <td width="16%"><span th:text="${result.senders}">Senders</span></td>
             <td width="16%"><span th:text="${result.results}">Results</span></td>
             <td width="16%"><span th:text="${result.metadata}">Metadata</span></td>

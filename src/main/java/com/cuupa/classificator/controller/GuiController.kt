@@ -47,9 +47,17 @@ class GuiController(private val classificator: Classificator, private val manage
     }
 
     @RequestMapping(value = ["/monitorWithFilter"], method = [RequestMethod.POST])
-    fun monitorWithFilter(@ModelAttribute monitorProcess: MonitorProcess): String {
+    fun monitorWithFilter(@ModelAttribute monitorProcess: MonitorProcess, model: Model): String {
         monitorProcess.events = load(monitorProcess)
+        model.addAttribute("monitorProcess", monitorProcess)
         return "monitor"
+    }
+
+    @RequestMapping(value = ["/exportAsPdf"], method = [RequestMethod.POST])
+    fun exportAsPdf(@ModelAttribute monitorProcess: MonitorProcess) {
+        val start: LocalDate? = monitorProcess.from
+        val end: LocalDate? = monitorProcess.to
+        val statistics = monitor.getStatistics(start, end)
     }
 
     private fun load(monitorProcess: MonitorProcess): List<Event> {
