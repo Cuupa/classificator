@@ -19,7 +19,7 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         val knowledgebaseDir = ResourceUtils.getFile(applicationProperties.knowledgbaseDir)
 
         if (!knowledgebaseDir.isDirectory) {
-            log.error("No knowledgbase found for $knowledgebaseDir")
+            log.error("No knowledgebase found for $knowledgebaseDir")
             return kb
         }
 
