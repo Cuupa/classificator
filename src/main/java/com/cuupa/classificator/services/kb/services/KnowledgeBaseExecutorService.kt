@@ -1,5 +1,6 @@
-package com.cuupa.classificator.services.kb
+package com.cuupa.classificator.services.kb.services
 
+import com.cuupa.classificator.services.kb.SemanticResult
 import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic

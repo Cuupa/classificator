@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb
+package com.cuupa.classificator.services.kb.services.knowledgebase
 
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic

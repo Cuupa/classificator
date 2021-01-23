@@ -2,7 +2,13 @@ package com.cuupa.classificator.configuration.spring
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties
 import com.cuupa.classificator.services.Classificator
-import com.cuupa.classificator.services.kb.*
+import com.cuupa.classificator.services.kb.KnowledgeManager
+import com.cuupa.classificator.services.kb.services.KnowledgeBaseExecutorService
+import com.cuupa.classificator.services.kb.services.MetadataService
+import com.cuupa.classificator.services.kb.services.SenderService
+import com.cuupa.classificator.services.kb.services.TopicService
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeBase
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeBaseInitiator
 import com.cuupa.classificator.services.stripper.PdfAnalyser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
