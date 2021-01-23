@@ -1,7 +1,6 @@
 package com.cuupa.classificator.services.kb
 
 import com.cuupa.classificator.constants.RegexConstants
-import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException
@@ -77,19 +76,6 @@ object KnowledgeFileParser {
             }
             if (charArray[index] == '}') {
                 break
-            }
-        }
-        // these are the metadata which is only applicable for the specific topic
-        if (kbFile.contains(StringConstants.dollar)) {
-            var metadata = MetaDataToken()
-            for (index in charArray.indices) {
-                if (charArray[index] == '$') {
-                    metadata.name = findExtractName(charArray, index)
-                } else if (charArray[index] == '(' && metadata.name.isNotEmpty()) {
-                    metadata.addToken(Tokens[TokenTextPointer(charArray, index)])
-                    topic.addMetaData(metadata)
-                    metadata = MetaDataToken()
-                }
             }
         }
         return topic

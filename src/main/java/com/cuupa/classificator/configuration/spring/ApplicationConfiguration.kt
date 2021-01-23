@@ -5,9 +5,7 @@ import com.cuupa.classificator.monitor.EventStorage
 import com.cuupa.classificator.monitor.FileEventStorage
 import com.cuupa.classificator.monitor.Monitor
 import com.cuupa.classificator.services.Classificator
-import com.cuupa.classificator.services.kb.KnowledgeBaseExecutorService
-import com.cuupa.classificator.services.kb.KnowledgeBaseInitiator
-import com.cuupa.classificator.services.kb.KnowledgeManager
+import com.cuupa.classificator.services.kb.*
 import com.cuupa.classificator.services.stripper.PdfAnalyser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,12 +30,32 @@ open class ApplicationConfiguration {
 
     @Bean
     open fun knowledgeManager(): KnowledgeManager {
-        return KnowledgeManager(knowledgeBaseInitiator(), knowledgeBaseExecutorService())
+        return KnowledgeManager(knowledgeBase(), knowledgeBaseExecutorService())
     }
 
     @Bean
     open fun knowledgeBaseExecutorService(): KnowledgeBaseExecutorService {
-        return KnowledgeBaseExecutorService()
+        return KnowledgeBaseExecutorService(topicService(), senderService(), metadataService())
+    }
+
+    @Bean
+    open fun knowledgeBase(): KnowledgeBase {
+        return knowledgeBaseInitiator().initKnowledgeBase()
+    }
+
+    @Bean
+    open fun topicService(): TopicService {
+        return TopicService(knowledgeBase().topicList)
+    }
+
+    @Bean
+    open fun senderService(): SenderService {
+        return SenderService(knowledgeBase().sendersList)
+    }
+
+    @Bean
+    open fun metadataService(): MetadataService {
+        return MetadataService(knowledgeBase().metadataList)
     }
 
     @Bean

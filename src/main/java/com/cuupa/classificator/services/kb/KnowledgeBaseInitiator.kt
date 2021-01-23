@@ -19,19 +19,18 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         val knowledgebaseDir = ResourceUtils.getFile(applicationProperties.knowledgbaseDir)
 
         if (!knowledgebaseDir.isDirectory) {
-            log.error("No knowledgbase found for $knowledgebaseDir")
+            log.error("No knowledgebase found for $knowledgebaseDir")
             return kb
         }
 
         val files = knowledgebaseDir.listFiles() ?: return kb
         val regexContent = getRegexContent(files)
         val metaDataTokenList = getMetaData(files)
+        metaDataTokenList.forEach { it.setRegexContent(regexContent) }
         val topicList = files.filter { it.name.endsWith(StringConstants.dslSuffix) }.map { createTopic(it) }
-
-        topicList.forEach { it.addMetaDataList(metaDataTokenList) }
-        topicList.forEach { topic: Topic -> topic.metaDataList.forEach { it.setRegexContent(regexContent) } }
         kb.topicList = topicList
-        kb.senders = getSenders(applicationProperties.senderFiles)
+        kb.sendersList = getSenders(applicationProperties.senderFiles)
+        kb.metadataList = metaDataTokenList
         return kb
     }
 

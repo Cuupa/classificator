@@ -2,14 +2,17 @@ package com.cuupa.classificator.services.kb
 
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
+import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 
 class KnowledgeBase {
 
+    var metadataList: List<MetaDataToken> = listOf()
     var topicList: List<Topic> = listOf()
-    var senders: List<SenderToken> = listOf()
+    var sendersList: List<SenderToken> = listOf()
 
     fun clear() {
         topicList = listOf()
-        senders = listOf()
+        sendersList = listOf()
+        metadataList = listOf()
     }
 }

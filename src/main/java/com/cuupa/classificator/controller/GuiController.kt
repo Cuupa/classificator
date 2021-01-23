@@ -33,7 +33,7 @@ class GuiController(private val classificator: Classificator, private val manage
 
     @RequestMapping(value = ["/reloadKB"], method = [RequestMethod.POST])
     fun reloadKB(@ModelAttribute guiProcess: GuiProcess, model: Model): String {
-        manager.reloadKB()
+        //manager.reloadKB()
         model.addAttribute("guiProcess", guiProcess)
         return "index"
     }
