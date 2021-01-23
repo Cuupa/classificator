@@ -18,7 +18,7 @@ open class TestConfig {
 
     @Bean
     open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser())
+        return Classificator(knowledgeManager(), analyser(), monitor())
     }
 
     @Bean
