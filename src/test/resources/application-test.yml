@@ -5,7 +5,7 @@ server:
 
 logging.level:
   root: ERROR
-  com.cuupa.classificator: DEBUG
+  com.cuupa.classificator: warn
 
 classificator:
   kbfiles: classpath:kbfiles

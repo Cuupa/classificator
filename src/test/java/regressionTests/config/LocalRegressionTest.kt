@@ -11,7 +11,8 @@ import java.util.stream.Collectors
 open class LocalRegressionTest {
 
     fun getFilesOfPath(path: String): List<File> {
-        return Files.list(Paths.get(path)).map { it.toFile() }.collect(Collectors.toList()) ?: listOf()
+        return Files.list(Paths.get(path)).filter { it.toFile().name.endsWith(".pdf") }.map { it.toFile() }
+            .collect(Collectors.toList()) ?: listOf()
     }
 
     fun getFileContent(file: File): String {
