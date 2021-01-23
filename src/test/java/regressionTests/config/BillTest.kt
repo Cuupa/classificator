@@ -1,13 +1,25 @@
 package regressionTests.config
 
+import com.cuupa.classificator.services.kb.KnowledgeManager
 import org.junit.jupiter.api.TestInstance
+import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit4.SpringRunner
 import java.util.stream.IntStream
 import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(classes = [TestConfig::class])
+@ActiveProfiles("test")
+@RunWith(SpringRunner::class)
 open class BillTest : LocalRegressionTest() {
 
     private val path = "/home/${System.getProperty("user.name")}/testdata/bill"
+
+    @Autowired
+    private var knowledgeManager: KnowledgeManager? = null
 
     /**
      * I don't feel like publishing my private test documents to a public github repo.
@@ -20,7 +32,7 @@ open class BillTest : LocalRegressionTest() {
         var bill = 0
         val list = mutableListOf<String>()
         IntStream.range(0, files.size).forEach { index ->
-            val result = knowledgeManager.getResults(contents[index])
+            val result = knowledgeManager!!.getResults(contents[index])
             assertEquals(1, result.size)
             if ("BILL" == result.first().topicName) {
                 bill += 1

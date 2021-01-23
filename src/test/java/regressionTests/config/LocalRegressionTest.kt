@@ -1,7 +1,5 @@
 package regressionTests.config
 
-import com.cuupa.classificator.configuration.application.ApplicationProperties
-import com.cuupa.classificator.services.kb.*
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import java.io.File
@@ -11,10 +9,6 @@ import java.util.*
 import java.util.stream.Collectors
 
 open class LocalRegressionTest {
-
-    var applicationProperties = ApplicationProperties()
-
-    var knowledgeManager: KnowledgeManager
 
     fun getFilesOfPath(path: String): List<File> {
         return Files.list(Paths.get(path)).map { it.toFile() }.collect(Collectors.toList()) ?: listOf()
@@ -33,16 +27,5 @@ open class LocalRegressionTest {
             pages.add(stripper.getText(document))
         }
         return pages
-    }
-
-    init {
-        applicationProperties.knowledgbaseDir =
-            "/home/${System.getProperty("user.name")}/IntelliJProjects/classificator/src/main/resources/kbfiles"
-        val knowledgeBase = KnowledgeBaseInitiator(applicationProperties).initKnowledgeBase()
-        val topicService = TopicService(knowledgeBase.topicList)
-        val senderService = SenderService(knowledgeBase.sendersList)
-        val metadataService = MetadataService(knowledgeBase.metadataList)
-        knowledgeManager =
-            KnowledgeManager(knowledgeBase, KnowledgeBaseExecutorService(topicService, senderService, metadataService))
     }
 }
