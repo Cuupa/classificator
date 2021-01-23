@@ -16,9 +16,9 @@ import kotlin.test.assertEquals
 @SpringBootTest(classes = [TestConfig::class])
 @ActiveProfiles("test")
 @RunWith(SpringRunner::class)
-open class BillTest : LocalRegressionTest() {
+open class SEPATest : LocalRegressionTest() {
 
-    private val path = "/home/${System.getProperty("user.name")}/testdata/bill"
+    private val path = "/home/${System.getProperty("user.name")}/testdata/SEPA"
 
     @Autowired
     private var knowledgeManager: KnowledgeManager? = null
@@ -37,7 +37,7 @@ open class BillTest : LocalRegressionTest() {
             IntStream.range(0, files.size).forEach { index ->
                 val result = knowledgeManager!!.getResults(contents[index])
                 assertEquals(1, result.size)
-                if ("BILL" == result.first().topicName) {
+                if ("SEPA" == result.first().topicName) {
                     bill += 1
                 } else {
                     list.add("${files[index].absolutePath} classified as ${result.first().topicName}")
