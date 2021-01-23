@@ -1,5 +1,6 @@
 import com.cuupa.classificator.services.kb.KnowledgeFileParser.parseTopic
 import com.cuupa.classificator.services.kb.KnowledgeManager
+import com.cuupa.classificator.services.kb.TopicService
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,13 +20,18 @@ class KBTest {
     @Autowired
     private val knowledgeManager: KnowledgeManager? = null
 
+    @Autowired
+    private val topicService: TopicService? = null
+
     private val bill = Files.readString(Paths.get("src/main/resources/kbfiles/bill.dsl"))
     private val warning = Files.readString(Paths.get("src/main/resources/kbfiles/warning.dsl"))
     private val sickNote = Files.readString(Paths.get("src/main/resources/kbfiles/sicknote.dsl"))
 
-    private val textBill = "Im Anhang finden Sie die Rechnung für den Betrag von 31€"
-    private val textWarning = "Im Anhang finden Sie die Rechnung für den Betrag von 31 €. Bisher haben wir noch keine Zahlung erhalten. Dies ist die letzte Mahnung"
-    private val textSicknote = "Arbeitsunfähigkeitsbescheinigung ICD-10 Code: A10.1 Erstbescheinigung " + "Folgebescheinigung arbeitsunfähig seit 01.01.2020 voraussichtlich arbeitsunfähig bis 01.02.2020 " + "festgestellt am 01.01.2020"
+    private val textBill = "Im Anhang finden Sie die Rechnung für den Betrag von 31 €"
+    private val textWarning =
+        "Im Anhang finden Sie die Rechnung für den Betrag von 31 €. Bisher haben wir noch keine Zahlung erhalten. Dies ist die letzte Mahnung"
+    private val textSicknote =
+        "Arbeitsunfähigkeitsbescheinigung ICD-10 Code: A10.1 Erstbescheinigung " + "Folgebescheinigung arbeitsunfähig seit 01.01.2020 voraussichtlich arbeitsunfähig bis 01.02.2020 " + "festgestellt am 01.01.2020"
 
     @Test
     fun parseBill() {

@@ -1,29 +1,55 @@
 package com.cuupa.classificator.services.kb
 
+import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.SenderToken
-import com.cuupa.classificator.services.kb.semantic.Topic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.logging.LogFactory
 
-class KnowledgeBaseExecutorService {
+class KnowledgeBaseExecutorService(
+    private val topicService: TopicService,
+    private val senderService: SenderService,
+    private val metadataService: MetadataService
+) {
 
-    private val senderService = SenderService()
+    fun submit(text: String): List<SemanticResult> {
+        var semanticResults = mutableListOf<SemanticResult>()
+        var mostFittingSender: String? = null
+        var metadata = listOf<Metadata>()
+        runBlocking {
+            val job = launch(Dispatchers.Default) {
+                val asyncTopics = async {
+                    LOG.info("I'm Thread ${Thread.currentThread()}")
+                    topicService.getTopics(text)
+                }
+                val asyncSenders = async {
+                    LOG.info("I'm Thread ${Thread.currentThread()}")
+                    senderService.getSender(text)
+                }
 
-    private val topicService = TopicService()
+                val asyncMetadata = async {
+                    LOG.info("I'm Thread ${Thread.currentThread()}")
+                    metadataService.getMetadata(text)
+                }
 
-    fun submit(topics: List<Topic>, senderTokens: List<SenderToken>, text: String): List<SemanticResult> {
-        val semanticResults = topicService.getTopics(topics, text)
-        var mostFittingSender = senderService.getSender(senderTokens, text)
+                metadata = asyncMetadata.await()
+                mostFittingSender = asyncSenders.await()
+                if (mostFittingSender.isNullOrEmpty()) {
+                    mostFittingSender = senderService.findSenderFromMetadata(metadata, text)
+                }
 
-        if (mostFittingSender.isNullOrEmpty()) {
-            LOG.debug("Looking for senders in metadata")
-            mostFittingSender = senderService.findSenderFromMetadata(semanticResults, senderTokens, text)
+                semanticResults = asyncTopics.await()
+            }
+            job.join()
         }
 
-        semanticResults.forEach { it.sender = mostFittingSender ?: SenderToken.UNKNOWN }
-        semanticResults.forEach { result ->
-            result.metaData = result.metaData.distinctBy { it.value }.toMutableList()
+        val distinctMetadata = metadata.distinctBy { it.value }.toList()
+        semanticResults.forEach {
+            it.sender = mostFittingSender ?: SenderToken.UNKNOWN
+            it.metaData = distinctMetadata
         }
-
         LOG.debug(semanticResults)
         return semanticResults
     }

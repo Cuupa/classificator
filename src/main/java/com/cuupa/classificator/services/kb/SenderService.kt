@@ -4,43 +4,38 @@ import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.token.CountToken
-import org.apache.juli.logging.LogFactory
 
-class SenderService {
+class SenderService(private val senders: List<SenderToken>) {
 
-    private val LOG = LogFactory.getLog(SenderService::class.java)
 
-    fun getSender(senders: List<SenderToken>, text: String): String? {
-        val sender = getSenders(senders, text)
-        return getMostFittingSender(sender, text)
+    fun getSender(text: String): String? {
+        val foundSenders = getSenders(text)
+        return getMostFittingSender(foundSenders, text)
     }
 
-    private fun getSenders(senders: List<SenderToken>, text: String): List<SenderToken> {
+    private fun getSenders(text: String): List<SenderToken> {
         return senders.filter { it.match(text) }
     }
 
-    private fun getNumberOfOccurrences(senders: List<SenderToken>, text: String): List<SenderToken> {
-        senders.forEach { it.countNumberOfOccurences(text) }
-        return senders
+    private fun getNumberOfOccurrences(foundSenders: List<SenderToken>, text: String): List<SenderToken> {
+        foundSenders.forEach { it.countNumberOfOccurences(text) }
+        return foundSenders
     }
 
-    fun getMostFittingSender(senders: List<SenderToken>, text: String): String? {
-        val mostFittingSenders = getNumberOfOccurrences(senders, text)
+    private fun getMostFittingSender(foundSenders: List<SenderToken>, text: String): String? {
+        val mostFittingSenders = getNumberOfOccurrences(foundSenders, text)
         return mostFittingSenders.maxWithOrNull(compareBy { it.countNumberOfOccurences() })?.name
     }
 
     fun findSenderFromMetadata(
-        semanticResults: List<SemanticResult>,
-        senderTokens: List<SenderToken>,
+        metadata: List<Metadata>,
         text: String
-    ): String? {
+    ): String {
 
         val sendersFromTopic = mutableListOf<Metadata>()
-        for ((_, _, metaData) in semanticResults) {
-            sendersFromTopic.addAll(metaData.filter { (name) -> StringConstants.sender == name })
-        }
+        sendersFromTopic.addAll(metadata.filter { (name) -> StringConstants.sender == name })
 
-        sendersFromTopic.addAll(senderTokens.map { Metadata(StringConstants.sender, it.name) })
+        sendersFromTopic.addAll(senders.map { Metadata(StringConstants.sender, it.name) })
 
         val filteredText = sendersFromTopic.filter { text.contains(it.value) }
         val mutableMapOf = mutableMapOf<String, Int>()

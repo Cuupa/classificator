@@ -181,4 +181,8 @@ class MetaDataToken {
     fun setRegexContent(regexContent: List<Pair<String, String>>?) {
         this.regexContent = regexContent
     }
+
+    override fun toString(): String {
+        return name
+    }
 }

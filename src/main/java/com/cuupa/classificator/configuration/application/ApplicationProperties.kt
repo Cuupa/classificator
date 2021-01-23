@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Value
 class ApplicationProperties {
 
     @Value("\${classificator.kbfiles}")
-    val knowledgbaseDir: String = ""
+    var knowledgbaseDir: String = ""
 
     @Value("\${classificator.metadatafiles}")
-    val metadataFiles: String = ""
+    var metadataFiles: String = ""
 
     @Value("\${classificator.regexfiles}")
-    val regexFiles: String = ""
+    var regexFiles: String = ""
 
     @Value("\${classificator.senderfiles}")
-    val senderFiles: String = ""
+    var senderFiles: String = ""
 }
