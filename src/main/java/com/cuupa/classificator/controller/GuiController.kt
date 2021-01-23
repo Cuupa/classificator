@@ -27,7 +27,7 @@ class GuiController(private val classificator: Classificator, private val manage
 
     @RequestMapping(value = ["/reloadKB"], method = [RequestMethod.POST])
     fun reloadKB(): String {
-        manager.reloadKB()
+        //manager.reloadKB()
         return "index"
     }
 }
