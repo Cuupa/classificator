@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 abstract class EventStorage {
 
-    val statisticalFields = listOf("RECEIVED", "PROCESSED", "TEXT", "TOPICS", "SENDER", "METADATA")
+    val statisticalFields = listOf("RECEIVED", "PROCESSED", "TOPICS", "SENDER", "METADATA", "TEXT")
 
     abstract fun write(event: Event)
 
