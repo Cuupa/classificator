@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb
+package com.cuupa.classificator.services.kb.services.knowledgebase
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties
 import com.cuupa.classificator.constants.StringConstants
@@ -50,8 +50,10 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
     }
 
     private fun createRegex(regexFile: File): Pair<String, String> {
-        return KnowledgeFileParser.parseRegexFile(regexFile.name,
-                                                  FileUtils.readFileToString(regexFile, StandardCharsets.UTF_8))
+        return KnowledgeFileParser.parseRegexFile(
+            regexFile.name,
+            FileUtils.readFileToString(regexFile, StandardCharsets.UTF_8)
+        )
     }
 
     private fun createTopic(kbFile: File): Topic {

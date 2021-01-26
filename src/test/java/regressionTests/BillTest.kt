@@ -1,4 +1,4 @@
-package regressionTests.config
+package regressionTests
 
 import com.cuupa.classificator.services.kb.KnowledgeManager
 import org.junit.Test
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import regressionTests.config.TestConfig
 import java.util.stream.IntStream
 import kotlin.system.measureTimeMillis
 import kotlin.test.assertEquals
@@ -16,9 +17,9 @@ import kotlin.test.assertEquals
 @SpringBootTest(classes = [TestConfig::class])
 @ActiveProfiles("test")
 @RunWith(SpringRunner::class)
-open class SEPATest : LocalRegressionTest() {
+open class BillTest : LocalRegressionTest() {
 
-    private val path = "/home/${System.getProperty("user.name")}/testdata/SEPA"
+    private val path = "/home/${System.getProperty("user.name")}/testdata/bill"
 
     @Autowired
     private var knowledgeManager: KnowledgeManager? = null
@@ -37,7 +38,7 @@ open class SEPATest : LocalRegressionTest() {
             IntStream.range(0, files.size).forEach { index ->
                 val result = knowledgeManager!!.getResults(contents[index])
                 assertEquals(1, result.size)
-                if ("SEPA" == result.first().topicName) {
+                if ("BILL" == result.first().topicName) {
                     bill += 1
                 } else {
                     list.add("${files[index].absolutePath} classified as ${result.first().topicName}")

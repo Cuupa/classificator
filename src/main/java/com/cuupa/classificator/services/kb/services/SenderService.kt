@@ -1,4 +1,4 @@
-package com.cuupa.classificator.services.kb
+package com.cuupa.classificator.services.kb.services
 
 import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.Metadata

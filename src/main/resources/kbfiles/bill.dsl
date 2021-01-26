@@ -6,4 +6,5 @@ BILL = {
 	not("versicherungsschein", "versicherungs-nr"),
 	not("gehaltsabrechnungen"),
 	not("rechnung trägt")
+	not("keine Zahlung erhalten")
 }
