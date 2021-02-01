@@ -20,8 +20,11 @@ If you want to participate, feel free to create pull requests, fork this project
 When creating an issue or a pull request, please be as detailed as possible.
 
 "I want to participate, but I know nothing about programming 😔"
-- No problem. You can contribute by providing [topic definitions](https://github.com/Cuupa/classificator/tree/master/src/main/resources/kbfiles) or contribute by providing feedback, make some suggestions eg.
-If you want to create or fine tune a topic, create a pull request and I'll give it a shot.
+- No problem. You can contribute by
+  providing [topic definitions](https://github.com/Cuupa/classificator/tree/master/knowledgebase) or contribute by
+  providing feedback, make some suggestions eg. If you want to contribute to your topic, open a new issue providing your
+  suggested changes but also supply any text you have tested with. If you want to create or fine tune a topic, create a
+  pull request and I'll give it a shot.
 
 If you think this project is awesome, you can spend me a beer or a coffee.
 
