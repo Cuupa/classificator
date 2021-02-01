@@ -9,7 +9,7 @@ import java.util.*
 import java.util.stream.Collectors
 
 class TextAndPositionTest {
-    private val testFile = File("C:/Users/Simon/Desktop/Testdaten/BRN3C2AF4402B24_20181206_205721_001340.pdf")
+    private val testFile = File("")
     @Test
     fun dingens() {
         try {

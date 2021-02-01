@@ -32,7 +32,7 @@ object KnowledgeFileExtractor {
                     entry!!.name.endsWith("regx") ->
                         regexList.add(
                             KnowledgeFileParser.parseRegexFile(
-                                entry!!.name,
+                                entry!!.name.substringAfter("regex/"),
                                 readIntoString(entry, sevenZFile)
                             )
                         )
