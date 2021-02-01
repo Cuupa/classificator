@@ -1,3 +1,0 @@
-$phoneNumber = {
-	oneOf("Tel.: [PHONENUMBER]", "Tel: [PHONENUMBER]", "Tel. [PHONENUMBER]", "Telefon: [PHONENUMBER]")
-}

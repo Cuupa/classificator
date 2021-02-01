@@ -8,7 +8,4 @@ logging.level:
   com.cuupa.classificator: warn
 
 classificator:
-  kbfiles: classpath:kbfiles
-  metadatafiles: classpath:kbfiles/metadata
-  regexfiles: classpath:kbfiles/regex
-  senderFiles: classpath:kbfiles/senders
+  kbfiles: knowledgebase

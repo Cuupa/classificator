@@ -7,7 +7,6 @@ import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 import com.cuupa.classificator.services.kb.semantic.token.TokenTextPointer
 import com.cuupa.classificator.services.kb.semantic.token.Tokens
-import org.apache.commons.lang3.tuple.Pair
 
 object KnowledgeFileParser {
 
@@ -47,7 +46,7 @@ object KnowledgeFileParser {
     }
 
     fun parseRegexFile(filename: String, content: String): Pair<String, String> {
-        return Pair.of(filename.split(RegexConstants.dotPattern)[0], content)
+        return Pair(filename.split(RegexConstants.dotPattern)[0], content)
     }
 
     private fun parseMetaData(kbFile: String): MetaDataToken {
