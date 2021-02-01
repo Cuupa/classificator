@@ -3,8 +3,6 @@ package com.cuupa.classificator.services.kb.semantic.token
 import com.cuupa.classificator.constants.RegexConstants
 import com.cuupa.classificator.services.kb.semantic.Metadata
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.*
-import org.apache.commons.lang3.tuple.ImmutablePair
-import org.apache.commons.lang3.tuple.Pair
 import org.apache.logging.log4j.util.Strings
 import java.util.*
 import java.util.function.Consumer
@@ -48,7 +46,7 @@ class MetaDataToken {
                 searchStream = getIntStream(tokens.size)
                 searchStream.forEach { value: Int ->
                     if (tokens[value].match(text)) {
-                        val metadataValue = compiledText[0][value].right
+                        val metadataValue = compiledText[0][value].second
                         addMetadataSynchronized(match, metadataValue, tokens, value)
                     }
                 }
@@ -56,8 +54,10 @@ class MetaDataToken {
         }
     }
 
-    private fun addMetadataSynchronized(match: MutableMap<Metadata, Int>, metadataValue: String, tokens: List<Token>,
-                                        value: Int) {
+    private fun addMetadataSynchronized(
+        match: MutableMap<Metadata, Int>, metadataValue: String, tokens: List<Token>,
+        value: Int
+    ) {
         if (isMetadataAlreadyRegistered(match, metadataValue)) {
             synchronized(MetaDataToken::class.java) {
                 if (isMetadataAlreadyRegistered(match, metadataValue)) {
@@ -72,11 +72,13 @@ class MetaDataToken {
         return match.entries.stream().noneMatch { name == it.key.name && it.key.value == metadataValue }
     }
 
-    private fun replaceCompiledTextInTokenValue(compiledText: List<List<Pair<String, String>>>,
-                                                tokens: List<Token>): List<Token> {
+    private fun replaceCompiledTextInTokenValue(
+        compiledText: List<List<Pair<String, String>>>,
+        tokens: List<Token>
+    ): List<Token> {
         IntStream.range(0, compiledText.size).forEach { i: Int ->
             IntStream.range(0, tokens.size).forEach { j: Int ->
-                tokens[j].tokenValue[i] = compiledText[i][j].left
+                tokens[j].tokenValue[i] = compiledText[i][j].first
             }
         }
         return tokens
@@ -124,7 +126,7 @@ class MetaDataToken {
 
     private fun compileText(text: String?, tokenValue: String): List<Pair<String, String>> {
         if (text == null || !hasVariable(tokenValue)) {
-            return listOf(ImmutablePair(tokenValue, tokenValue))
+            return listOf(Pair(tokenValue, tokenValue))
         }
         val split = tokenValue.split(RegexConstants.squareBracketOpenPattern)
         val textBeforeToken = split[0]
@@ -138,7 +140,7 @@ class MetaDataToken {
         val value: MutableList<Pair<String, String>> = mutableListOf()
         while (matcher.find()) {
             val normalizedValue = extract.normalize(matcher.group())
-            value.add(ImmutablePair(textBeforeToken + normalizedValue + textAfterToken, normalizedValue))
+            value.add(Pair(textBeforeToken + normalizedValue + textAfterToken, normalizedValue))
         }
         return value
     }
@@ -146,25 +148,30 @@ class MetaDataToken {
     private fun getExtractForName(name: String): Extract {
         for (pair in regexContent!!) {
             when {
-                isDateExtract(name, pair) -> return DateExtract(pair.right)
-                isIbanExtract(name, pair) -> return IbanExtract(pair.right)
-                isSenderExtract(name, pair) -> return SenderExtract(pair.right)
-                isRegexExtract(name, pair) -> return RegexExtract(pair.right)
+                isDateExtract(name, pair) -> return DateExtract(pair.second)
+                isIbanExtract(name, pair) -> return IbanExtract(pair.second)
+                isSenderExtract(name, pair) -> return SenderExtract(pair.second)
+                isRegexExtract(name, pair) -> return RegexExtract(pair.second)
             }
         }
         throw RuntimeException("There is no extract specified")
     }
 
-    private fun isRegexExtract(name: String, pair: Pair<String, String>) = name.contains(pair.left)
+    private fun isRegexExtract(name: String, pair: Pair<String, String>) = name.contains(pair.first)
 
     private fun isSenderExtract(name: String, pair: Pair<String, String>) = SenderExtract.name == name && name.contains(
-        pair.left)
+        pair.first
+    )
 
-    private fun isIbanExtract(name: String,
-                              pair: Pair<String, String>) = IbanExtract.name == name && name.contains(pair.left)
+    private fun isIbanExtract(
+        name: String,
+        pair: Pair<String, String>
+    ) = IbanExtract.name == name && name.contains(pair.first)
 
-    private fun isDateExtract(name: String,
-                              pair: Pair<String, String>) = DateExtract.name == name && name.contains(pair.left)
+    private fun isDateExtract(
+        name: String,
+        pair: Pair<String, String>
+    ) = DateExtract.name == name && name.contains(pair.first)
 
     private fun getTextAfterToken(value: String): String {
         val split = value.split("]".toPattern())
