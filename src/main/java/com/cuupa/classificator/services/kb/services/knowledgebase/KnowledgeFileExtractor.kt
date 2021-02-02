@@ -22,21 +22,22 @@ object KnowledgeFileExtractor {
                 if (entry == null || entry!!.isDirectory) {
                     continue
                 }
+                val filename = entry!!.name
                 when {
-                    entry!!.name.endsWith(".dsl") ->
+                    filename.endsWith(".dsl") ->
                         topicList.add(KnowledgeFileParser.parseTopic(readIntoString(entry, sevenZFile)))
-                    entry!!.name.endsWith("sender") ->
+                    filename.endsWith("sender") ->
                         senderList.add(KnowledgeFileParser.parseSenderFile(readIntoString(entry, sevenZFile)))
-                    entry!!.name.endsWith("meta") ->
+                    filename.endsWith("meta") ->
                         metadataList.add(KnowledgeFileParser.parseMetaFile(readIntoString(entry, sevenZFile)))
-                    entry!!.name.endsWith("regx") ->
+                    filename.endsWith("regx") ->
                         regexList.add(
                             KnowledgeFileParser.parseRegexFile(
-                                entry!!.name.substringAfter("regex/"),
+                                filename.substringAfter("regex/"),
                                 readIntoString(entry, sevenZFile)
                             )
                         )
-                    entry!!.name == "META.INF" -> {
+                    filename == "META.INF" -> {
                         val metaInfContent = readIntoString(entry!!, sevenZFile)
                         kb.version = metaInfContent.substringAfter("version=").substringBefore("\n")
                     }
