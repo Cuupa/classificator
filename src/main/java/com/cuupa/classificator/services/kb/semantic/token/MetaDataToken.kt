@@ -1,7 +1,7 @@
 package com.cuupa.classificator.services.kb.semantic.token
 
 import com.cuupa.classificator.constants.RegexConstants
-import com.cuupa.classificator.services.kb.semantic.Metadata
+import com.cuupa.classificator.services.kb.Metadata
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.*
 import org.apache.logging.log4j.util.Strings
 import java.util.*

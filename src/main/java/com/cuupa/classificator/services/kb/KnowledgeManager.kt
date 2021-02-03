@@ -1,6 +1,5 @@
 package com.cuupa.classificator.services.kb
 
-import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.services.KnowledgeBaseExecutorService
 import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeBase
 

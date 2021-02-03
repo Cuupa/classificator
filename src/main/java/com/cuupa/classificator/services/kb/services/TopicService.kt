@@ -1,7 +1,7 @@
 package com.cuupa.classificator.services.kb.services
 
 import com.cuupa.classificator.services.kb.SemanticResult
-import com.cuupa.classificator.services.kb.semantic.Topic
+import com.cuupa.classificator.services.kb.Topic
 
 class TopicService(private val topics: List<Topic>) {
 

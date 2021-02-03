@@ -1,16 +1,16 @@
-package com.cuupa.classificator.services.kb.semantic
+package com.cuupa.classificator.services.kb
 
 import com.cuupa.classificator.services.kb.semantic.token.Token
 import org.apache.juli.logging.LogFactory
 import org.apache.logging.log4j.util.Strings
 
-class Topic {
+class Topic : SemanticResultData() {
 
     private val log = LogFactory.getLog(Topic::class.java)
     private val tokenList: MutableList<Token> = mutableListOf()
     var name: String = Strings.EMPTY
 
-    fun addToken(token: Token) {
+    override fun addToken(token: Token) {
         tokenList.add(token)
     }
 

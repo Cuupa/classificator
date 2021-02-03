@@ -1,8 +1,8 @@
 package com.cuupa.classificator.services.kb.services
 
 import com.cuupa.classificator.constants.StringConstants
-import com.cuupa.classificator.services.kb.semantic.Metadata
-import com.cuupa.classificator.services.kb.semantic.Sender
+import com.cuupa.classificator.services.kb.Metadata
+import com.cuupa.classificator.services.kb.Sender
 import com.cuupa.classificator.services.kb.semantic.token.CountToken
 
 class SenderService(private val senders: List<Sender>) {

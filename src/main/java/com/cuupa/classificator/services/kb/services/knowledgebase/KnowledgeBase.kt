@@ -1,7 +1,7 @@
 package com.cuupa.classificator.services.kb.services.knowledgebase
 
-import com.cuupa.classificator.services.kb.semantic.Sender
-import com.cuupa.classificator.services.kb.semantic.Topic
+import com.cuupa.classificator.services.kb.Sender
+import com.cuupa.classificator.services.kb.Topic
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 
 class KnowledgeBase {
