@@ -12,6 +12,7 @@ Documentation work in progress!
   - [Docker](https://github.com/Cuupa/classificator#docker)
   - [Synology Docker](https://github.com/Cuupa/classificator#synology-docker)
   - [Changing the configuration](https://github.com/Cuupa/classificator#changing-the-configuration)
+  - [Install a new Knowledgebase](https://github.com/Cuupa/classificator#install-a-new-knowledgebase)
 
 ## About this project
 
@@ -135,3 +136,7 @@ java -jar app.jar -Dclassificator.kbfiles:"C:\Users\JohnDoe\My Programs\classifi
 ```
 
 Notice that, you need to quote the value as soon as you have spaces in a parameter
+
+### Install a new Knowledgebase
+
+Just copy the new database to your corresponding directory and restart the application
