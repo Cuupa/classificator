@@ -26,11 +26,11 @@ object KnowledgeFileExtractor {
                 when {
                     filename.endsWith(".dsl") ->
                         topicList.add(KnowledgeFileParser.parseTopic(readIntoString(entry, sevenZFile)))
-                    filename.endsWith("sender") ->
+                    filename.endsWith(".sender") ->
                         senderList.add(KnowledgeFileParser.parseSenderFile(readIntoString(entry, sevenZFile)))
-                    filename.endsWith("meta") ->
+                    filename.endsWith(".meta") ->
                         metadataList.add(KnowledgeFileParser.parseMetaFile(readIntoString(entry, sevenZFile)))
-                    filename.endsWith("regx") ->
+                    filename.endsWith(".regx") ->
                         regexList.add(
                             KnowledgeFileParser.parseRegexFile(
                                 filename.substringAfter("regex/"),
