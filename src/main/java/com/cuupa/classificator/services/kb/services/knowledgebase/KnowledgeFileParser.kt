@@ -111,8 +111,12 @@ object KnowledgeFileParser {
         }
 
         var equalAndBracketValid = false
-        IntStream.of(indexOf, charArray.size).forEach { index ->
-            if (!charArray[index].isWhitespace() && charArray[index] == '{') {
+        IntStream.of(indexOf, charArray.size - 2).forEach { index ->
+            var searchIndex = index + 1
+            while (!equalAndBracketValid && charArray[searchIndex].isWhitespace()) {
+                searchIndex++
+            }
+            if (!equalAndBracketValid && charArray[searchIndex] == '{') {
                 equalAndBracketValid = true
             }
         }
@@ -121,6 +125,7 @@ object KnowledgeFileParser {
             throw InvalidTokenException("invalid bracket count")
         }
         if (!equalAndBracketValid) {
+            println(kbFile)
             throw InvalidTokenException("invalid file definition")
         }
     }
