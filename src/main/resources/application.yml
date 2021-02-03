@@ -1,11 +1,7 @@
-server_port: 8080
-
-server:
-  port: ${server_port}
+server.port: 8080
 
 logging.level:
   root: ERROR
   com.cuupa.classificator: DEBUG
 
-classificator:
-  kbfiles: knowledgebase
+classificator.kbfiles: knowledgebase
