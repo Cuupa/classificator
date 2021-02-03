@@ -2,7 +2,7 @@ package com.cuupa.classificator.services.kb.services
 
 import com.cuupa.classificator.services.kb.SemanticResult
 import com.cuupa.classificator.services.kb.semantic.Metadata
-import com.cuupa.classificator.services.kb.semantic.SenderToken
+import com.cuupa.classificator.services.kb.semantic.Sender
 import com.cuupa.classificator.services.kb.semantic.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -48,7 +48,7 @@ class KnowledgeBaseExecutorService(
         }
 
         if (mostFittingSender.isNullOrEmpty()) {
-            mostFittingSender = SenderToken.UNKNOWN
+            mostFittingSender = Sender.UNKNOWN
         }
         val distinctMetadata = metadata.distinctBy { it.value }.toList()
         semanticResults.forEach {

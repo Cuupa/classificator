@@ -1,7 +1,7 @@
 package com.cuupa.classificator.services.kb.services.knowledgebase
 
 import com.cuupa.classificator.constants.RegexConstants
-import com.cuupa.classificator.services.kb.semantic.SenderToken
+import com.cuupa.classificator.services.kb.semantic.Sender
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
@@ -20,19 +20,19 @@ object KnowledgeFileParser {
         return parseMetaData(kbFile)
     }
 
-    fun parseSenderFile(kbFile: String): SenderToken {
+    fun parseSenderFile(kbFile: String): Sender {
         validateToken(kbFile)
         return parseSender(kbFile)
     }
 
-    private fun parseSender(kbFile: String): SenderToken {
+    private fun parseSender(kbFile: String): Sender {
         val senderToken = fillToken(kbFile)
         senderToken.name = kbFile.split(RegexConstants.equalPattern)[0].trim()
         return senderToken
     }
 
-    private fun fillToken(kbFile: String): SenderToken {
-        val token = SenderToken()
+    private fun fillToken(kbFile: String): Sender {
+        val token = Sender()
         val charArray = kbFile.toCharArray()
         for (index in charArray.indices) {
             if (charArray[index] == '(') {

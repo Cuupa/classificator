@@ -1,6 +1,6 @@
 package com.cuupa.classificator.services.kb.services.knowledgebase
 
-import com.cuupa.classificator.services.kb.semantic.SenderToken
+import com.cuupa.classificator.services.kb.semantic.Sender
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseDatabaseMetadata
@@ -19,7 +19,7 @@ object KnowledgeFileExtractor {
         val kb = KnowledgeBase()
         SevenZFile(knowledgebase).use { sevenZFile ->
             val topicList = mutableListOf<Topic>()
-            val senderList = mutableListOf<SenderToken>()
+            val senderList = mutableListOf<Sender>()
             val metadataList = mutableListOf<MetaDataToken>()
             val regexList = mutableListOf<Pair<String, String>>()
             var entry: SevenZArchiveEntry?

@@ -7,7 +7,7 @@ import org.apache.logging.log4j.util.Strings
 /**
  * @author Simon Thiel (https://github.com/cuupa)
  */
-class SenderToken {
+class Sender {
 
     private val tokenList: MutableList<Token> = mutableListOf()
     var name: String = Strings.EMPTY
@@ -29,7 +29,7 @@ class SenderToken {
     override fun equals(other: Any?): Boolean {
         return when (other) {
             null -> false
-            is SenderToken -> name == other.name
+            is Sender -> name == other.name
             else -> false
         }
     }
