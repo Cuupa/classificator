@@ -62,7 +62,12 @@ object KnowledgeFileParser {
         return metadata
     }
 
-    @JvmStatic
+    fun parseDatabaseMetadata(metaInfContent: String): KnowledgeBaseMetadata {
+        val knowledgeBaseMetadata = KnowledgeBaseMetadata()
+        knowledgeBaseMetadata.version = metaInfContent.substringAfter("version=").substringBefore("\n")
+        return knowledgeBaseMetadata
+    }
+
     fun parseTopic(kbFile: String): Topic {
         val split = kbFile.split(RegexConstants.equalPattern)
         val topicName = split[0].trim()

@@ -3,6 +3,11 @@ package com.cuupa.classificator.services.kb.services.knowledgebase
 import com.cuupa.classificator.services.kb.semantic.SenderToken
 import com.cuupa.classificator.services.kb.semantic.Topic
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseDatabaseMetadata
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseMetaFile
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseRegexFile
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseSenderFile
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseTopic
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import java.io.File
@@ -19,28 +24,22 @@ object KnowledgeFileExtractor {
             val regexList = mutableListOf<Pair<String, String>>()
             var entry: SevenZArchiveEntry?
             while (sevenZFile.nextEntry.also { entry = it } != null) {
-                if (entry == null || entry!!.isDirectory) {
+                if (isToParse(entry)) {
                     continue
                 }
                 val filename = entry!!.name
                 when {
-                    filename.endsWith(".dsl") ->
-                        topicList.add(KnowledgeFileParser.parseTopic(readIntoString(entry, sevenZFile)))
-                    filename.endsWith(".sender") ->
-                        senderList.add(KnowledgeFileParser.parseSenderFile(readIntoString(entry, sevenZFile)))
-                    filename.endsWith(".meta") ->
-                        metadataList.add(KnowledgeFileParser.parseMetaFile(readIntoString(entry, sevenZFile)))
-                    filename.endsWith(".regx") ->
-                        regexList.add(
-                            KnowledgeFileParser.parseRegexFile(
-                                filename.substringAfter("regex/"),
-                                readIntoString(entry, sevenZFile)
-                            )
+                    isTopicFile(filename) -> topicList.add(parseTopic(readIntoString(entry, sevenZFile)))
+                    isSenderFile(filename) -> senderList.add(parseSenderFile(readIntoString(entry, sevenZFile)))
+                    isMetadataFile(filename) -> metadataList.add(parseMetaFile(readIntoString(entry, sevenZFile)))
+                    isRegexFile(filename) -> regexList.add(
+                        parseRegexFile(
+                            getRegexName(filename),
+                            readIntoString(entry, sevenZFile)
                         )
-                    filename == "META.INF" -> {
-                        val metaInfContent = readIntoString(entry!!, sevenZFile)
-                        kb.version = metaInfContent.substringAfter("version=").substringBefore("\n")
-                    }
+                    )
+                    isDatabaseMetaInfo(filename) -> kb.knowledgeBaseMetadata =
+                        parseDatabaseMetadata(readIntoString(entry, sevenZFile))
                 }
             }
             kb.topicList = topicList
@@ -50,6 +49,21 @@ object KnowledgeFileExtractor {
         }
         return kb
     }
+
+    private fun isToParse(entry: SevenZArchiveEntry?) =
+        entry == null || entry.isDirectory
+
+    private fun getRegexName(filename: String) = filename.substringAfter("regex/")
+
+    private fun isDatabaseMetaInfo(filename: String?) = filename == "META.INF"
+
+    private fun isRegexFile(filename: String) = filename.endsWith(".regx")
+
+    private fun isMetadataFile(filename: String) = filename.endsWith(".meta")
+
+    private fun isSenderFile(filename: String) = filename.endsWith(".sender")
+
+    private fun isTopicFile(filename: String) = filename.endsWith(".dsl")
 
 
     private fun readIntoString(

@@ -13,7 +13,7 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
     fun initKnowledgeBase(): KnowledgeBase {
         val knowledgebase = File(applicationProperties.knowledgbaseDir)
 
-        val kb = if (knowledgebase.isFile && knowledgebase.name.endsWith(knowledgebaseEnding)) {
+        val kb = if (isFileSpecified(knowledgebase)) {
             KnowledgeFileExtractor.extractKnowledgebase(knowledgebase)
         } else if (knowledgebase.isDirectory) {
             val files = knowledgebase.list()?.filter { it.endsWith(knowledgebaseEnding) } ?: listOf()
@@ -33,15 +33,18 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
             log.error("No knowledgebase found for $knowledgebase")
         } else {
             log.info("Successfully loaded Knowledgbase $knowledgebase")
-            log.info("Running Knowledgebase ${kb.version}")
+            log.info("Running Knowledgebase ${kb.knowledgeBaseMetadata.version}")
         }
         return kb
     }
 
+    private fun isFileSpecified(knowledgebase: File) =
+        knowledgebase.isFile && knowledgebase.name.endsWith(knowledgebaseEnding)
+
     private fun getFilename(maxVersion: Int?, files: List<String>) =
         if (maxVersion != null) {
+            val regex = "[$maxVersion.]+.db".toRegex()
             files.firstOrNull {
-                val regex = "[$maxVersion.]+.db".toRegex()
                 val result = regex.find(it)
                 if (result == null) {
                     false
