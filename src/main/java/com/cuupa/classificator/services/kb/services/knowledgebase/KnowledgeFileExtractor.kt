@@ -7,7 +7,7 @@ import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileP
 import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseMetaFile
 import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseRegexFile
 import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseSenderFile
-import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseTopic
+import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeFileParser.parseTopicFile
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import java.io.File
@@ -29,7 +29,7 @@ object KnowledgeFileExtractor {
                 }
                 val filename = entry!!.name
                 when {
-                    isTopicFile(filename) -> topicList.add(parseTopic(readIntoString(entry, sevenZFile)))
+                    isTopicFile(filename) -> topicList.add(parseTopicFile(readIntoString(entry, sevenZFile)))
                     isSenderFile(filename) -> senderList.add(parseSenderFile(readIntoString(entry, sevenZFile)))
                     isMetadataFile(filename) -> metadataList.add(parseMetaFile(readIntoString(entry, sevenZFile)))
                     isRegexFile(filename) -> regexList.add(

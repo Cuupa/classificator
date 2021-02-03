@@ -1,6 +1,7 @@
 package com.cuupa.classificator.services.kb.services.knowledgebase
 
 import com.cuupa.classificator.constants.RegexConstants
+import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.SemanticResultData
 import com.cuupa.classificator.services.kb.Sender
 import com.cuupa.classificator.services.kb.Topic
@@ -8,13 +9,10 @@ import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 import com.cuupa.classificator.services.kb.semantic.token.TokenTextPointer
 import com.cuupa.classificator.services.kb.semantic.token.Tokens
+import java.util.stream.IntStream
 
 object KnowledgeFileParser {
 
-    fun parseTopicFile(kbFile: String): Topic {
-        validateToken(kbFile)
-        return parseTopic(kbFile)
-    }
 
     fun parseMetaFile(kbFile: String): MetaDataToken {
         validateToken(kbFile)
@@ -68,7 +66,7 @@ object KnowledgeFileParser {
         return knowledgeBaseMetadata
     }
 
-    fun parseTopic(kbFile: String): Topic {
+    fun parseTopicFile(kbFile: String): Topic {
         val split = kbFile.split(RegexConstants.equalPattern)
         val topicName = split[0].trim()
         val topic = fillToken(kbFile, Topic()) as Topic
@@ -106,10 +104,23 @@ object KnowledgeFileParser {
 
             }
         }
+
+        val indexOf = kbFile.indexOf(StringConstants.equal)
+        if (indexOf == -1) {
+            throw InvalidTokenException("invalid file definition")
+        }
+
+        var equalAndBracketValid = false
+        IntStream.of(indexOf, charArray.size).forEach { index ->
+            if (!charArray[index].isWhitespace() && charArray[index] == '{') {
+                equalAndBracketValid = true
+            }
+        }
+
         if (curlyCloseBrackets != curlyOpenBrackets || normalCloseBrackets != normalOpenBrackets) {
             throw InvalidTokenException("invalid bracket count")
         }
-        if (!kbFile.contains("=")) {
+        if (!equalAndBracketValid) {
             throw InvalidTokenException("invalid file definition")
         }
     }
