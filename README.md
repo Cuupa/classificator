@@ -1,4 +1,5 @@
 # classificator
+Documentation work in progress!
 
 ![GitHub](https://img.shields.io/github/license/Cuupa/classificator) ![CI](https://github.com/Cuupa/classificator/workflows/CI/badge.svg) ![GitHub issues](https://img.shields.io/github/issues-raw/Cuupa/classificator) ![GitHub pull request](https://img.shields.io/github/issues-pr-raw/Cuupa/classificator)
 
@@ -7,6 +8,10 @@
 - [How to contribute](https://github.com/Cuupa/classificator#how-to-contribute)
 - [How it works](https://github.com/Cuupa/classificator#how-it-works)
 - [Installation](https://github.com/Cuupa/classificator#installation)
+  - [Standalone](https://github.com/Cuupa/classificator#standalone)
+  - [Docker](https://github.com/Cuupa/classificator#docker)
+  - [Synology Docker](https://github.com/Cuupa/classificator#synology-docker)
+  - [Changing the configuration](https://github.com/Cuupa/classificator#changing-the-configuration)
 
 ## About this project
 
@@ -98,6 +103,7 @@ Please change the port of the application and change it accordingly.
 ### Synology Docker
 
 1. Create yourself a folder, where you upload the files to
+
    ![folder](https://github.com/Cuupa/classificator/blob/master/documentation/docker-classificator.png "folder")
 
 ### Changing the configuration
