@@ -98,7 +98,7 @@ Please change the port of the application and change it accordingly.
 ### Synology Docker
 
 1. Create yourself a folder, where you upload the files to
-   [folder](https://github.com/Cuupa/classificator/tree/master/documentation/docker-classificator.png)
+   ![folder](https://github.com/Cuupa/classificator/blob/master/documentation/docker-classificator.png "folder")
 
 ### Changing the configuration
 
