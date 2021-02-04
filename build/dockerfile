@@ -1,0 +1,9 @@
+FROM openjdk:15-jdk
+MAINTAINER Cuupa
+WORKDIR /opt/app/classificator
+COPY knowlegebase/*.db ./knowledgebase/
+COPY *.jar ./app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "./app.jar", "-Dserver.port=8080", "-Dserver_port=8080", "-Dclassificator.kbfiles=./knowlegebase/kb-1.0.0.db"]

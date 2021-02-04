@@ -94,7 +94,7 @@ WORKDIR /opt/app/classificator
 COPY knowlegebase/kb-1.0.0.db ./knowledgebase/kb-1.0.0.db
 COPY *.jar ./app.jar
 
-EXPOSE 8080:8080
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "./app.jar", "-Dserver.port=8080", "-Dserver_port=8080", "-Dclassificator.kbfiles=./knowlegebase/kb-1.0.0.db"]
 ```
