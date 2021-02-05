@@ -114,6 +114,11 @@ Please change the port of the application and change it accordingly.
 4. Mount your folders and files to the docker container
    ![volume mounts](https://github.com/Cuupa/classificator/blob/master/documentation/docker_volume_mounts.png "folder")
 
+5. Change the ports to your liking
+   ![ports](https://github.com/Cuupa/classificator/blob/master/documentation/docker_ports.png "folder")
+
+6. Go to the environment tab and paste this as command to run:
+
 ``` shell
 java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase'
 ```
