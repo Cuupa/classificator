@@ -104,24 +104,32 @@ Please change the port of the application and change it accordingly.
 ### Synology Docker
 
 1. Create yourself a folder, where you upload the files to
-
    ![folder](https://github.com/Cuupa/classificator/blob/master/documentation/docker-classificator.png "folder")
+
 2. Download the openJDK container
    ![openjdk](https://github.com/Cuupa/classificator/blob/master/documentation/open_jdk_download.png "folder")
 
 3. Create a new container from this image
+   ![new container_1](https://github.com/Cuupa/classificator/blob/master/documentation/docker_new_container_1.png "folder")
 
-4. Mount your folders and files to the docker container
+4. Give this container a name to your likings and click on the 'Advanced Settings' button
+   ![new_container_2](https://github.com/Cuupa/classificator/blob/master/documentation/docker_new_container_2.png "folder")
+
+5. Mount your folders and files to the docker container. It is also a good idea to change this to "read only" mode, as
+   this program does not change these files
    ![volume mounts](https://github.com/Cuupa/classificator/blob/master/documentation/docker_volume_mounts.png "folder")
 
-5. Change the ports to your liking
+6. Change the ports to your liking
    ![ports](https://github.com/Cuupa/classificator/blob/master/documentation/docker_ports.png "folder")
 
-6. Go to the environment tab and paste this as command to run:
+7. Go to the environment tab and paste this as command to run:
 
 ``` shell
 java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase'
 ```
+
+8. Run this container. You can access the webui by going to http://your-nas-ip:your-port For
+   example "http://192.168.0.3:8081"
 
 ### Changing the configuration
 
