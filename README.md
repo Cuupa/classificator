@@ -148,15 +148,13 @@ server.port: 1234
 If you don't, don't panic. You can run it by typing
 
 ``` shell
-java -jar app.jar -Dserver.port=8080 -Dclassificator.kbfiles:knowlegebase/kb-1.0.0.db
+java -jar app.jar --server.port=8080 --knowledge_base:knowlegebase/kb-1.0.0.db
 ```
-
-Notice the "-D" before each parameter. This is mandatory.
 
 Of course, you can use absolute paths like
 
 ``` shell
-java -jar app.jar -Dclassificator.kbfiles:"C:\Users\JohnDoe\My Programs\classificator\knowlegebase\kb-1.0.0.db"
+java -jar app.jar --knowledge_base:"C:\Users\JohnDoe\My Programs\classificator\knowlegebase\kb-1.0.0.db"
 ```
 
 Notice that, you need to quote the value as soon as you have spaces in a parameter
