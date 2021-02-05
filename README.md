@@ -96,7 +96,7 @@ COPY *.jar ./app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "./app.jar", "-Dserver.port=8080", "-Dserver_port=8080", "-Dclassificator.kbfiles=./knowlegebase/kb-1.0.0.db"]
+ENTRYPOINT ["java", "-jar", "./app.jar", "--server.port=8080", "--knowlegde_base=./knowlegebase/kb-1.0.0.db"]
 ```
 
 Please change the port of the application and change it accordingly.
