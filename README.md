@@ -106,6 +106,17 @@ Please change the port of the application and change it accordingly.
 1. Create yourself a folder, where you upload the files to
 
    ![folder](https://github.com/Cuupa/classificator/blob/master/documentation/docker-classificator.png "folder")
+2. Download the openJDK container
+   ![openjdk](https://github.com/Cuupa/classificator/blob/master/documentation/open_jdk_download.png "folder")
+
+3. Create a new container from this image
+
+4. Mount your folders and files to the docker container
+   ![volume mounts](https://github.com/Cuupa/classificator/blob/master/documentation/docker_volume_mounts.png "folder")
+
+``` shell
+java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase'
+```
 
 ### Changing the configuration
 
@@ -124,7 +135,7 @@ server.port: 1234
 If you don't, don't panic. You can run it by typing
 
 ``` shell
-java -jar app.jar -Dserverport=1234 -Dclassificator.kbfiles:knowlegebase/kb-1.0.0.db
+java -jar app.jar -Dserver.port=8080 -Dclassificator.kbfiles:knowlegebase/kb-1.0.0.db
 ```
 
 Notice the "-D" before each parameter. This is mandatory.
