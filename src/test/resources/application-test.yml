@@ -8,4 +8,4 @@ logging.level:
   com.cuupa.classificator: warn
 
 classificator:
-  kbfiles: knowledgebase
+  kbfiles: build/knowledgebase

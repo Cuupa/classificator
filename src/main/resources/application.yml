@@ -1,5 +1,5 @@
 server_port: 8080
-knowlegde_base: knowledgebase
+knowlegde_base: build/knowledgebase
 
 server.port: ${server_port}
 
