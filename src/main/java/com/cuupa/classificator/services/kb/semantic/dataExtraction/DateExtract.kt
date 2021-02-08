@@ -5,6 +5,7 @@ import java.util.regex.Pattern
 
 class DateExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
+    // TODO: normalize months in non numeric values
     override fun normalize(value: String): String {
         val dateFields = value.split(RegexConstants.dotPattern)
         var day = dateFields[0]
@@ -26,3 +27,5 @@ class DateExtract(regex: String) : Extract(Pattern.compile(regex)) {
         const val name = "[DATE]"
     }
 }
+
+

@@ -123,7 +123,6 @@ class MetaDataToken {
         }
         return entries
     }
-
     private fun compileText(text: String?, tokenValue: String): List<Pair<String, String>> {
         if (text == null || !hasVariable(tokenValue)) {
             return listOf(Pair(tokenValue, tokenValue))
@@ -135,14 +134,7 @@ class MetaDataToken {
         variable = variable.split(RegexConstants.squareBracketClosePattern)[0] + "]"
 
         val extract = getExtractForName(variable)
-        val matcher = extract.pattern.matcher(text)
-
-        val value: MutableList<Pair<String, String>> = mutableListOf()
-        while (matcher.find()) {
-            val normalizedValue = extract.normalize(matcher.group())
-            value.add(Pair(textBeforeToken + normalizedValue + textAfterToken, normalizedValue))
-        }
-        return value
+        return extract.get(text, textBeforeToken, textAfterToken)
     }
 
     private fun getExtractForName(name: String): Extract {

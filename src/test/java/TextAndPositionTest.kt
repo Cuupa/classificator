@@ -2,7 +2,7 @@ import com.cuupa.classificator.services.stripper.LocationAndSizeStripper
 import com.cuupa.classificator.services.stripper.TextAndPosition
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.common.PDRectangle
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -10,6 +10,7 @@ import java.util.stream.Collectors
 
 class TextAndPositionTest {
     private val testFile = File("")
+
     @Test
     fun dingens() {
         try {

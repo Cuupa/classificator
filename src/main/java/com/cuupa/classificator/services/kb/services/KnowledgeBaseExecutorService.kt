@@ -23,16 +23,13 @@ class KnowledgeBaseExecutorService(
         runBlocking {
             val job = launch(Dispatchers.Default) {
                 val asyncTopics = async {
-                    LOG.info("I'm Thread ${Thread.currentThread()}")
                     topicService.getTopics(text)
                 }
                 val asyncSenders = async {
-                    LOG.info("I'm Thread ${Thread.currentThread()}")
                     senderService.getSender(text)
                 }
 
                 val asyncMetadata = async {
-                    LOG.info("I'm Thread ${Thread.currentThread()}")
                     metadataService.getMetadata(text)
                 }
 
@@ -58,7 +55,7 @@ class KnowledgeBaseExecutorService(
         if (semanticResults.isEmpty()) {
             semanticResults.add(SemanticResult(Topic.OTHER, mostFittingSender!!, distinctMetadata))
         }
-        LOG.debug(semanticResults)
+        LOG.info(semanticResults)
         return semanticResults
     }
 
