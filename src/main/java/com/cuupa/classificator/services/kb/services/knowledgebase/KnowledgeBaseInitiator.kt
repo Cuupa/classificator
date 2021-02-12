@@ -43,9 +43,9 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
     private fun getFilename(maxVersion: Int?, files: List<String>) =
         if (maxVersion != null) {
             val regex = "[$maxVersion.]+.db".toRegex()
-            files.firstOrNull { matches(regex, it) }
+            files.findLast { matches(regex, it) }
         } else {
-            files.firstOrNull { it.endsWith(".db") }
+            files.findLast { it.endsWith(".db") }
         }
 
     private fun matches(regex: Regex, it: String): Boolean {

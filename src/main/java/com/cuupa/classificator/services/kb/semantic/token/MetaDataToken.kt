@@ -144,10 +144,13 @@ class MetaDataToken {
                 isIbanExtract(name, pair) -> return IbanExtract(pair.second)
                 isSenderExtract(name, pair) -> return SenderExtract(pair.second)
                 isRegexExtract(name, pair) -> return RegexExtract(pair.second)
+                isPhoneNumberExtract(name, pair) -> return PhoneNumberExtract(pair.second)
             }
         }
-        throw RuntimeException("There is no extract specified")
+        throw RuntimeException("There is no extract for $name specified")
     }
+
+    private fun isPhoneNumberExtract(name: String, pair: Pair<String, String>)= PhoneNumberExtract.name == name && name.contains(pair.first)
 
     private fun isRegexExtract(name: String, pair: Pair<String, String>) = name.contains(pair.first)
 
