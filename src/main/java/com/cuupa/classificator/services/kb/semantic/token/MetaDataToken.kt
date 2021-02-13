@@ -91,9 +91,8 @@ class MetaDataToken {
         } else searchStream
     }
 
-    private fun getPredicateNotTokenMatching(text: String, token: Token, tokens: List<Token>): IntPredicate {
-        return IntPredicate { token is Not && tokens[it].match(text) }
-    }
+    private fun getPredicateNotTokenMatching(text: String, token: Token, tokens: List<Token>): IntPredicate =
+        IntPredicate { token is Not && tokens[it].match(text) }
 
     private fun cloneTokens(token: Token, compiledText: List<List<Pair<String, String>>>): List<Token> {
         val tokens: MutableList<Token> = ArrayList()
@@ -101,9 +100,7 @@ class MetaDataToken {
         return tokens
     }
 
-    private fun createTempList(): List<Token> {
-        return tokenList.map { it.clone() }
-    }
+    private fun createTempList(): List<Token> = tokenList.map { it.clone() }
 
     private fun findMostFittingResult(match: Map<Metadata, Int>): List<Metadata> {
         val entries = getMatchesMap(match)
@@ -123,6 +120,7 @@ class MetaDataToken {
         }
         return entries
     }
+
     private fun compileText(text: String?, tokenValue: String): List<Pair<String, String>> {
         if (text == null || !hasVariable(tokenValue)) {
             return listOf(Pair(tokenValue, tokenValue))
@@ -150,7 +148,8 @@ class MetaDataToken {
         throw RuntimeException("There is no extract for $name specified")
     }
 
-    private fun isPhoneNumberExtract(name: String, pair: Pair<String, String>)= PhoneNumberExtract.name == name && name.contains(pair.first)
+    private fun isPhoneNumberExtract(name: String, pair: Pair<String, String>) =
+        PhoneNumberExtract.name == name && name.contains(pair.first)
 
     private fun isRegexExtract(name: String, pair: Pair<String, String>) = name.contains(pair.first)
 
@@ -181,7 +180,7 @@ class MetaDataToken {
     }
 
     fun setRegexContent(regexContent: List<Pair<String, String>>?) {
-        this.regexContent = regexContent
+        this.regexContent = regexContent?.filter { name.contains(it.first, true) } ?: listOf()
     }
 
     override fun toString(): String {
