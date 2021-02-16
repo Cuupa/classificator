@@ -16,10 +16,12 @@ class Topic : SemanticResultData() {
 
     fun match(text: String): Boolean {
         val match = tokenList.stream().allMatch { it.match(text) }
-        if (match) {
-            log.info("Topic $name matched with ${tokenList.map { it::class.java.simpleName + it.tokenValue }}")
-        } else {
-            log.info("Topic $name did not match with ${tokenList.map { it::class.java.simpleName + it.tokenValue }}")
+        if(log.isDebugEnabled) {
+            if (match) {
+                log.debug("Topic $name matched with ${tokenList.map { it::class.java.simpleName + it.tokenValue }}")
+            } else {
+                log.debug("Topic $name did not match with ${tokenList.map { it::class.java.simpleName + it.tokenValue }}")
+            }
         }
         return match
     }

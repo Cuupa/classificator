@@ -91,9 +91,8 @@ class MetaDataToken {
         } else searchStream
     }
 
-    private fun getPredicateNotTokenMatching(text: String, token: Token, tokens: List<Token>): IntPredicate {
-        return IntPredicate { token is Not && tokens[it].match(text) }
-    }
+    private fun getPredicateNotTokenMatching(text: String, token: Token, tokens: List<Token>): IntPredicate =
+        IntPredicate { token is Not && tokens[it].match(text) }
 
     private fun cloneTokens(token: Token, compiledText: List<List<Pair<String, String>>>): List<Token> {
         val tokens: MutableList<Token> = ArrayList()
@@ -101,9 +100,7 @@ class MetaDataToken {
         return tokens
     }
 
-    private fun createTempList(): List<Token> {
-        return tokenList.map { it.clone() }
-    }
+    private fun createTempList(): List<Token> = tokenList.map { it.clone() }
 
     private fun findMostFittingResult(match: Map<Metadata, Int>): List<Metadata> {
         val entries = getMatchesMap(match)
@@ -135,14 +132,7 @@ class MetaDataToken {
         variable = variable.split(RegexConstants.squareBracketClosePattern)[0] + "]"
 
         val extract = getExtractForName(variable)
-        val matcher = extract.pattern.matcher(text)
-
-        val value: MutableList<Pair<String, String>> = mutableListOf()
-        while (matcher.find()) {
-            val normalizedValue = extract.normalize(matcher.group())
-            value.add(Pair(textBeforeToken + normalizedValue + textAfterToken, normalizedValue))
-        }
-        return value
+        return extract.get(text, textBeforeToken, textAfterToken)
     }
 
     private fun getExtractForName(name: String): Extract {
@@ -152,10 +142,14 @@ class MetaDataToken {
                 isIbanExtract(name, pair) -> return IbanExtract(pair.second)
                 isSenderExtract(name, pair) -> return SenderExtract(pair.second)
                 isRegexExtract(name, pair) -> return RegexExtract(pair.second)
+                isPhoneNumberExtract(name, pair) -> return PhoneNumberExtract(pair.second)
             }
         }
-        throw RuntimeException("There is no extract specified")
+        throw RuntimeException("There is no extract for $name specified")
     }
+
+    private fun isPhoneNumberExtract(name: String, pair: Pair<String, String>) =
+        PhoneNumberExtract.name == name && name.contains(pair.first)
 
     private fun isRegexExtract(name: String, pair: Pair<String, String>) = name.contains(pair.first)
 
@@ -186,7 +180,7 @@ class MetaDataToken {
     }
 
     fun setRegexContent(regexContent: List<Pair<String, String>>?) {
-        this.regexContent = regexContent
+        this.regexContent = regexContent?.filter { name.contains(it.first, true) } ?: listOf()
     }
 
     override fun toString(): String {

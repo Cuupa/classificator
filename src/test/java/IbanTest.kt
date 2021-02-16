@@ -1,10 +1,11 @@
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.IbanExtract
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class IbanTest {
+
     @Test
     fun test() {
-        val extract = IbanExtract("[A-Z]{2}[0-9]{2}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{4}[\\\\s]?[0-9]{2}")
+        val extract = IbanExtract("[a-z]{2}[0-9]{2}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{2}")
         val pattern = extract.pattern
         var matcher = pattern.matcher("DE19 1234 1234 1234 1234 12")
         if (matcher.find()) {

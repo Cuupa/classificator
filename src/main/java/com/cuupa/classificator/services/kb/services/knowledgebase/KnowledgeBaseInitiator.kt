@@ -17,8 +17,7 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
             KnowledgeFileExtractor.extractKnowledgebase(knowledgebase)
         } else if (knowledgebase.isDirectory) {
             val files = knowledgebase.list()?.filter { it.endsWith(knowledgebaseEnding) } ?: listOf()
-            val maxVersion = getMaxVersion(files)
-            val filename = getFilename(maxVersion, files)
+            val filename = getFilename(getMaxVersion(files), files)
 
             if (filename.isNullOrEmpty()) {
                 KnowledgeBase()
@@ -32,8 +31,8 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         if (!kb.isValid()) {
             log.error("No knowledgebase found for $knowledgebase")
         } else {
-            log.info("Successfully loaded Knowledgbase $knowledgebase")
-            log.info("Running Knowledgebase ${kb.knowledgeBaseMetadata.version}")
+            log.error("Successfully loaded Knowledgbase $knowledgebase")
+            log.error("Running Knowledgebase ${kb.knowledgeBaseMetadata.version}")
         }
         return kb
     }
@@ -44,20 +43,28 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
     private fun getFilename(maxVersion: Int?, files: List<String>) =
         if (maxVersion != null) {
             val regex = "[$maxVersion.]+.db".toRegex()
-            files.firstOrNull {
-                val result = regex.find(it)
-                if (result == null) {
-                    false
-                } else {
-                    it.endsWith(result.value)
-                }
-            }
+            files.findLast { matches(regex, it) }
         } else {
-            files.firstOrNull { it.endsWith(".db") }
+            files.findLast { it.endsWith(".db") }
         }
 
+    private fun matches(regex: Regex, it: String): Boolean {
+        val result = regex.find(it)
+        return if (result == null) {
+            false
+        } else {
+            it.endsWith(result.value)
+        }
+    }
+
     private fun getMaxVersion(files: List<String>) =
-        files.mapNotNull { versionRegex.find(it) }.map { it.value.replace(".", "") }.map { it.toInt() }
+        files.mapNotNull { versionRegex.find(it) }.map { it.value.replace(".", "") }.map {
+            try {
+                it.toInt()
+            } catch(e: Exception){
+                0
+            }
+        }
             .maxOfOrNull { it }
 
     companion object {

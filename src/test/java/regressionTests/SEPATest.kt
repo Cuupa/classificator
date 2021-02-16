@@ -1,13 +1,13 @@
 package regressionTests
 
 import com.cuupa.classificator.services.kb.KnowledgeManager
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import regressionTests.config.TestConfig
 import java.util.stream.IntStream
 import kotlin.system.measureTimeMillis
@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = [TestConfig::class])
 @ActiveProfiles("test")
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 open class SEPATest : LocalRegressionTest() {
 
     private val path = "/home/${System.getProperty("user.name")}/testdata/SEPA"
