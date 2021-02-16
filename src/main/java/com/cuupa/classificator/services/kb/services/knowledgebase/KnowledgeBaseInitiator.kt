@@ -58,7 +58,13 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
     }
 
     private fun getMaxVersion(files: List<String>) =
-        files.mapNotNull { versionRegex.find(it) }.map { it.value.replace(".", "") }.map { it.toInt() }
+        files.mapNotNull { versionRegex.find(it) }.map { it.value.replace(".", "") }.map {
+            try {
+                it.toInt()
+            } catch(e: Exception){
+                0
+            }
+        }
             .maxOfOrNull { it }
 
     companion object {
