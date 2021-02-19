@@ -45,7 +45,12 @@ object KnowledgeFileExtractor {
             kb.topicList = topicList
             kb.metadataList = metadataList
             kb.sendersList = senderList
-            kb.metadataList.forEach { it.setRegexContent(regexList) }
+            kb.metadataList.forEach { metadata -> metadata.regexContent = regexList.filter { metadata.name.contains(it.first, true) } }
+            kb.metadataList.forEach {
+                if(it.regexContent.isEmpty()){
+                    it.regexContent = regexList
+                }
+            }
         }
         return kb
     }

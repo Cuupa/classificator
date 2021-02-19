@@ -3,6 +3,7 @@ package com.cuupa.classificator.services.kb.semantic.token
 import com.cuupa.classificator.constants.RegexConstants
 import com.cuupa.classificator.services.kb.Metadata
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.*
+import org.apache.juli.logging.LogFactory
 import org.apache.logging.log4j.util.Strings
 import java.util.*
 import java.util.function.Consumer
@@ -13,7 +14,7 @@ class MetaDataToken {
 
     private val tokenList: MutableList<Token> = mutableListOf()
     var name: String = Strings.EMPTY
-    private var regexContent: List<Pair<String, String>>? = null
+    var regexContent: List<Pair<String, String>> = listOf()
 
     fun addToken(token: Token) {
         tokenList.add(token)
@@ -30,27 +31,59 @@ class MetaDataToken {
     }
 
     private fun getTokenConsumer(text: String, match: MutableMap<Metadata, Int>): Consumer<Token> {
-        return Consumer {
-            val compiledText: List<List<Pair<String, String>>> = it.tokenValue.map { e: String ->
-                compileText(text, e)
+        return Consumer { token ->
+            val compiledText = token.tokenValue.map {
+                tryCompile(text, it)
             }
 
             if (compiledText.isEmpty()) {
                 return@Consumer
             }
 
-            val tokens = replaceCompiledTextInTokenValue(compiledText, cloneTokens(it, compiledText))
+            val tokens = replaceCompiledTextInTokenValue(compiledText, cloneTokens(token, compiledText))
             var searchStream = getIntStream(tokens.size)
 
-            if (searchStream.noneMatch(getPredicateNotTokenMatching(text, it, tokens))) {
-                searchStream = getIntStream(tokens.size)
-                searchStream.forEach { value: Int ->
-                    if (tokens[value].match(text)) {
-                        val metadataValue = compiledText[0][value].second
-                        addMetadataSynchronized(match, metadataValue, tokens, value)
+            val parallel = searchStream.isParallel
+            searchStream.forEach {
+                if (tokens[it] !is Not && tokens[it].match(text)) {
+                    val metadataValue = compiledText[0][it].second
+                    if (parallel) {
+                        addMetadataSynchronized(match, metadataValue, tokens, it)
+                    } else {
+                        addMetadata(match, metadataValue, tokens, it)
                     }
                 }
             }
+            searchStream = getIntStream(tokens.size)
+            searchStream.forEach {
+                if (tokens[it] is Not && !tokens[it].match(text)) {
+                    // We want the reversed result, because we want to know if the text contains this match
+                    val excluded = match.filter { metadata -> metadata.key.value == compiledText[0][it].second }
+                    if (match.isNotEmpty() && excluded.isNotEmpty()) {
+                        match.remove(excluded.keys.first())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun tryCompile(
+        text: String,
+        e: String
+    ) = try {
+        compileText(text, e)
+    } catch (re: RuntimeException) {
+        log.error(re)
+        listOf()
+    }
+
+    private fun addMetadata(
+        match: MutableMap<Metadata, Int>, metadataValue: String, tokens: List<Token>,
+        value: Int
+    ) {
+        if (isMetadataAlreadyRegistered(match, metadataValue)) {
+            val metadata = Metadata(name, metadataValue)
+            match[metadata] = tokens[value].distance
         }
     }
 
@@ -136,7 +169,7 @@ class MetaDataToken {
     }
 
     private fun getExtractForName(name: String): Extract {
-        for (pair in regexContent!!) {
+        for (pair in regexContent) {
             when {
                 isDateExtract(name, pair) -> return DateExtract(pair.second)
                 isIbanExtract(name, pair) -> return IbanExtract(pair.second)
@@ -179,11 +212,11 @@ class MetaDataToken {
         return text.contains("[") && text.contains("]")
     }
 
-    fun setRegexContent(regexContent: List<Pair<String, String>>?) {
-        this.regexContent = regexContent?.filter { name.contains(it.first, true) } ?: listOf()
-    }
-
     override fun toString(): String {
         return name
+    }
+
+    companion object {
+        val log = LogFactory.getLog(MetaDataToken::class.java)
     }
 }
