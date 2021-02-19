@@ -56,13 +56,11 @@ class MetaDataToken {
             }
             searchStream = getIntStream(tokens.size)
             searchStream.forEach {
-                if (tokens[it] is Not) {
+                if (tokens[it] is Not && !tokens[it].match(text)) {
                     // We want the reversed result, because we want to know if the text contains this match
-                    if (!tokens[it].match(text)) {
-                        val excluded = match.filter { metadata -> metadata.key.value == compiledText[0][it].second }
-                        if (match.isNotEmpty() && excluded.isNotEmpty()) {
-                            match.remove(excluded.keys.first())
-                        }
+                    val excluded = match.filter { metadata -> metadata.key.value == compiledText[0][it].second }
+                    if (match.isNotEmpty() && excluded.isNotEmpty()) {
+                        match.remove(excluded.keys.first())
                     }
                 }
             }
