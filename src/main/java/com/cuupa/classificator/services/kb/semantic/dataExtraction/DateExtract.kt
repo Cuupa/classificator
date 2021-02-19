@@ -19,11 +19,8 @@ class DateExtract(regex: String) : Extract(Pattern.compile(regex, Pattern.CASE_I
     }
 
     private fun parseAndNormalizeDate(dateFields: List<String>): String {
-        var day = dateFields[0]
-        var monthAndYear = dateFields[1].split(" ")
-        var month = Months.get(monthAndYear[0])
-        var year = monthAndYear[1]
-        return fill(day, month, year)
+        val monthAndYear = dateFields[1].split(" ")
+        return fill(dateFields[0], Months.get(monthAndYear[0]), monthAndYear[1])
     }
 
     private fun fill(day: String, month: String, year: String): String {
@@ -42,12 +39,7 @@ class DateExtract(regex: String) : Extract(Pattern.compile(regex, Pattern.CASE_I
         return "$day1.$month1.$year1"
     }
 
-    private fun normalizeDate(dateFields: List<String>): String {
-        var day = dateFields[0]
-        var month = dateFields[1]
-        var year = dateFields[2]
-        return fill(day, month, year)
-    }
+    private fun normalizeDate(dateFields: List<String>) = fill(dateFields[0], dateFields[1], dateFields[2])
 
     companion object {
         const val name = "[DATE]"
