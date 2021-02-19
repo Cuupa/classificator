@@ -124,9 +124,6 @@ class MetaDataToken {
         } else searchStream
     }
 
-    private fun getPredicateNotTokenMatching(text: String, token: Token, tokens: List<Token>): IntPredicate =
-        IntPredicate { token is Not && tokens[it].match(text) }
-
     private fun cloneTokens(token: Token, compiledText: List<List<Pair<String, String>>>): List<Token> {
         val tokens: MutableList<Token> = ArrayList()
         IntStream.range(0, compiledText[0].size).forEach { tokens.add(token.clone()) }
@@ -176,10 +173,14 @@ class MetaDataToken {
                 isSenderExtract(name, pair) -> return SenderExtract(pair.second)
                 isRegexExtract(name, pair) -> return RegexExtract(pair.second)
                 isPhoneNumberExtract(name, pair) -> return PhoneNumberExtract(pair.second)
+                isTimespanExtract(name, pair) -> return TimespanExtract(pair.second)
             }
         }
         throw RuntimeException("There is no extract for $name specified")
     }
+
+    private fun isTimespanExtract(name: String, pair: Pair<String, String>) =
+        TimespanExtract.name == name && DateExtract.name.contains(pair.first)
 
     private fun isPhoneNumberExtract(name: String, pair: Pair<String, String>) =
         PhoneNumberExtract.name == name && name.contains(pair.first)
