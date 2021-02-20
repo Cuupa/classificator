@@ -1,7 +1,7 @@
 # classificator
 Documentation work in progress!
 
-![GitHub](https://img.shields.io/github/license/Cuupa/classificator) ![CI](https://github.com/Cuupa/classificator/workflows/CI/badge.svg) ![GitHub issues](https://img.shields.io/github/issues-raw/Cuupa/classificator) ![GitHub pull request](https://img.shields.io/github/issues-pr-raw/Cuupa/classificator)
+![GitHub](https://img.shields.io/github/license/Cuupa/classificator) ![CI](https://github.com/Cuupa/classificator/workflows/CI/badge.svg) ![GitHub issues](https://img.shields.io/github/issues-raw/Cuupa/classificator) ![GitHub pull request](https://img.shields.io/github/issues-pr-raw/Cuupa/classificator) ![Releases](https://img.shields.io/github/v/release/cuupa/classificator)
 
 ## Content
 - [About this project](https://github.com/Cuupa/classificator#about-this-project)
