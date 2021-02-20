@@ -1,9 +1,9 @@
 package com.cuupa.classificator.services.kb.services
 
+import com.cuupa.classificator.services.kb.Metadata
 import com.cuupa.classificator.services.kb.SemanticResult
-import com.cuupa.classificator.services.kb.semantic.Metadata
-import com.cuupa.classificator.services.kb.semantic.SenderToken
-import com.cuupa.classificator.services.kb.semantic.Topic
+import com.cuupa.classificator.services.kb.Sender
+import com.cuupa.classificator.services.kb.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -23,16 +23,13 @@ class KnowledgeBaseExecutorService(
         runBlocking {
             val job = launch(Dispatchers.Default) {
                 val asyncTopics = async {
-                    LOG.info("I'm Thread ${Thread.currentThread()}")
                     topicService.getTopics(text)
                 }
                 val asyncSenders = async {
-                    LOG.info("I'm Thread ${Thread.currentThread()}")
                     senderService.getSender(text)
                 }
 
                 val asyncMetadata = async {
-                    LOG.info("I'm Thread ${Thread.currentThread()}")
                     metadataService.getMetadata(text)
                 }
 
@@ -48,7 +45,7 @@ class KnowledgeBaseExecutorService(
         }
 
         if (mostFittingSender.isNullOrEmpty()) {
-            mostFittingSender = SenderToken.UNKNOWN
+            mostFittingSender = Sender.UNKNOWN
         }
         val distinctMetadata = metadata.distinctBy { it.value }.toList()
         semanticResults.forEach {
@@ -58,7 +55,7 @@ class KnowledgeBaseExecutorService(
         if (semanticResults.isEmpty()) {
             semanticResults.add(SemanticResult(Topic.OTHER, mostFittingSender!!, distinctMetadata))
         }
-        LOG.debug(semanticResults)
+        LOG.info(semanticResults)
         return semanticResults
     }
 

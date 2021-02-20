@@ -1,53 +1,50 @@
 package com.cuupa.classificator.services.kb.services.knowledgebase
 
 import com.cuupa.classificator.constants.RegexConstants
-import com.cuupa.classificator.services.kb.semantic.SenderToken
-import com.cuupa.classificator.services.kb.semantic.Topic
+import com.cuupa.classificator.constants.StringConstants
+import com.cuupa.classificator.services.kb.SemanticResultData
+import com.cuupa.classificator.services.kb.Sender
+import com.cuupa.classificator.services.kb.Topic
 import com.cuupa.classificator.services.kb.semantic.token.InvalidTokenException
 import com.cuupa.classificator.services.kb.semantic.token.MetaDataToken
 import com.cuupa.classificator.services.kb.semantic.token.TokenTextPointer
 import com.cuupa.classificator.services.kb.semantic.token.Tokens
-import org.apache.commons.lang3.tuple.Pair
+import java.util.stream.IntStream
 
 object KnowledgeFileParser {
 
-    fun parseTopicFile(kbFile: String): Topic {
-        validateToken(kbFile)
-        return parseTopic(kbFile)
-    }
 
     fun parseMetaFile(kbFile: String): MetaDataToken {
         validateToken(kbFile)
         return parseMetaData(kbFile)
     }
 
-    fun parseSenderFile(kbFile: String): SenderToken {
+    fun parseSenderFile(kbFile: String): Sender {
         validateToken(kbFile)
         return parseSender(kbFile)
     }
 
-    private fun parseSender(kbFile: String): SenderToken {
-        val senderToken = fillToken(kbFile)
+    private fun parseSender(kbFile: String): Sender {
+        val senderToken = fillToken(kbFile, Sender()) as Sender
         senderToken.name = kbFile.split(RegexConstants.equalPattern)[0].trim()
         return senderToken
     }
 
-    private fun fillToken(kbFile: String): SenderToken {
-        val token = SenderToken()
+    private fun fillToken(kbFile: String, data: SemanticResultData): SemanticResultData {
         val charArray = kbFile.toCharArray()
         for (index in charArray.indices) {
             if (charArray[index] == '(') {
-                token.addToken(Tokens[TokenTextPointer(charArray, index)])
+                data.addToken(Tokens[TokenTextPointer(charArray, index)])
             }
             if (charArray[index] == '}') {
                 break
             }
         }
-        return token
+        return data
     }
 
     fun parseRegexFile(filename: String, content: String): Pair<String, String> {
-        return Pair.of(filename.split(RegexConstants.dotPattern)[0], content)
+        return Pair(filename.split(RegexConstants.dotPattern)[0], content)
     }
 
     private fun parseMetaData(kbFile: String): MetaDataToken {
@@ -63,21 +60,17 @@ object KnowledgeFileParser {
         return metadata
     }
 
-    @JvmStatic
-    fun parseTopic(kbFile: String): Topic {
+    fun parseDatabaseMetadata(metaInfContent: String): KnowledgeBaseMetadata {
+        val knowledgeBaseMetadata = KnowledgeBaseMetadata()
+        knowledgeBaseMetadata.version = metaInfContent.substringAfter("version=").substringBefore("\n")
+        return knowledgeBaseMetadata
+    }
+
+    fun parseTopicFile(kbFile: String): Topic {
         val split = kbFile.split(RegexConstants.equalPattern)
         val topicName = split[0].trim()
-        val topic = Topic()
+        val topic = fillToken(kbFile, Topic()) as Topic
         topic.name = topicName
-        val charArray = kbFile.toCharArray()
-        for (index in charArray.indices) {
-            if (charArray[index] == '(') {
-                topic.addToken(Tokens[TokenTextPointer(charArray, index)])
-            }
-            if (charArray[index] == '}') {
-                break
-            }
-        }
         return topic
     }
 
@@ -111,10 +104,28 @@ object KnowledgeFileParser {
 
             }
         }
+
+        val indexOf = kbFile.indexOf(StringConstants.equal)
+        if (indexOf == -1) {
+            throw InvalidTokenException("invalid file definition")
+        }
+
+        var equalAndBracketValid = false
+        IntStream.of(indexOf, charArray.size - 2).forEach { index ->
+            var searchIndex = index + 1
+            while (!equalAndBracketValid && charArray[searchIndex].isWhitespace()) {
+                searchIndex++
+            }
+            if (!equalAndBracketValid && charArray[searchIndex] == '{') {
+                equalAndBracketValid = true
+            }
+        }
+
         if (curlyCloseBrackets != curlyOpenBrackets || normalCloseBrackets != normalOpenBrackets) {
             throw InvalidTokenException("invalid bracket count")
         }
-        if (!kbFile.contains("=")) {
+        if (!equalAndBracketValid) {
+            println(kbFile)
             throw InvalidTokenException("invalid file definition")
         }
     }

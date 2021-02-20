@@ -1,16 +1,17 @@
 import com.cuupa.classificator.services.kb.KnowledgeManager
-import org.junit.Assert
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import regressionTests.config.TestConfig
 
 @SpringBootTest(classes = [TestConfig::class])
 @ActiveProfiles("test")
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 class KBTest {
 
     @Autowired
@@ -25,21 +26,21 @@ class KBTest {
     @Test
     fun parseBill() {
         val resultsBill = knowledgeManager!!.getResults(textBill)
-        Assert.assertTrue(resultsBill.isNotEmpty())
-        Assert.assertEquals("BILL", resultsBill[0].topicName)
+        assertTrue(resultsBill.isNotEmpty())
+        assertEquals("BILL", resultsBill[0].topicName)
     }
 
     @Test
     fun parseWarning() {
         val resultsWarning = knowledgeManager!!.getResults(textWarning)
-        Assert.assertEquals(1, resultsWarning.size.toLong())
-        Assert.assertEquals("WARNING", resultsWarning[0].topicName)
+        assertEquals(1, resultsWarning.size.toLong())
+        assertEquals("WARNING", resultsWarning[0].topicName)
     }
 
     @Test
     fun parseSicknote() {
         val resultsWarning = knowledgeManager!!.getResults(textSicknote)
-        Assert.assertEquals(1, resultsWarning.size.toLong())
-        Assert.assertEquals("SICKNOTE", resultsWarning[0].topicName)
+        assertEquals(1, resultsWarning.size.toLong())
+        assertEquals("SICKNOTE", resultsWarning[0].topicName)
     }
 }

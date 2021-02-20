@@ -1,4 +1,0 @@
-European Bank for Financial Services GmbH = {
-	all("European Bank for Financial Services GmbH", "ebase®")
-	wildcardBefore("@ebase.com")
-}

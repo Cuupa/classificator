@@ -1,4 +1,0 @@
-Deutsche Rentenversicherung Bund = {
-    oneOf("Deutsche Rentenversicherung Bund")
-    not("verpflichtet der deutschen rentenversicherung bund")
-}
