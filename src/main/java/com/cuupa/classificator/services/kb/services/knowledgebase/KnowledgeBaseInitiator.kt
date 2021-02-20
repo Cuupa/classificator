@@ -33,6 +33,9 @@ class KnowledgeBaseInitiator(private val applicationProperties: ApplicationPrope
         } else {
             log.error("Successfully loaded Knowledgbase $knowledgebase")
             log.error("Running Knowledgebase ${kb.knowledgeBaseMetadata.version}")
+            log.error("Loaded ${kb.topicList.size} topic definitions")
+            log.error("Loaded ${kb.sendersList.size} sender definitions")
+            log.error("Loaded ${kb.metadataList.size} metadata definitions")
         }
         return kb
     }
