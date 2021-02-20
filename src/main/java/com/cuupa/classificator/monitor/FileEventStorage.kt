@@ -23,11 +23,12 @@ class FileEventStorage : EventStorage() {
 
     override fun write(event: Event) {
         val path = Paths.get(getFilename(event))
-        if (directoryExists(path)) {
+        if (!directoryExists(path)) {
             createDirectories(path)
         }
 
         if (!Files.exists(path)) {
+            Files.createFile(path)
             Files.writeString(path, getFileHeader())
         }
 
