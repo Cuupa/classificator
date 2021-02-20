@@ -15,4 +15,6 @@ class MonitorStatistics {
     var averageProcessingTime: Long = 0
 
     var averageTextLength: Long = 0
+
+    var processingHistory: Map<String, Double> = mapOf()
 }

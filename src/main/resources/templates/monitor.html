@@ -15,84 +15,22 @@
 
 <table width="100%">
     <tr>
-        <td width="50%"><canvas id="topics"/></td>
-        <td width="50%"><canvas id="senders"/></td>
+        <td width="50%">
+            <canvas id="topics"></canvas>
+        </td>
+        <td width="50%">
+            <canvas id="senders"></canvas>
+        </td>
     </tr>
 </table>
+
+<hr>
+
+<canvas id="processingHistory" height="50"></canvas>
 <input type="hidden" id="topics_data" th:value="${topics}"/>
 <input type="hidden" id="senders_data" th:value="${senders}"/>
+<input type="hidden" id="processingHistory_data" th:value="${processingHistory}"/>
 
-<script type="application/javascript">
-    const topicdata = JSON.parse(document.getElementById('topics_data').value);
-    var ctx = document.getElementById('topics').getContext("2d");
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(topicdata),
-            datasets: [{
-                label: '# Topics',
-                data: Object.values(topicdata),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            legend: {
-                position: 'left'
-            }
-        }
-    });
-
-    const sendersdata = JSON.parse(document.getElementById('senders_data').value);
-    ctx = document.getElementById('senders').getContext("2d");
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(sendersdata),
-            datasets: [{
-                label: '# Senders',
-                data: Object.values(sendersdata),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            legend: {
-                position: 'left'
-            }
-        }
-    });
-</script>
 
 <!--/*@thymesVar id="monitorProcess" type="com.cuupa.classificator.gui.MonitorProcess"*/-->
 <form action="#" method="POST" th:action="@{monitorWithFilter}" th:object="${monitorProcess}">
@@ -141,5 +79,112 @@
     </tr>
     </table>
 </form>
+
+<script type="application/javascript">
+    const topicdata = JSON.parse(document.getElementById('topics_data').value);
+    var ctx = document.getElementById('topics').getContext("2d");
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(topicdata),
+            datasets: [{
+                label: 'Topics',
+                data: Object.values(topicdata),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                position: 'left'
+            }
+        }
+    });
+
+    const sendersdata = JSON.parse(document.getElementById('senders_data').value);
+    ctx = document.getElementById('senders').getContext("2d");
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(sendersdata),
+            datasets: [{
+                label: 'Senders',
+                data: Object.values(sendersdata),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                position: 'left'
+            }
+        }
+    });
+
+    const processingHistroyData = JSON.parse(document.getElementById('processingHistory_data').value);
+    ctx = document.getElementById('processingHistory').getContext("2d");
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Object.keys(processingHistroyData),
+            datasets: [{
+                label: 'Processingtime in seconds',
+                data: Object.values(processingHistroyData),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    });
+</script>
 </body>
 </html>

@@ -16,13 +16,15 @@ import java.time.LocalDate
 class MonitorController(private val monitor: Monitor, private val gson: Gson) {
 
     @RequestMapping(value = ["/monitor"], method = [RequestMethod.GET])
-    fun monitor(): ModelAndView {
+    fun monitor(model: Model): ModelAndView {
         val monitorProcess = MonitorProcess()
         monitorProcess.events = load(monitorProcess)
         val modelAndView = ModelAndView("monitor")
         val statistics = monitor.getStatistics(null, null)
         modelAndView.addObject("topics", gson.toJson(statistics.topicDistribution))
         modelAndView.addObject("senders", gson.toJson(statistics.senderDistribution))
+        modelAndView.addObject("processingHistory", gson.toJson(statistics.processingHistory))
+        model.addAttribute("monitorProcess", monitorProcess)
         return modelAndView
     }
 
