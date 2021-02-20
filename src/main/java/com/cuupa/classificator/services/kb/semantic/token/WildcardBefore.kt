@@ -1,12 +1,12 @@
 package com.cuupa.classificator.services.kb.semantic.token
 
-import com.cuupa.classificator.constants.RegexConstants
 import com.cuupa.classificator.constants.StringConstants
 import com.cuupa.classificator.services.kb.semantic.text.TextSearch
-import org.apache.logging.log4j.util.Strings
 import java.util.*
 
 class WildcardBefore : Token() {
+
+    private val blankRegex = StringConstants.blank.toRegex()
 
     override var distance = 0
         private set
@@ -27,9 +27,9 @@ class WildcardBefore : Token() {
             return text
         }
 
-        val words = text.replace(StringConstants.newLine, Strings.EMPTY)
-            .replace(StringConstants.carriageReturn, Strings.EMPTY)
-            .split(RegexConstants.emptyStringRegex)
+        val words = text.replace(StringConstants.newLine, StringConstants.blank)
+            .replace(StringConstants.carriageReturn, StringConstants.blank)
+            .split(blankRegex)
 
         val stringBuilder = StringBuilder()
         tokenValue.forEach { token ->
@@ -39,7 +39,7 @@ class WildcardBefore : Token() {
                     processWord = processWord.substring(1)
                 }
                 stringBuilder.append(processWord)
-                stringBuilder.append(Strings.EMPTY)
+                stringBuilder.append(StringConstants.blank)
             }
 
         }

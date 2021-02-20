@@ -7,11 +7,7 @@ logging.level:
   root: ERROR
   com.cuupa.classificator: DEBUG
 
-classificator:
-  kbfiles: classpath:kbfiles
-  metadatafiles: classpath:kbfiles/metadata
-  regexfiles: classpath:kbfiles/regex
-  senderFiles: classpath:kbfiles/senders
+classificator.kbfiles: ${knowlegde_base}
 
 
   monitor:

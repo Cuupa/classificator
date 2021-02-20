@@ -1,34 +1,40 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Testing</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
+<meta charset="UTF-8" />
+<title>Testing</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 </head>
 
 <body>
 
-<form action="#" th:action="@{reloadKB}">
-    <input type="submit" value="reload KB">
-</form>
-
-<form action="#" method="post" th:action="@{guiProcess}"
-      th:object="${guiProcess}">
-    <table class="table">
+<form action="#" th:action="@{guiProcess}" th:object="${guiProcess}"
+      method="post">
+    <table class="table table-striped">
+        <thead class="thead-dark">
         <tr>
-            <td width="50%"><textarea autofocus="autofocus" cols="70%"
-                                      rowsfield="15" th:field="${guiProcess.inputText}"></textarea></td>
-            <td align="center" width="50%">Result
+            <th>Text</th>
+            <th>Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td width="50%">
+					<textarea autofocus="autofocus" cols="100%"
+                              rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea></td>
+            <td width="50%" align="center">
                 <table border="1" class="table table-striped">
                     <thead class="thead-dark">
                     <tr>
                         <th>Topic</th>
+                        <th>Sender</th>
                         <th>Metadata</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="result : ${guiProcess.result}">
                         <td width="30%"><span th:text="${result.topicName}">Topic</span></td>
+                        <td width="30%"><span th:text="${result.sender}">Sender</span></td>
                         <td width="70%">
 
                             <table border="1">
@@ -39,9 +45,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td width="50%"><span th:text="${result.sender}">Sender</span></td>
-                                </tr>
+
                                 <tr th:each="metaData : ${result.metaData}">
                                     <td width="50%"><span th:text="${metaData.name}">Name</span></td>
                                     <td width="50%"><span th:text="${metaData.value}">Value</span></td>
@@ -56,6 +60,7 @@
         <tr>
             <td><input type="submit"/></td>
         </tr>
+        </tbody>
     </table>
 </form>
 </body>

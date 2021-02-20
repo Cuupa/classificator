@@ -1,7 +1,8 @@
 import com.cuupa.classificator.services.kb.semantic.dataExtraction.PhoneNumberExtract
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class PhoneNumberTest {
+
     @Test
     fun test() {
         val extract = PhoneNumberExtract("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")

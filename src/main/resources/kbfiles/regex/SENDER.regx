@@ -1,1 +1,0 @@
-((?!(Ihre|Handelsregister)))[a-zA-Z0-9äöü]+[0-9& a-zA-Zäöü\-]+ (AG\s|ag\s|a.G.\s|GmbH\s|gmbh\s|se\s|SE\s|OHG\s|ohg\s)(?=|\r|\n)
