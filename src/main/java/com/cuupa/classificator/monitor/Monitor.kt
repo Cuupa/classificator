@@ -18,7 +18,7 @@ class Monitor(private val eventStorage: EventStorage) {
     fun writeEvent(text: String?, results: List<SemanticResult>, start: LocalDateTime, end: LocalDateTime) {
         if (enabled) {
             val event = if (logText) {
-                Event(text, getTopics(results),  getSenders(results),getMetadata(results), start, end)
+                Event(text, getTopics(results), getSenders(results), getMetadata(results), start, end)
             } else {
                 Event(getTopics(results), getSenders(results), getMetadata(results), start, end)
             }
@@ -40,17 +40,22 @@ class Monitor(private val eventStorage: EventStorage) {
         monitorStatistics.senderDistribution = getSenderDistribution(events)
         monitorStatistics.maxProcessingTime = events.maxOf { it.getElapsedTime() }
         monitorStatistics.minProcessingTime = events.minOf { it.getElapsedTime() }
-        monitorStatistics.averageProcessingTime = events.map { it.getElapsedTime() }
+        val elapsedTime = events.map { it.getElapsedTime() }
             .average()
-            .roundToLong()
+
+        monitorStatistics.averageProcessingTime = if (elapsedTime.isNaN()) {
+            0L
+        } else {
+            elapsedTime.toLong()
+        }
 
         val average = events.filter { !it.text.isNullOrBlank() }
             .map { it.text!!.length }
             .average()
-        if (!average.isNaN()) {
-            monitorStatistics.averageTextLength = average.roundToLong()
+        monitorStatistics.averageTextLength = if (!average.isNaN()) {
+            average.roundToLong()
         } else {
-            monitorStatistics.averageTextLength = 0L
+            0L
         }
 
         return monitorStatistics

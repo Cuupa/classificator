@@ -13,25 +13,21 @@ import com.cuupa.classificator.services.kb.services.TopicService
 import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeBase
 import com.cuupa.classificator.services.kb.services.knowledgebase.KnowledgeBaseInitiator
 import com.cuupa.classificator.services.stripper.PdfAnalyser
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
 @Configuration
+@Import(value = [MonitorConfiguration::class])
 open class ApplicationConfiguration {
+
+    @Autowired
+    private var monitor: Monitor? = null
 
     @Bean
     open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser(), monitor())
-    }
-
-    @Bean
-    open fun monitor(): Monitor {
-        return Monitor(eventStorage())
-    }
-
-    @Bean
-    open fun eventStorage(): EventStorage {
-        return FileEventStorage()
+        return Classificator(knowledgeManager(), analyser(), monitor!!)
     }
 
     @Bean
