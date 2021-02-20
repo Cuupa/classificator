@@ -23,12 +23,11 @@ class FileEventStorage : EventStorage() {
 
     override fun write(event: Event) {
         val path = Paths.get(getFilename(event))
-        if (!Files.exists(path.parent)) {
-            Files.createDirectories(path.parent)
+        if (directoryExists(path)) {
+            createDirectories(path)
         }
 
         if (!Files.exists(path)) {
-            Files.createFile(path)
             Files.writeString(path, getFileHeader())
         }
 
@@ -38,6 +37,12 @@ class FileEventStorage : EventStorage() {
         }
     }
 
+    private fun createDirectories(path: Path) {
+        path.toFile().parentFile.mkdirs()
+    }
+
+    private fun directoryExists(path: Path) = path.toFile().parentFile.exists()
+
     override fun get(start: LocalDate?, end: LocalDate?): List<Event> {
         val directoryOfFiles = Paths.get(getDirectoryOfFiles())
 
@@ -46,20 +51,20 @@ class FileEventStorage : EventStorage() {
         }
 
         val lastModified = directoryOfFiles.toFile()
-            .lastModified()
+                .lastModified()
         if (lastModifiedEventStorage >= lastModified) {
             return cachedEventList
         }
         lastModifiedEventStorage = lastModified
         val listOfAllFiles = Files.list(directoryOfFiles)
-            .collect(Collectors.toList())
-            .filterNotNull()
-            .filter { isCsv(it) }
-            .filter { inBetween(it, start, end) }
+                .collect(Collectors.toList())
+                .filterNotNull()
+                .filter { isCsv(it) }
+                .filter { inBetween(it, start, end) }
         cachedEventList = listOfAllFiles.map { Files.readAllLines(it) }
-            .flatten()
-            .filter { isNotHeadline(it) }
-            .map { maptToEvent(it) }
+                .flatten()
+                .filter { isNotHeadline(it) }
+                .map { maptToEvent(it) }
         return cachedEventList
     }
 
@@ -69,24 +74,22 @@ class FileEventStorage : EventStorage() {
 
     private fun inBetween(path: Path, start: LocalDate?, end: LocalDate?): Boolean {
         val filename = path.toFile().name.split(".")
-            .first()
+                .first()
         val dateTimeOfLog = LocalDate.parse(filename, formatter)
         val startLocal = start ?: LocalDate.MIN
         val endLocal = end ?: LocalDate.MAX
         return dateTimeOfLog.isAfter(startLocal)
-            .and(dateTimeOfLog.isBefore(endLocal))
+                .and(dateTimeOfLog.isBefore(endLocal))
     }
 
     private fun maptToEvent(data: String): Event {
         val fields = data.split(";")
-        return Event(
-            toString(fields, "TEXT"),
-            toStringList(fields, "TOPICS"),
-            toStringList(fields, "SENDER"),
-            toStringList(fields, "METADATA"),
-            toLocalDateTime(fields, "RECEIVED"),
-            toLocalDateTime(fields, "PROCESSED")
-        )
+        return Event(toString(fields, "TEXT"),
+                     toStringList(fields, "TOPICS"),
+                     toStringList(fields, "SENDER"),
+                     toStringList(fields, "METADATA"),
+                     toLocalDateTime(fields, "RECEIVED"),
+                     toLocalDateTime(fields, "PROCESSED"))
     }
 
     private fun toStringList(fields: List<String>, fieldName: String): List<String> {
@@ -102,11 +105,8 @@ class FileEventStorage : EventStorage() {
         return fields[statisticalFields.indexOf(fieldName)]
     }
 
-    private fun toLocalDateTime(fields: List<String>, fieldName: String) = LocalDateTime.parse(
-        fields[statisticalFields.indexOf(
-            fieldName
-        )]
-    )
+    private fun toLocalDateTime(fields: List<String>, fieldName: String) = LocalDateTime.parse(fields[statisticalFields.indexOf(
+        fieldName)])
 
     private fun getFileHeader(): String {
         return statisticalFields.joinToString(semicolon, "", newLine())
