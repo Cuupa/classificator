@@ -23,7 +23,7 @@ class FileEventStorage : EventStorage() {
 
     override fun write(event: Event) {
         val path = Paths.get(getFilename(event))
-        if (directoryExists(path)) {
+        if (!directoryExists(path)) {
             createDirectories(path)
         }
 
@@ -52,9 +52,9 @@ class FileEventStorage : EventStorage() {
 
         val lastModified = directoryOfFiles.toFile()
                 .lastModified()
-        if (lastModifiedEventStorage >= lastModified) {
-            return cachedEventList
-        }
+       // if (lastModifiedEventStorage >= lastModified) {
+       //     return cachedEventList
+        //}
         lastModifiedEventStorage = lastModified
         val listOfAllFiles = Files.list(directoryOfFiles)
                 .collect(Collectors.toList())
@@ -68,7 +68,7 @@ class FileEventStorage : EventStorage() {
         return cachedEventList
     }
 
-    private fun isNotHeadline(line: String) = line != getFileHeader().replace("\n", "")
+    private fun isNotHeadline(line: String) = line != getFileHeader().replace("\n", "").replace("\r", "")
 
     private fun isCsv(path: Path) = path.toFile().name.endsWith(".csv")
 
@@ -112,14 +112,18 @@ class FileEventStorage : EventStorage() {
         return statisticalFields.joinToString(semicolon, "", newLine())
     }
 
+    /**
+     * "RECEIVED", "PROCESSED", "TOPICS", "SENDER", "METADATA", "TEXT"
+     */
     private fun getEventData(event: Event): String {
-        return StringBuilder().append(event.start)
+        return StringBuilder()
+            .append(event.start)
             .append(semicolon)
             .append(event.end)
             .append(semicolon)
-            .append(event.senders.joinToString(",", "", ""))
-            .append(semicolon)
             .append(event.results.joinToString(",", "", ""))
+            .append(semicolon)
+            .append(event.senders.joinToString(",", "", ""))
             .append(semicolon)
             .append(event.metadata.joinToString(",", "", ""))
             .append(semicolon)
