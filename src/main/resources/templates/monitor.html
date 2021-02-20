@@ -4,13 +4,95 @@
     <meta charset="UTF-8"/>
     <title>Testing</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
+    <script th:src="@{/js/chart.js}"></script>
 </head>
 
 <body>
 
-<form action="#" method="POST" th:action="@{exportAsPdf}" th:object="${monitorProcess}">
-    <input type="submit" value="Export as PDF"/>
-</form>
+<!--<form action="#" method="POST" th:action="@{exportAsPdf}" th:object="${monitorProcess}">
+   <input type="submit" value="Export as PDF"/>
+</form>-->
+
+<table width="100%">
+    <tr>
+        <td width="50%"><canvas id="topics"/></td>
+        <td width="50%"><canvas id="senders"/></td>
+    </tr>
+</table>
+<input type="hidden" id="topics_data" th:value="${topics}"/>
+<input type="hidden" id="senders_data" th:value="${senders}"/>
+
+<script type="application/javascript">
+    const topicdata = JSON.parse(document.getElementById('topics_data').value);
+    var ctx = document.getElementById('topics').getContext("2d");
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(topicdata),
+            datasets: [{
+                label: '# Topics',
+                data: Object.values(topicdata),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                position: 'left'
+            }
+        }
+    });
+
+    const sendersdata = JSON.parse(document.getElementById('senders_data').value);
+    ctx = document.getElementById('senders').getContext("2d");
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(sendersdata),
+            datasets: [{
+                label: '# Senders',
+                data: Object.values(sendersdata),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                position: 'left'
+            }
+        }
+    });
+</script>
 
 <!--/*@thymesVar id="monitorProcess" type="com.cuupa.classificator.gui.MonitorProcess"*/-->
 <form action="#" method="POST" th:action="@{monitorWithFilter}" th:object="${monitorProcess}">
@@ -49,8 +131,8 @@
             <td align="right" width="16%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
             </td>
             <td align="right" width="16%"><span th:text="${result.processingTime}">Processing time</span></td>
-            <td width="16%"><span th:text="${result.senders}">Senders</span></td>
             <td width="16%"><span th:text="${result.results}">Results</span></td>
+            <td width="16%"><span th:text="${result.senders}">Senders</span></td>
             <td width="16%"><span th:text="${result.metadata}">Metadata</span></td>
             <td width="16%"><span th:text="${result.text}">Text</span></td>
         </tbody>

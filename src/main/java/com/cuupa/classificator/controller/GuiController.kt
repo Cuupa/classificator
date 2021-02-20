@@ -6,16 +6,20 @@ import com.cuupa.classificator.monitor.Event
 import com.cuupa.classificator.monitor.Monitor
 import com.cuupa.classificator.services.Classificator
 import com.cuupa.classificator.services.kb.KnowledgeManager
+import com.google.gson.Gson
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.servlet.ModelAndView
 import java.time.LocalDate
 
 @Controller
 class GuiController(private val classificator: Classificator, private val manager: KnowledgeManager,
                     private val monitor: Monitor) {
+
+    private val gson = Gson()
 
     @RequestMapping(value = ["/", "/index"], method = [RequestMethod.GET])
     fun index(model: Model): String {
@@ -39,11 +43,16 @@ class GuiController(private val classificator: Classificator, private val manage
     }
 
     @RequestMapping(value = ["/monitor"], method = [RequestMethod.GET])
-    fun monitor(model: Model): String {
+    fun monitor(model: Model): ModelAndView {
         val monitorProcess = MonitorProcess()
         monitorProcess.events = load(monitorProcess)
         model.addAttribute("monitorProcess", monitorProcess)
-        return "monitor"
+        model.addAttribute("data", gson.toJson(monitorProcess.events))
+        val modelAndView = ModelAndView("monitor")
+        val statistics = monitor.getStatistics(null, null)
+        modelAndView.addObject("topics", gson.toJson(statistics.topicDistribution))
+        modelAndView.addObject("senders", gson.toJson(statistics.senderDistribution))
+        return modelAndView
     }
 
     @RequestMapping(value = ["/monitorWithFilter"], method = [RequestMethod.POST])
