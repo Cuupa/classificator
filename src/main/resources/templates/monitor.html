@@ -5,6 +5,7 @@
     <title>Testing</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css"/>
     <script th:src="@{/js/chart.js}"></script>
+    <script th:src="@{/js/statistics.js}"></script>
 </head>
 
 <body>
@@ -56,23 +57,25 @@
     <table class="table table-striped" width="100%">
         <thead class="thead-dark">
         <tr>
-            <th width="16%">Received</th>
-            <th width="16%">Processing Time</th>
-            <th width="16%">Topics</th>
-            <th width="16%">Senders</th>
-            <th width="16%">Metadata</th>
-            <th width="16%">Analyzed Text</th>
+            <th width="14%">Received</th>
+            <th width="14%">Processing Time</th>
+            <th width="14%">Topics</th>
+            <th width="14%">Senders</th>
+            <th width="14%">Metadata</th>
+            <th width="14%">Analyzed Text</th>
+            <th width="14%">Download</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="result : ${monitorProcess.events}">
-            <td align="right" width="16%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
+            <td align="right" width="14%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
             </td>
-            <td align="right" width="16%"><span th:text="${result.processingTime}">Processing time</span></td>
-            <td width="16%"><span th:text="${result.results}">Results</span></td>
-            <td width="16%"><span th:text="${result.senders}">Senders</span></td>
-            <td width="16%"><span th:text="${result.metadata}">Metadata</span></td>
-            <td width="16%"><span th:text="${result.text}">Text</span></td>
+            <td align="right" width="14%"><span th:text="${result.processingTime}">Processing time</span></td>
+            <td width="14%"><span th:text="${result.results}">Results</span></td>
+            <td width="14%"><span th:text="${result.senders}">Senders</span></td>
+            <td width="14%"><span th:text="${result.metadata}">Metadata</span></td>
+            <td width="14%"><span th:text="${result.text}">Text</span></td>
+            <td width="14%"></td>
         </tbody>
     </table>
     </td>
@@ -81,110 +84,9 @@
 </form>
 
 <script type="application/javascript">
-    const topicdata = JSON.parse(document.getElementById('topics_data').value);
-    var ctx = document.getElementById('topics').getContext("2d");
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(topicdata),
-            datasets: [{
-                label: 'Topics',
-                data: Object.values(topicdata),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            legend: {
-                position: 'left'
-            }
-        }
-    });
-
-    const sendersdata = JSON.parse(document.getElementById('senders_data').value);
-    ctx = document.getElementById('senders').getContext("2d");
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(sendersdata),
-            datasets: [{
-                label: 'Senders',
-                data: Object.values(sendersdata),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            legend: {
-                position: 'left'
-            }
-        }
-    });
-
-    const processingHistroyData = JSON.parse(document.getElementById('processingHistory_data').value);
-    ctx = document.getElementById('processingHistory').getContext("2d");
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: Object.keys(processingHistroyData),
-            datasets: [{
-                label: 'Processingtime in seconds',
-                data: Object.values(processingHistroyData),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            legend: {
-                position: 'bottom'
-            }
-        }
-    });
+    getDiagram('doughnut', 'left', 'topics_data', 'topics', 'Topics')
+    getDiagram('doughnut', 'left', 'senders_data', 'senders', 'Senders')
+    getDiagram('line', 'bottom', 'processingHistory_data', 'processingHistory', 'Processingtime in seconds')
 </script>
 </body>
 </html>
