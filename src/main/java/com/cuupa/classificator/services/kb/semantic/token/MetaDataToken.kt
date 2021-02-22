@@ -134,7 +134,7 @@ class MetaDataToken {
 
     private fun findMostFittingResult(match: Map<Metadata, Int>): List<Metadata> {
         val entries = getMatchesMap(match)
-        return entries.entries.minWith(compareBy {
+        return entries.entries.minWithOrNull(compareBy {
             it.key
         })?.value ?: listOf()
     }

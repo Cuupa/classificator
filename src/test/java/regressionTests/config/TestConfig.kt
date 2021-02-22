@@ -1,6 +1,9 @@
 package regressionTests.config
 
 import com.cuupa.classificator.configuration.application.ApplicationProperties
+import com.cuupa.classificator.monitor.EventStorage
+import com.cuupa.classificator.monitor.FileEventStorage
+import com.cuupa.classificator.monitor.Monitor
 import com.cuupa.classificator.services.Classificator
 import com.cuupa.classificator.services.kb.KnowledgeManager
 import com.cuupa.classificator.services.kb.services.KnowledgeBaseExecutorService
@@ -21,7 +24,7 @@ open class TestConfig {
 
     @Bean
     open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser())
+        return Classificator(knowledgeManager(), analyser(), monitor())
     }
 
     @Bean
@@ -62,6 +65,16 @@ open class TestConfig {
     @Bean
     open fun applicationProperties(): ApplicationProperties {
         return ApplicationProperties()
+    }
+
+    @Bean
+    open fun monitor(): Monitor {
+        return Monitor(eventStorage())
+    }
+
+    @Bean
+    open fun eventStorage(): EventStorage {
+        return FileEventStorage()
     }
 
     @Bean
