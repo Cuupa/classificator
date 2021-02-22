@@ -63,33 +63,35 @@ class Monitor(private val eventStorage: EventStorage) {
     fun getStatistics(start: LocalDate?, end: LocalDate?): MonitorStatistics {
         val events = getEvents(start, end)
         val monitorStatistics = MonitorStatistics()
-        monitorStatistics.topicDistribution = getTopicDistribution(events)
-        monitorStatistics.senderDistribution = getSenderDistribution(events)
-        monitorStatistics.maxProcessingTime = events.maxOf { it.getElapsedTime() }
-        monitorStatistics.minProcessingTime = events.minOf { it.getElapsedTime() }
-        val elapsedTime = events.map { it.getElapsedTime() }
-            .average()
+        if(events.isNotEmpty()) {
+            monitorStatistics.topicDistribution = getTopicDistribution(events)
+            monitorStatistics.senderDistribution = getSenderDistribution(events)
+            monitorStatistics.maxProcessingTime = events.maxOf { it.getElapsedTime() }
+            monitorStatistics.minProcessingTime = events.minOf { it.getElapsedTime() }
+            val elapsedTime = events.map { it.getElapsedTime() }
+                .average()
 
-        monitorStatistics.averageProcessingTime = if (elapsedTime.isNaN()) {
-            0L
-        } else {
-            elapsedTime.toLong()
+            monitorStatistics.averageProcessingTime = if (elapsedTime.isNaN()) {
+                0L
+            } else {
+                elapsedTime.toLong()
+            }
+
+            val average = events.filter { !it.text.isNullOrBlank() }
+                .map { it.text!!.length }
+                .average()
+            monitorStatistics.averageTextLength = if (!average.isNaN()) {
+                average.roundToLong()
+            } else {
+                0L
+            }
+
+            val processingHistory = groupBy(events)
+                .mapValues { it.value.map { event -> event.getElapsedTime() }.average() }.mapValues { getDefault(it) }
+                .mapValues { it.value / 1000 }.toList().sortedBy { it.first }.toMap().toMutableMap()
+
+            monitorStatistics.processingHistory = fillEmptyTimeSlots(processingHistory)
         }
-
-        val average = events.filter { !it.text.isNullOrBlank() }
-            .map { it.text!!.length }
-            .average()
-        monitorStatistics.averageTextLength = if (!average.isNaN()) {
-            average.roundToLong()
-        } else {
-            0L
-        }
-
-        val processingHistory = groupBy(events)
-            .mapValues { it.value.map { event -> event.getElapsedTime() }.average() }.mapValues { getDefault(it) }
-            .mapValues { it.value / 1000 }.toList().sortedBy { it.first }.toMap().toMutableMap()
-
-        monitorStatistics.processingHistory = fillEmptyTimeSlots(processingHistory)
         return monitorStatistics
     }
 

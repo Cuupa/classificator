@@ -5,7 +5,7 @@ server.port: ${server_port}
 
 logging.level:
   root: ERROR
-  com.cuupa.classificator: WARNING
+  com.cuupa.classificator: WARN
 
 classificator:
   kbfiles: ${knowlegde_base}

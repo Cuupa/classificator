@@ -70,13 +70,18 @@
         <tbody>
         <tr th:each="result : ${monitorProcess.events}">
             <td width="12%"><span th:text="${result.kbVersion}"></span></td>
-            <td align="right" width="12%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span></td>
+            <td align="right" width="12%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
+            </td>
             <td align="right" width="12%"><span th:text="${result.processingTime}">Processing time</span></td>
             <td width="12%"><span th:text="${result.results}">Results</span></td>
             <td width="12%"><span th:text="${result.senders}">Senders</span></td>
             <td width="12%"><span th:text="${result.metadata}">Metadata</span></td>
-            <td width="12%"><span th:text="${result.text.length()} > 99 ? ${result.text.substring(0,99)} + ' ...' : ${result.text}">Text</span></td>
-            <td width="12%"><a th:href="@{download?start={start}&end={end}(start=${result.getStartTimestamp()},end=${result.getEndTimestamp()})}">Download</a></td>
+            <td width="12%"><span
+                    th:text="${result.text.length()} > 99 ? ${result.text.substring(0,99)} + ' ...' : ${result.text}">Text</span>
+            </td>
+            <td width="12%"><a
+                    th:href="@{download?start={start}&end={end}(start=${result.getStartTimestamp()},end=${result.getEndTimestamp()})}">Download</a>
+            </td>
         </tbody>
     </table>
     </td>
