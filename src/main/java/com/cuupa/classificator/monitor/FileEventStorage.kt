@@ -28,10 +28,10 @@ class FileEventStorage : EventStorage() {
         }
 
         if (!Files.exists(path)) {
-            Files.writeString(path, getFileHeader())
+            Files.writeString(path, Event.headlines())
         }
 
-        Files.writeString(path, getEventData(event), StandardOpenOption.APPEND)
+        Files.writeString(path, event.toCsvString(), StandardOpenOption.APPEND)
         if (log.isDebugEnabled) {
             log.debug("Wrote event $event to ${path.toFile().absolutePath}")
         }
@@ -51,45 +51,58 @@ class FileEventStorage : EventStorage() {
         }
 
         val lastModified = directoryOfFiles.toFile()
-                .lastModified()
-       // if (lastModifiedEventStorage >= lastModified) {
-       //     return cachedEventList
+            .lastModified()
+        // if (lastModifiedEventStorage >= lastModified) {
+        //     return cachedEventList
         //}
         lastModifiedEventStorage = lastModified
         val listOfAllFiles = Files.list(directoryOfFiles)
-                .collect(Collectors.toList())
-                .filterNotNull()
-                .filter { isCsv(it) }
-                .filter { inBetween(it, start, end) }
+            .collect(Collectors.toList())
+            .filterNotNull()
+            .filter { isCsv(it) }
+            .filter { isDatabase(it) }
+            .filter { inBetween(it, start, end) }
         cachedEventList = listOfAllFiles.map { Files.readAllLines(it) }
-                .flatten()
-                .filter { isNotHeadline(it) }
-                .map { maptToEvent(it) }
+            .flatten()
+            .filter { isNotHeadline(it) }
+            .map { maptToEvent(it) }
         return cachedEventList
     }
 
-    private fun isNotHeadline(line: String) = line != getFileHeader().replace("\n", "").replace("\r", "")
+    private fun isDatabase(it: Path): Boolean {
+        return try{
+            formatter.parse(it.toFile().name.removeSuffix(".csv"))
+            true
+        }catch (e:Exception){
+            false
+        }
+    }
+
+    private fun isNotHeadline(line: String) = line != Event.headlines().replace("\n", "").replace("\r", "")
 
     private fun isCsv(path: Path) = path.toFile().name.endsWith(".csv")
 
     private fun inBetween(path: Path, start: LocalDate?, end: LocalDate?): Boolean {
         val filename = path.toFile().name.split(".")
-                .first()
+            .first()
         val dateTimeOfLog = LocalDate.parse(filename, formatter)
         val startLocal = start ?: LocalDate.MIN
         val endLocal = end ?: LocalDate.MAX
         return dateTimeOfLog.isAfter(startLocal)
-                .and(dateTimeOfLog.isBefore(endLocal))
+            .and(dateTimeOfLog.isBefore(endLocal)) || dateTimeOfLog == startLocal || dateTimeOfLog == endLocal
     }
 
     private fun maptToEvent(data: String): Event {
         val fields = data.split(";")
-        return Event(toString(fields, "TEXT"),
-                     toStringList(fields, "TOPICS"),
-                     toStringList(fields, "SENDER"),
-                     toStringList(fields, "METADATA"),
-                     toLocalDateTime(fields, "RECEIVED"),
-                     toLocalDateTime(fields, "PROCESSED"))
+        return Event(
+            toString(fields, "KB-VERSION"),
+            toString(fields, "TEXT"),
+            toStringList(fields, "TOPICS"),
+            toStringList(fields, "SENDER"),
+            toStringList(fields, "METADATA"),
+            toLocalDateTime(fields, "RECEIVED"),
+            toLocalDateTime(fields, "PROCESSED")
+        )
     }
 
     private fun toStringList(fields: List<String>, fieldName: String): List<String> {
@@ -105,37 +118,11 @@ class FileEventStorage : EventStorage() {
         return fields[statisticalFields.indexOf(fieldName)]
     }
 
-    private fun toLocalDateTime(fields: List<String>, fieldName: String) = LocalDateTime.parse(fields[statisticalFields.indexOf(
-        fieldName)])
-
-    private fun getFileHeader(): String {
-        return statisticalFields.joinToString(semicolon, "", newLine())
-    }
-
-    /**
-     * "RECEIVED", "PROCESSED", "TOPICS", "SENDER", "METADATA", "TEXT"
-     */
-    private fun getEventData(event: Event): String {
-        return StringBuilder()
-            .append(event.start)
-            .append(semicolon)
-            .append(event.end)
-            .append(semicolon)
-            .append(event.results.joinToString(",", "", ""))
-            .append(semicolon)
-            .append(event.senders.joinToString(",", "", ""))
-            .append(semicolon)
-            .append(event.metadata.joinToString(",", "", ""))
-            .append(semicolon)
-            .append(event.text?.replace(";", " ")?.replace("\n", " ")?.replace("\r", "") ?: "")
-            .append(semicolon)
-            .append(newLine())
-            .toString()
-    }
-
-    private val semicolon = ";"
-
-    private fun newLine() = System.getProperty("line.separator")
+    private fun toLocalDateTime(fields: List<String>, fieldName: String) = LocalDateTime.parse(
+        fields[statisticalFields.indexOf(
+            fieldName
+        )]
+    )
 
     private fun getFilename(event: Event): String {
         val filename = formatter.format(event.start) + ".csv"

@@ -15,4 +15,8 @@ class KnowledgeManager(
     fun manualParse(parseTopic: Topic) {
         knowledgeBase.topicList = mutableListOf(parseTopic)
     }
+
+    fun getVersion(): String {
+        return knowledgeBase.knowledgeBaseMetadata.version
+    }
 }

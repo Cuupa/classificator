@@ -18,9 +18,9 @@ class Classificator(private val manager: KnowledgeManager, private val analyser:
 
     fun classify(text: String?): List<SemanticResult> {
         val start = LocalDateTime.now()
-        var result = getResultFromInputText(text)
+        val result = getResultFromInputText(text)
         val done = LocalDateTime.now()
-        monitor.writeEvent(text, result, start, done)
+        monitor.writeEvent(manager.getVersion(), text, result, start, done)
 
         return result
     }

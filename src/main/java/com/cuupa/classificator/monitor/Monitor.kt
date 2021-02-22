@@ -23,6 +23,7 @@ class Monitor(private val eventStorage: EventStorage) {
     private val hours = mutableListOf<String>()
 
     private val format = SimpleDateFormat("HH:mm")
+
     private val formatDate = SimpleDateFormat("dd.MM.yyyy HH:mm")
 
     init {
@@ -35,12 +36,18 @@ class Monitor(private val eventStorage: EventStorage) {
         }
     }
 
-    fun writeEvent(text: String?, results: List<SemanticResult>, start: LocalDateTime, end: LocalDateTime) {
+    fun writeEvent(
+        version: String,
+        text: String?,
+        results: List<SemanticResult>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ) {
         if (enabled) {
             val event = if (logText) {
-                Event(text, getTopics(results), getSenders(results), getMetadata(results), start, end)
+                Event(version, text, getTopics(results), getSenders(results), getMetadata(results), start, end)
             } else {
-                Event(getTopics(results), getSenders(results), getMetadata(results), start, end)
+                Event(version, getTopics(results), getSenders(results), getMetadata(results), start, end)
             }
             eventStorage.write(event)
             if (log.isDebugEnabled) {
@@ -83,7 +90,6 @@ class Monitor(private val eventStorage: EventStorage) {
             .mapValues { it.value / 1000 }.toList().sortedBy { it.first }.toMap().toMutableMap()
 
         monitorStatistics.processingHistory = fillEmptyTimeSlots(processingHistory)
-
         return monitorStatistics
     }
 

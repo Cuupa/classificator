@@ -57,25 +57,26 @@
     <table class="table table-striped" width="100%">
         <thead class="thead-dark">
         <tr>
-            <th width="14%">Received</th>
-            <th width="14%">Processing Time</th>
-            <th width="14%">Topics</th>
-            <th width="14%">Senders</th>
-            <th width="14%">Metadata</th>
-            <th width="14%">Analyzed Text</th>
-            <th width="14%">Download</th>
+            <th width="12%">Knowledgebase version</th>
+            <th width="12%">Received</th>
+            <th width="12%">Processing Time</th>
+            <th width="12%">Topics</th>
+            <th width="12%">Senders</th>
+            <th width="12%">Metadata</th>
+            <th width="12%">Analyzed Text</th>
+            <th width="12%">Download</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="result : ${monitorProcess.events}">
-            <td align="right" width="14%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
-            </td>
-            <td align="right" width="14%"><span th:text="${result.processingTime}">Processing time</span></td>
-            <td width="14%"><span th:text="${result.results}">Results</span></td>
-            <td width="14%"><span th:text="${result.senders}">Senders</span></td>
-            <td width="14%"><span th:text="${result.metadata}">Metadata</span></td>
-            <td width="14%"><span th:text="${result.text}">Text</span></td>
-            <td width="14%"></td>
+            <td width="12%"><span th:text="${result.kbVersion}"></span></td>
+            <td align="right" width="12%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span></td>
+            <td align="right" width="12%"><span th:text="${result.processingTime}">Processing time</span></td>
+            <td width="12%"><span th:text="${result.results}">Results</span></td>
+            <td width="12%"><span th:text="${result.senders}">Senders</span></td>
+            <td width="12%"><span th:text="${result.metadata}">Metadata</span></td>
+            <td width="12%"><span th:text="${result.text.length()} > 99 ? ${result.text.substring(0,99)} + ' ...' : ${result.text}">Text</span></td>
+            <td width="12%"><a th:href="@{download?start={start}&end={end}(start=${result.getStartTimestamp()},end=${result.getEndTimestamp()})}">Download</a></td>
         </tbody>
     </table>
     </td>
