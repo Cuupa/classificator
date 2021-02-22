@@ -37,8 +37,8 @@ open class Text internal constructor(var text: String) {
         return stringArray.size
     }
 
-    operator fun get(currentPositionSearchString: Int): String {
-        return stringArray[currentPositionSearchString]
+    operator fun get(index: Int): String {
+        return stringArray[index]
     }
 
     val isEmpty: Boolean

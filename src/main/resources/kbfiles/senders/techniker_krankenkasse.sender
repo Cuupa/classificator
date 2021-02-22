@@ -1,5 +1,0 @@
-Techniker Krankenkasse = {
-    oneOf("Techniker Krankenkasse")m
-    not("Krankenkasse bzw. Kostenträger", "Kostenträger"),
-    not("Meldebescheinigung zur Sozialversicherung")
-}

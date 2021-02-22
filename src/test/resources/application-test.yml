@@ -1,12 +1,11 @@
-classificator:
-  kbfiles: kbfiles
-  metadatafiles: kbfiles/metadata
-  regexfiles: kbfiles/regex
-  senderFiles: kbfiles/senders
+server_port: 8080
 
-test:
-  paths:
-    warning: C:\Users\Simon\Desktop\Testdaten\Classificator\WARNING
-    bill: C:\Users\Simon\Desktop\Testdaten\Classificator\BILL
-    bank_statement: C:\Users\Simon\Desktop\Testdaten\Classificator\BANK_STATEMENT
-    receipt_slip: C:\Users\Simon\Desktop\Testdaten\Classificator\RECEIPT_SLIP
+server:
+  port: ${server_port}
+
+logging.level:
+  root: ERROR
+  com.cuupa.classificator: warn
+
+classificator:
+  kbfiles: build/knowledgebase

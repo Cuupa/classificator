@@ -1,53 +1,46 @@
-import com.cuupa.classificator.services.kb.KnowledgeFileParser.parseTopic
 import com.cuupa.classificator.services.kb.KnowledgeManager
-import org.junit.Assert
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import regressionTests.config.TestConfig
-import java.nio.file.Files
-import java.nio.file.Paths
 
 @SpringBootTest(classes = [TestConfig::class])
 @ActiveProfiles("test")
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 class KBTest {
 
     @Autowired
     private val knowledgeManager: KnowledgeManager? = null
 
-    private val bill = Files.readString(Paths.get("src/main/resources/kbfiles/bill.dsl"))
-    private val warning = Files.readString(Paths.get("src/main/resources/kbfiles/warning.dsl"))
-    private val sickNote = Files.readString(Paths.get("src/main/resources/kbfiles/sicknote.dsl"))
-
-    private val textBill = "Im Anhang finden Sie die Rechnung für den Betrag von 31€"
-    private val textWarning = "Im Anhang finden Sie die Rechnung für den Betrag von 31 €. Bisher haben wir noch keine Zahlung erhalten. Dies ist die letzte Mahnung"
-    private val textSicknote = "Arbeitsunfähigkeitsbescheinigung ICD-10 Code: A10.1 Erstbescheinigung " + "Folgebescheinigung arbeitsunfähig seit 01.01.2020 voraussichtlich arbeitsunfähig bis 01.02.2020 " + "festgestellt am 01.01.2020"
+    private val textBill = "Im Anhang finden Sie die Rechnung für den Betrag von 31 €"
+    private val textWarning =
+        "Im Anhang finden Sie die Rechnung für den Betrag von 31 €. Bisher haben wir noch keine Zahlung erhalten. Dies ist die letzte Mahnung"
+    private val textSicknote =
+        "Arbeitsunfähigkeitsbescheinigung ICD-10 Code: A10.1 Erstbescheinigung " + "Folgebescheinigung arbeitsunfähig seit 01.01.2020 voraussichtlich arbeitsunfähig bis 01.02.2020 " + "festgestellt am 01.01.2020"
 
     @Test
     fun parseBill() {
-        knowledgeManager!!.manualParse(parseTopic(bill))
-        val resultsBill = knowledgeManager.getResults(textBill)
-        Assert.assertTrue(resultsBill.isNotEmpty())
-        Assert.assertEquals("BILL", resultsBill[0].topicName)
+        val resultsBill = knowledgeManager!!.getResults(textBill)
+        assertTrue(resultsBill.isNotEmpty())
+        assertEquals("BILL", resultsBill[0].topicName)
     }
 
     @Test
     fun parseWarning() {
-        knowledgeManager!!.manualParse(parseTopic(warning))
-        val resultsWarning = knowledgeManager.getResults(textWarning)
-        Assert.assertEquals(1, resultsWarning.size.toLong())
-        Assert.assertEquals("WARNING", resultsWarning[0].topicName)
+        val resultsWarning = knowledgeManager!!.getResults(textWarning)
+        assertEquals(1, resultsWarning.size.toLong())
+        assertEquals("WARNING", resultsWarning[0].topicName)
     }
 
     @Test
     fun parseSicknote() {
-        knowledgeManager!!.manualParse(parseTopic(sickNote))
-        val resultsWarning = knowledgeManager.getResults(textSicknote)
-        Assert.assertEquals(1, resultsWarning.size.toLong())
-        Assert.assertEquals("SICKNOTE", resultsWarning[0].topicName)
+        val resultsWarning = knowledgeManager!!.getResults(textSicknote)
+        assertEquals(1, resultsWarning.size.toLong())
+        assertEquals("SICKNOTE", resultsWarning[0].topicName)
     }
 }
