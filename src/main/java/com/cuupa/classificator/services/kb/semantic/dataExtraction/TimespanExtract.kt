@@ -2,7 +2,7 @@ package com.cuupa.classificator.services.kb.semantic.dataExtraction
 
 import java.util.regex.Pattern
 
-class TimespanExtract(regex: String) : Extract(Pattern.compile(regex, Pattern.CASE_INSENSITIVE)) {
+class TimespanExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pattern.CASE_INSENSITIVE)) {
 
     override fun normalize(value: String): String {
         return value

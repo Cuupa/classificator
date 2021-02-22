@@ -3,7 +3,7 @@ package com.cuupa.classificator.services.kb.semantic.dataExtraction
 import com.cuupa.classificator.constants.RegexConstants
 import java.util.regex.Pattern
 
-class DateExtract(regex: String) : Extract(Pattern.compile(regex, Pattern.CASE_INSENSITIVE)) {
+class DateExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pattern.CASE_INSENSITIVE)) {
 
     // TODO: normalize months in non numeric values
     override fun normalize(value: String): String {
