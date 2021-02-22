@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 /**
  * @author Simon Thiel (https://github.com/cuupa)
  */
-class SenderExtract(regex: String) : Extract(Pattern.compile(regex, Pattern.CASE_INSENSITIVE)) {
+class SenderExtract(regex: String) : Extract(Pattern.compile(regex)) {
 
     override fun normalize(value: String): String {
         return value.trim()

@@ -1,0 +1,10 @@
+$POLICY_NUMBER = {
+	oneOf("Versicherungsnummer [INSURANCE_NUMBER], 
+	"Versicherungs-Nr. [INSURANCE_NUMBER]", 
+	"Versicherungs-Nr.: [INSURANCE_NUMBER], 
+	"Risiko-Lebensversicherung Nr. [INSURANCE_NUMBER]", 
+	"Rentenversicherung Nr. [INSURANCE_NUMBER]", 
+	"Vertragsnummer [INSURANCE_NUMBER]", 
+	"Rentenversicherung [INSURANCE_NUMBER]"
+	)
+}

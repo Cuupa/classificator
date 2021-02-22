@@ -1,8 +1,11 @@
 package com.cuupa.classificator.services.kb
 
-data class SemanticResult(val topicName: String, var sender: String, var metaData: List<Metadata>) {
+import com.cuupa.classificator.services.kb.semantic.Metadata
+import com.cuupa.classificator.services.kb.semantic.SenderToken
 
-    constructor(topicName: String, metaData: MutableList<Metadata>) : this(topicName, Sender.UNKNOWN, metaData)
+data class SemanticResult(val topicName: String, var sender: String, var metaData: MutableList<Metadata>) {
 
-    constructor(topicName: String) : this(topicName, Sender.UNKNOWN, mutableListOf())
+    constructor(topicName: String, metaData: MutableList<Metadata>) : this(topicName, SenderToken.UNKNOWN, metaData)
+
+    constructor(topicName: String) : this(topicName, SenderToken.UNKNOWN, mutableListOf())
 }

@@ -1,0 +1,4 @@
+Stadtsparkasse Düsseldorf = {
+    oneOf("Stadtsparkasse Düsseldorf", "Stadt Sparkasse Düsseldorf"),
+    oneOf("www.sskduesseldorf.de")
+}

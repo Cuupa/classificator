@@ -1,0 +1,4 @@
+RAY Property Management GmbH = {
+    oneOf("RAY Property Management GmbH", "RAY Property Manag. GmbH"),
+    oneOf("www.rayermann.com", "HRB 1017")
+}
