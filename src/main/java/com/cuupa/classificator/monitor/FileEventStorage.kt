@@ -65,15 +65,15 @@ class FileEventStorage : EventStorage() {
         cachedEventList = listOfAllFiles.map { Files.readAllLines(it) }
             .flatten()
             .filter { isNotHeadline(it) }
-            .map { maptToEvent(it) }
+            .map { maptToEvent(it) }.filterNotNull()
         return cachedEventList
     }
 
     private fun isDatabase(it: Path): Boolean {
-        return try{
+        return try {
             formatter.parse(it.toFile().name.removeSuffix(".csv"))
             true
-        }catch (e:Exception){
+        } catch (e: Exception) {
             false
         }
     }
@@ -92,21 +92,27 @@ class FileEventStorage : EventStorage() {
             .and(dateTimeOfLog.isBefore(endLocal)) || dateTimeOfLog == startLocal || dateTimeOfLog == endLocal
     }
 
-    private fun maptToEvent(data: String): Event {
+    private fun maptToEvent(data: String): Event? {
         val fields = data.split(";")
-        return Event(
-            toString(fields, "KB-VERSION"),
-            toString(fields, "TEXT"),
-            toStringList(fields, "TOPICS"),
-            toStringList(fields, "SENDER"),
-            toStringList(fields, "METADATA"),
-            toLocalDateTime(fields, "RECEIVED"),
-            toLocalDateTime(fields, "PROCESSED")
-        )
+        return try {
+            Event(
+                toString(fields, "KB-VERSION"),
+                toString(fields, "TEXT"),
+                toStringList(fields, "TOPICS"),
+                toStringList(fields, "SENDER"),
+                toStringList(fields, "METADATA"),
+                toLocalDateTime(fields, "RECEIVED"),
+                toLocalDateTime(fields, "PROCESSED")
+            )
+        } catch (e: Exception) {
+            log.error(data)
+            log.error(fields)
+            null
+        }
     }
 
     private fun toStringList(fields: List<String>, fieldName: String): List<String> {
-        val field = fields[statisticalFields.indexOf(fieldName)]
+        val field = fields[Event.statisticalFields.indexOf(fieldName)]
         return if (field.contains(",")) {
             field.split(",")
         } else {
@@ -115,11 +121,11 @@ class FileEventStorage : EventStorage() {
     }
 
     private fun toString(fields: List<String>, fieldName: String): String {
-        return fields[statisticalFields.indexOf(fieldName)]
+        return fields[Event.statisticalFields.indexOf(fieldName)]
     }
 
     private fun toLocalDateTime(fields: List<String>, fieldName: String) = LocalDateTime.parse(
-        fields[statisticalFields.indexOf(
+        fields[Event.statisticalFields.indexOf(
             fieldName
         )]
     )

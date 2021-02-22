@@ -1,10 +1,8 @@
 package com.cuupa.classificator.monitor
 
-import com.cuupa.classificator.constants.StringConstants.newLine
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 

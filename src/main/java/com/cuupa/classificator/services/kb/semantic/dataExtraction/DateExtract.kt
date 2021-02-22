@@ -9,9 +9,9 @@ class DateExtract(regex: String) : Extract(Pattern.compile(regex, Pattern.CASE_I
     override fun normalize(value: String): String {
         if (value.contains(".")) {
             val dateFields = value.split(RegexConstants.dotPattern)
-            return when (dateFields.size) {
-                3 -> normalizeDate(dateFields)
-                2 -> parseAndNormalizeDate(dateFields)
+            return when {
+                dateFields.size == 3 -> normalizeDate(dateFields)
+                dateFields.size == 2 && value.contains(" ") -> parseAndNormalizeDate(dateFields)
                 else -> value
             }
         }

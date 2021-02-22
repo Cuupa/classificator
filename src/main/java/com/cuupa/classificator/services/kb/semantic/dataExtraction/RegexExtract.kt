@@ -7,6 +7,6 @@ import java.util.regex.Pattern
 class RegexExtract(regex: String) : Extract(Pattern.compile(regex, Pattern.CASE_INSENSITIVE)) {
 
     override fun normalize(value: String): String {
-        return value.replace(StringConstants.blank, Strings.EMPTY)
+        return value.replace(StringConstants.blank, Strings.EMPTY).replace("\n", "").replace("\r", "")
     }
 }
