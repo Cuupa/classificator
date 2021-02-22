@@ -1,21 +1,20 @@
 import com.cuupa.classificator.services.kb.semantic.text.TextSearch
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
+import org.junit.Assert
+import org.junit.Test
 
 class TextSearchTest {
-
     @Test
     fun shouldFindText() {
         val text = TextSearch("abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor sit amet xyz")
         val contains = text.contains("ipsum dolor")
-        assertTrue(contains)
+        Assert.assertTrue(contains)
     }
 
     @Test
     fun shouldNotFindText() {
         val text = TextSearch("abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor sit amet xyz")
         val contains = text.contains("lorem ipsum dolor")
-        assertFalse(contains)
+        Assert.assertFalse(contains)
     }
 
     @Test
@@ -23,7 +22,7 @@ class TextSearchTest {
         val textSearch = TextSearch(
                 "abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz")
         val numberOfOccurences = textSearch.countOccurence("Sparkasse Krefeld")
-        assertEquals(3, numberOfOccurences.toLong())
+        Assert.assertEquals(3, numberOfOccurences.toLong())
     }
 
     @Test
@@ -31,10 +30,10 @@ class TextSearchTest {
         val textSearch = TextSearch(
                 "Sehr geehrte Damen und Herren. Hiermit kündige ich meinen Vertrag bei Ihnen. Mit freundlichen Grüßen, Max Mustermann")
         var numberOfOccurences = textSearch.countOccurence("Vertrag")
-        assertEquals(1, numberOfOccurences.toLong())
+        Assert.assertEquals(1, numberOfOccurences.toLong())
         numberOfOccurences = textSearch.countOccurence("Vertrag")
-        assertEquals(1, numberOfOccurences.toLong())
+        Assert.assertEquals(1, numberOfOccurences.toLong())
         numberOfOccurences = textSearch.countOccurence("Max Mustermann")
-        assertEquals(1, numberOfOccurences.toLong())
+        Assert.assertEquals(1, numberOfOccurences.toLong())
     }
 }

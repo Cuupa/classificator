@@ -1,0 +1,5 @@
+Rundfunk Beitragsservice = {
+    oneOf("Deutschlandradio"),
+    oneOf("BEITRAGSSERVICE"),
+    oneOf("ARD", "ZDF");
+}

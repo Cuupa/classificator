@@ -3,65 +3,60 @@
 <head>
 <meta charset="UTF-8" />
 <title>Testing</title>
-<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 </head>
 
 <body>
 
-<form action="#" th:action="@{guiProcess}" th:object="${guiProcess}"
-      method="post">
-    <table class="table table-striped">
-        <thead class="thead-dark">
-        <tr>
-            <th>Text</th>
-            <th>Result</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td width="50%">
-					<textarea autofocus="autofocus" cols="100%"
-                              rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea></td>
-            <td width="50%" align="center">
-                <table class="table table-striped">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>Topic</th>
-                        <th>Sender</th>
-                        <th>Metadata</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="result : ${guiProcess.result}">
-                        <td width="30%"><span th:text="${result.topicName}">Topic</span></td>
-                        <td width="30%"><span th:text="${result.sender}">Sender</span></td>
-                        <td width="70%">
+	<form action="#" th:action="@{reloadKB}">
+		<input type="submit" value="reload KB">
+	</form>
 
-                            <table>
-                                <thead class="thead-dark">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+	<form action="#" th:action="@{guiProcess}" th:object="${guiProcess}"
+		method="post">
+		<table class="table">
+			<tr>
+				<td width="50%"><textarea autofocus="autofocus" cols="70%"
+										  rowsfield="15" th:field="${guiProcess.inputText}"></textarea></td>
+				<td width="50%" align="center">Result
+					<table border="1" class="table table-striped">
+						<thead class="thead-dark">
+							<tr>
+								<th>Topic</th>
+								<th>Metadata</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="result : ${guiProcess.result}">
+								<td width="30%"><span th:text="${result.topicName}">Topic</span></td>
+								<td width="70%">
 
-                                <tr th:each="metaData : ${result.metaData}">
-                                    <td width="50%"><span th:text="${metaData.name}">Name</span></td>
-                                    <td width="50%"><span th:text="${metaData.value}">Value</span></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td><input type="submit"/></td>
-        </tr>
-        </tbody>
-    </table>
-</form>
+									<table border="1">
+										<thead class="thead-dark">
+											<tr>
+												<th>Name</th>
+												<th>Value</th>
+											</tr>
+										</thead>
+										<tbody>
+                                        <tr>
+                                            <td width="50%"><span th:text="${result.sender}">Sender</span></td>
+                                        </tr>
+											<tr th:each="metaData : ${result.metaData}">
+												<td width="50%"><span th:text="${metaData.name}">Name</span></td>
+												<td width="50%"><span th:text="${metaData.value}">Value</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="submit" /></td>
+			</tr>
+		</table>
+	</form>
 </body>
 </html>

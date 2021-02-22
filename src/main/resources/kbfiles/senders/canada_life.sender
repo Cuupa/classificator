@@ -1,0 +1,4 @@
+Canada Life Assurance = {
+	oneOf("Canada Life Assurance"),
+	oneOf("www.canadalife.de")
+}

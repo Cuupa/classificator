@@ -1,16 +1,14 @@
 server_port: 8080
-knowlegde_base: build/knowledgebase
 
-server.port: ${server_port}
+server:
+  port: ${server_port}
 
 logging.level:
   root: ERROR
   com.cuupa.classificator: DEBUG
 
 classificator:
-  kbfiles: ${knowlegde_base}
-
-  monitor:
-    enabled: true
-    logText: false
-    fileeventstorage.path: "C:\\Users\\Simon\\SynologyDrive\\Desktop"
+  kbfiles: classpath:kbfiles
+  metadatafiles: classpath:kbfiles/metadata
+  regexfiles: classpath:kbfiles/regex
+  senderFiles: classpath:kbfiles/senders

@@ -1,0 +1,5 @@
+Tecis Finanzdienstleistungen AG = {
+	oneOf("Message:From-Email", "tecis Finanzdienstleistungen AG"),
+	# Warning. Wildcards are expensive. Matches *@tecis.de
+	wildcardBefore("@tecis.de")
+}
