@@ -5,12 +5,12 @@ server.port: ${server_port}
 
 logging.level:
   root: ERROR
-  com.cuupa.classificator: DEBUG
+  com.cuupa.classificator: WARNING
 
 classificator:
   kbfiles: ${knowlegde_base}
 
   monitor:
     enabled: true
-    logText: false
-    fileeventstorage.path: "C:\\Users\\Simon\\SynologyDrive\\Desktop"
+    logText: true
+    fileeventstorage.path: "/opt/classificator/monitor"
