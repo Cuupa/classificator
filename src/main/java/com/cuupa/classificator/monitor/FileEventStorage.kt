@@ -50,22 +50,24 @@ class FileEventStorage : EventStorage() {
             return listOf()
         }
 
-        val lastModified = directoryOfFiles.toFile()
-            .lastModified()
-        // if (lastModifiedEventStorage >= lastModified) {
-        //     return cachedEventList
-        //}
-        lastModifiedEventStorage = lastModified
-        val listOfAllFiles = Files.list(directoryOfFiles)
-            .collect(Collectors.toList())
+        val files = Files.list(directoryOfFiles)
+                .filter { isCsv(it) }
+                .filter { isDatabase(it) }
+                .collect(Collectors.toList())
             .filterNotNull()
-            .filter { isCsv(it) }
-            .filter { isDatabase(it) }
+
+        val updatedFiles = files.filter { lastModifiedEventStorage < it.toFile().lastModified() }
+
+        if (updatedFiles.isEmpty()) {
+            return cachedEventList
+        }
+        lastModifiedEventStorage = updatedFiles.maxOf { it.toFile().lastModified() }
+        cachedEventList = files.asSequence()
             .filter { inBetween(it, start, end) }
-        cachedEventList = listOfAllFiles.map { Files.readAllLines(it) }
+            .map { Files.readAllLines(it) }
             .flatten()
             .filter { isNotHeadline(it) }
-            .map { maptToEvent(it) }.filterNotNull()
+            .mapNotNull { maptToEvent(it) }.toList()
         return cachedEventList
     }
 
