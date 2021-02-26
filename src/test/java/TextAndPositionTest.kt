@@ -1,5 +1,5 @@
-import com.cuupa.classificator.services.stripper.LocationAndSizeStripper
-import com.cuupa.classificator.services.stripper.TextAndPosition
+import com.cuupa.classificator.knowledgebase.stripper.LocationAndSizeStripper
+import com.cuupa.classificator.knowledgebase.stripper.TextAndPosition
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.junit.jupiter.api.Test

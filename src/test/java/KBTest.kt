@@ -1,4 +1,4 @@
-import com.cuupa.classificator.services.kb.KnowledgeManager
+import com.cuupa.classificator.knowledgebase.KnowledgeManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import regressionTests.config.TestConfig
+import regressionTests.config.ApplicationTestConfiguration
 
-@SpringBootTest(classes = [TestConfig::class])
+@SpringBootTest(classes = [ApplicationTestConfiguration::class])
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
 class KBTest {

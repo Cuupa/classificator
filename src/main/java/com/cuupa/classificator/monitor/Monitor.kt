@@ -1,6 +1,6 @@
 package com.cuupa.classificator.monitor
 
-import com.cuupa.classificator.services.kb.SemanticResult
+import com.cuupa.classificator.knowledgebase.resultobjects.SemanticResult
 import org.apache.commons.lang3.time.DateUtils
 import org.apache.juli.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value

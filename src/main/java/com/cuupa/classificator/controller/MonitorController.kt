@@ -23,6 +23,9 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 class MonitorController(private val monitor: Monitor, private val gson: Gson) {
 
+    @Value("\${classificator.monitor.fileeventstorage.path}")
+    var path: String? = null
+
     @RequestMapping(value = ["/monitor"], method = [RequestMethod.GET])
     fun monitor(model: Model): ModelAndView {
         val monitorProcess = MonitorProcess()
@@ -55,9 +58,6 @@ class MonitorController(private val monitor: Monitor, private val gson: Gson) {
         val end: LocalDate? = monitorProcess.to
         return monitor.getEvents(start, end)
     }
-
-    @Value("\${classificator.monitor.fileeventstorage.path}")
-    var path: String? = null
 
     @GetMapping(value = ["/download"])
     @ResponseBody
