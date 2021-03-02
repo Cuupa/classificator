@@ -1,11 +1,12 @@
 server_port: 8080
 knowlegde_base: build/knowledgebase
+monitor_path: build/monitor
 
 server.port: ${server_port}
 
 logging.level:
   root: ERROR
-  com.cuupa.classificator: WARN
+  com.cuupa.classificator: DEBUG
 
 classificator:
   kbfiles: ${knowlegde_base}
@@ -13,4 +14,4 @@ classificator:
   monitor:
     enabled: true
     logText: true
-    fileeventstorage.path: "/opt/classificator/monitor"
+    fileeventstorage.path: ${monitor_path}

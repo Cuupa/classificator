@@ -3,7 +3,6 @@ package com.cuupa.classificator.knowledgebase.services.token
 import com.cuupa.classificator.constants.RegexConstants
 import com.cuupa.classificator.knowledgebase.resultobjects.Metadata
 import com.cuupa.classificator.knowledgebase.services.dataExtraction.*
-import org.apache.juli.logging.Log
 import org.apache.juli.logging.LogFactory
 import org.apache.logging.log4j.util.Strings
 import java.util.*

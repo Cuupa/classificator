@@ -2,6 +2,7 @@ package com.cuupa.classificator.configuration
 
 import com.cuupa.classificator.knowledgebase.Classificator
 import com.cuupa.classificator.knowledgebase.KnowledgeManager
+import com.cuupa.classificator.knowledgebase.TextExtractor
 import com.cuupa.classificator.knowledgebase.services.KnowledgeBaseExecutorService
 import com.cuupa.classificator.knowledgebase.services.MetadataService
 import com.cuupa.classificator.knowledgebase.services.SenderService
@@ -10,6 +11,7 @@ import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeBase
 import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.knowledgebase.stripper.PdfAnalyser
 import com.cuupa.classificator.monitor.Monitor
+import org.apache.tika.Tika
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -28,7 +30,12 @@ open class ApplicationConfiguration {
 
     @Bean
     open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser(), monitor!!)
+        return Classificator(knowledgeManager(), textExtractor(), monitor!!)
+    }
+
+    @Bean
+    open fun textExtractor(): TextExtractor {
+        return TextExtractor(tika())
     }
 
     @Bean
@@ -64,6 +71,11 @@ open class ApplicationConfiguration {
     @Bean
     open fun knowledgeBaseInitiator(): KnowledgeBaseInitiator {
         return KnowledgeBaseInitiator(knowledgbaseDir)
+    }
+
+    @Bean
+    open fun tika(): Tika{
+        return Tika()
     }
 
     @Bean
