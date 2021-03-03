@@ -34,8 +34,8 @@ class KnowledgeBaseExecutorService(
                     topicService.getTopics(text)
                 }
 
-                metadata = asyncMetadata.await()
                 mostFittingSender = asyncSenders.await()
+                metadata = asyncMetadata.await()
                 if (mostFittingSender.isNullOrEmpty()) {
                     mostFittingSender = senderService.findSenderFromMetadata(metadata, text)
                 }
