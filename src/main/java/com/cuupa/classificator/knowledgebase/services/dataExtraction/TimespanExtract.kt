@@ -2,7 +2,7 @@ package com.cuupa.classificator.knowledgebase.services.dataExtraction
 
 import java.util.regex.Pattern
 
-class TimespanExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pattern.CASE_INSENSITIVE)) {
+class TimespanExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pattern.CASE_INSENSITIVE).toRegex()) {
 
     override fun normalize(value: String): String {
         return value
@@ -13,15 +13,11 @@ class TimespanExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pat
         textBeforeToken: String,
         textAfterToken: String
     ): List<Pair<String, String>> {
-        val matcher = pattern.matcher(text)
-
-        val value = mutableListOf<Pair<String, String>>()
         val dates = mutableListOf<String>()
-        while (matcher.find()) {
-            val normalizedValue = normalize(matcher.group())
-            dates.add(normalizedValue)
-            value.add(Pair(textBeforeToken + normalizedValue + textAfterToken, normalizedValue))
-        }
+        val value = regex.findAll(text).map {
+            val normalized = normalize(it.value)
+            Pair(textBeforeToken + normalized + textAfterToken, normalized)
+        }.toList()
         val finalValue = mutableListOf<Pair<String, String>>()
         value.forEach { content ->
             dates.forEach { date ->
