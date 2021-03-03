@@ -22,12 +22,12 @@ class KnowledgeBaseExecutorService(
         var metadata = listOf<Metadata>()
         runBlocking {
             val job = launch(Dispatchers.Default) {
-                val asyncSenders = async {
-                    senderService.getSender(text)
-                }
-
                 val asyncMetadata = async {
                     metadataService.getMetadata(text)
+                }
+
+                val asyncSenders = async {
+                    senderService.getSender(text)
                 }
 
                 val asyncTopics = async {

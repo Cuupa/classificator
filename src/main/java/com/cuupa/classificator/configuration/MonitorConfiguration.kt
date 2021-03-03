@@ -1,13 +1,24 @@
 package com.cuupa.classificator.configuration
 
 import com.cuupa.classificator.monitor.EventStorage
-import com.cuupa.classificator.monitor.FileEventStorage
 import com.cuupa.classificator.monitor.Monitor
+import com.cuupa.classificator.monitor.sqlite.EventRepository
+import com.cuupa.classificator.monitor.sqlite.EventService
+import com.cuupa.classificator.monitor.sqlite.SqliteEventStorage
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean
+import java.util.*
+import javax.sql.DataSource
 
 @Configuration
 open class MonitorConfiguration {
+
+    @Autowired
+    private var repository: EventRepository? = null
 
     @Bean
     open fun monitor(): Monitor {
@@ -16,6 +27,34 @@ open class MonitorConfiguration {
 
     @Bean
     open fun eventStorage(): EventStorage {
-        return FileEventStorage()
+        return SqliteEventStorage(eventService())
+    }
+
+    @Bean
+    open fun eventService(): EventService {
+        return EventService(repository!!)
+    }
+
+    @Bean
+    open fun dataSource(): DataSource {
+        return DataSourceBuilder.create()
+            .driverClassName("org.sqlite.JDBC")
+            .url("jdbc:sqlite:your.db")
+            .build()
+    }
+
+    @Bean
+    open fun entityManagerFactory(): LocalSessionFactoryBean? {
+        val sessionFactory = LocalSessionFactoryBean()
+        sessionFactory.setDataSource(dataSource())
+        sessionFactory.setPackagesToScan("com.cuupa.classificator")
+        sessionFactory.hibernateProperties = hibernateProperties()
+        return sessionFactory
+    }
+
+    private fun hibernateProperties(): Properties {
+        val properties = Properties()
+        properties.setProperty("hibernate.dialect", "com.cuupa.classificator.monitor.sqlite.SqliteDialect")
+        return properties
     }
 }
