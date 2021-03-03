@@ -9,21 +9,35 @@ import java.io.IOException
 
 class TextExtractor(private val tika: Tika) {
 
-    private fun isPdf(mimetype: String) = "application/pdf" == mimetype
+    private val eof = byteArrayOf(37, 37, 69, 79, 70)
 
     fun extract(content: ByteArray): ExtractResult {
-        if(content.isEmpty()){
+        if (content.isEmpty()) {
             return ExtractResult("", "")
         }
         val byteArrayInputStream = ByteArrayInputStream(content)
-        val mimetype = tika.detect(byteArrayInputStream)
-        return if (isPdf(mimetype)) {
+        return if (isPdf(content)) {
             PDDocument.load(byteArrayInputStream).use {
-                ExtractResult(extractText(it).joinToString("", "", ""), mimetype)
+                ExtractResult(extractText(it).joinToString("", "", ""), "application/pdf")
             }
-        } else{
+        } else {
+            val mimetype = tika.detect(byteArrayInputStream)
             ExtractResult(tika.parseToString(byteArrayInputStream), mimetype)
         }
+    }
+
+    private fun isPdf(content: ByteArray): Boolean {
+        // index of the first "%" of %%EOF
+        var indexContent = content.size - 6
+        var indexEOF = 0
+        var eofFound = true
+        // TODO: refactor
+        while(indexContent != content.size-1) {
+            if(content[indexContent++] != eof[indexEOF++]){
+                eofFound = false
+            }
+        }
+        return eofFound
     }
 
     private fun extractText(document: PDDocument): List<String> {
