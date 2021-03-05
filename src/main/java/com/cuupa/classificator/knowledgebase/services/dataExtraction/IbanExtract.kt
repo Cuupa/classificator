@@ -4,7 +4,7 @@ import com.cuupa.classificator.constants.StringConstants
 import org.apache.logging.log4j.util.Strings
 import java.util.regex.Pattern
 
-class IbanExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pattern.CASE_INSENSITIVE)) {
+class IbanExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pattern.CASE_INSENSITIVE).toRegex()) {
 
     override fun normalize(value: String): String {
         val charArray = value.replace(StringConstants.blank, Strings.EMPTY).toCharArray()
