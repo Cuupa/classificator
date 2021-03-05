@@ -2,9 +2,8 @@ package com.cuupa.classificator.knowledgebase.services.dataExtraction
 
 import com.cuupa.classificator.constants.RegexConstants
 import com.cuupa.classificator.knowledgebase.services.Months
-import java.util.regex.Pattern
 
-class DateExtract(regex: String) : Extract(Pattern.compile(regex.trim(), Pattern.CASE_INSENSITIVE).toRegex()) {
+class DateExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.IGNORE_CASE)) {
 
     // TODO: normalize months in non numeric values
     override fun normalize(value: String): String {

@@ -1,8 +1,6 @@
 package com.cuupa.classificator.knowledgebase.services.dataExtraction
 
-import java.util.regex.Pattern
-
-class PhoneNumberExtract(regex: String) : Extract(Pattern.compile(regex.trim()).toRegex()) {
+class PhoneNumberExtract(regex: String) : Extract(Regex(regex.trim())) {
 
     override fun normalize(value: String): String {
         return value
