@@ -5,7 +5,11 @@ import com.cuupa.classificator.monitor.Event
 class EventService(private val eventRepository: EventRepository) {
 
     fun list(): List<Event> {
-        return eventRepository.findAll().map { mapToDomainObject(it) }
+        return try {
+            eventRepository.findAll().map { mapToDomainObject(it) }
+        } catch (e : Exception){
+            listOf()
+        }
     }
 
     fun save(event: Event) {

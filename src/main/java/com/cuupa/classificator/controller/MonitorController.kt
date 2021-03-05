@@ -23,9 +23,6 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 class MonitorController(private val monitor: Monitor, private val gson: Gson) {
 
-    @Value("\${classificator.monitor.fileeventstorage.path}")
-    var path: String? = null
-
     @RequestMapping(value = ["/monitor"], method = [RequestMethod.GET])
     fun monitor(model: Model): ModelAndView {
         val monitorProcess = MonitorProcess()

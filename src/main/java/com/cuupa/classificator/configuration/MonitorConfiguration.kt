@@ -6,7 +6,7 @@ import com.cuupa.classificator.monitor.sqlite.EventRepository
 import com.cuupa.classificator.monitor.sqlite.EventService
 import com.cuupa.classificator.monitor.sqlite.SqliteEventStorage
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,6 +19,9 @@ open class MonitorConfiguration {
 
     @Autowired
     private var repository: EventRepository? = null
+
+    @Value("\${classificator.monitor.database-name:monitor.db}")
+    var databaseName: String? = null
 
     @Bean
     open fun monitor(): Monitor {
@@ -39,7 +42,7 @@ open class MonitorConfiguration {
     open fun dataSource(): DataSource {
         return DataSourceBuilder.create()
             .driverClassName("org.sqlite.JDBC")
-            .url("jdbc:sqlite:your.db")
+            .url("jdbc:sqlite:monitor.db")
             .build()
     }
 

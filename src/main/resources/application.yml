@@ -13,3 +13,4 @@ classificator:
   monitor:
     enabled: true
     logText: true
+    database-name: "monitor.db"
