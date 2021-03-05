@@ -70,9 +70,9 @@
         <tbody>
         <tr th:each="result : ${monitorProcess.events}">
             <td width="12%"><span th:text="${result.kbVersion}"></span></td>
-            <td align="right" width="12%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
+            <td width="12%"><span th:text="${#temporals.format(result.start, 'dd.MM.yyyy - HH:mm:ss')}">Start</span>
             </td>
-            <td align="right" width="12%"><span th:text="${result.processingTime}">Processing time</span></td>
+            <td width="12%"><span th:text="${result.processingTime}">Processing time</span></td>
             <td width="12%"><span th:text="${result.results}">Results</span></td>
             <td width="12%"><span th:text="${result.senders}">Senders</span></td>
             <td width="12%"><span th:text="${result.metadata}">Metadata</span></td>
