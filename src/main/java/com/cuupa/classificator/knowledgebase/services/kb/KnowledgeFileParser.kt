@@ -95,13 +95,15 @@ object KnowledgeFileParser {
         var curlyCloseBrackets = 0
         var normalOpenBrackets = 0
         var normalCloseBrackets = 0
+        var quotationMarks = 0
+
         for (c in charArray) {
             when (c) {
                 '{' -> curlyOpenBrackets++
                 '}' -> curlyCloseBrackets++
                 '(' -> normalOpenBrackets++
                 ')' -> normalCloseBrackets++
-
+                '"' -> quotationMarks++
             }
         }
 
@@ -124,8 +126,12 @@ object KnowledgeFileParser {
         if (curlyCloseBrackets != curlyOpenBrackets || normalCloseBrackets != normalOpenBrackets) {
             throw InvalidTokenException("invalid bracket count")
         }
+
+        if (quotationMarks % 2 != 0) {
+            throw InvalidTokenException("Invalid usage of quotation marks")
+        }
+
         if (!equalAndBracketValid) {
-            println(kbFile)
             throw InvalidTokenException("invalid file definition")
         }
     }

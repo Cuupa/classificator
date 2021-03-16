@@ -1,4 +1,5 @@
 import com.cuupa.classificator.knowledgebase.KnowledgeManager
+import com.cuupa.classificator.monitor.sqlite.EventService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

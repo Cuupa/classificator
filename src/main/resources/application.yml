@@ -13,4 +13,4 @@ classificator:
   monitor:
     enabled: true
     logText: true
-    fileeventstorage.path: "/opt/classificator/monitor"
+    database-name: "monitor.db"

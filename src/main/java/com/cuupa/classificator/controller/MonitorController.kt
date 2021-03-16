@@ -4,7 +4,6 @@ import com.cuupa.classificator.gui.MonitorProcess
 import com.cuupa.classificator.monitor.Event
 import com.cuupa.classificator.monitor.Monitor
 import com.google.gson.Gson
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -22,9 +19,6 @@ import javax.servlet.http.HttpServletResponse
 
 @Controller
 class MonitorController(private val monitor: Monitor, private val gson: Gson) {
-
-    @Value("\${classificator.monitor.fileeventstorage.path}")
-    var path: String? = null
 
     @RequestMapping(value = ["/monitor"], method = [RequestMethod.GET])
     fun monitor(model: Model): ModelAndView {
