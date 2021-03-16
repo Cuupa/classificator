@@ -1,6 +1,5 @@
 package regressionTests.config
 
-import com.cuupa.classificator.configuration.MonitorConfiguration
 import com.cuupa.classificator.knowledgebase.Classificator
 import com.cuupa.classificator.knowledgebase.KnowledgeManager
 import com.cuupa.classificator.knowledgebase.services.KnowledgeBaseExecutorService
@@ -21,7 +20,7 @@ import org.springframework.context.annotation.Import
  * @author Simon Thiel (https://github.com/cuupa)
  */
 @Configuration
-@Import(value = [MonitorConfiguration::class])
+@Import(value = [MonitorTestConfiguration::class])
 open class ApplicationTestConfiguration {
 
     @Autowired

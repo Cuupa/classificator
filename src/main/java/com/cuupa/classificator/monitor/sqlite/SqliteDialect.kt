@@ -1,10 +1,11 @@
 package com.cuupa.classificator.monitor.sqlite
 
 import org.hibernate.dialect.Dialect
+import org.hibernate.dialect.function.NoArgSQLFunction
 import org.hibernate.dialect.function.SQLFunctionTemplate
 import org.hibernate.dialect.function.StandardSQLFunction
 import org.hibernate.dialect.function.VarArgsSQLFunction
-import org.hibernate.type.StringType
+import org.hibernate.type.StandardBasicTypes
 import java.sql.Types
 
 
@@ -38,14 +39,15 @@ class SqliteDialect : Dialect() {
         registerColumnType(Types.BLOB, "blob")
         registerColumnType(Types.CLOB, "clob")
         registerColumnType(Types.BOOLEAN, "integer")
-
     }
 
     private fun registerFunctions() {
-        registerFunction("concat", VarArgsSQLFunction(StringType.INSTANCE, "", "||", ""))
-        registerFunction("mod", SQLFunctionTemplate(StringType.INSTANCE, "?1 % ?2"))
-        registerFunction("substr", StandardSQLFunction("substr", StringType.INSTANCE))
-        registerFunction("substring", StandardSQLFunction("substr", StringType.INSTANCE))
+        registerFunction("concat", VarArgsSQLFunction(StandardBasicTypes.STRING, "", "||", ""))
+        registerFunction("mod", SQLFunctionTemplate(StandardBasicTypes.INTEGER, "?1 % ?2"))
+        registerFunction("quote", StandardSQLFunction("quote", StandardBasicTypes.STRING))
+        registerFunction("random", NoArgSQLFunction("random", StandardBasicTypes.INTEGER))
+        registerFunction("round", StandardSQLFunction("round"))
+        registerFunction("substr", StandardSQLFunction("substr", StandardBasicTypes.STRING))
     }
 
     override fun hasAlterTable() = false
@@ -61,9 +63,29 @@ class SqliteDialect : Dialect() {
 
     override fun getAddPrimaryKeyConstraintString(constraintName: String?) = ""
 
-    fun supportsIdentityColumns() = true
+    override fun supportsLimit() = true
 
-    fun getIdentitySelectString(table: String?, column: String?, type: Int) = "select last_insert_rowid()"
+    override fun getLimitString(query: String, hasOffset: Boolean) =
+        StringBuffer(query.length + 20)
+            .append(query)
+            .append(if (hasOffset) " limit ? offset ?" else " limit ?")
+            .toString()
 
-    fun getIdentityColumnString(type: Int) = "integer"
+    override fun supportsCurrentTimestampSelection() = true
+
+    override fun isCurrentTimestampSelectStringCallable() = false
+
+    override fun getCurrentTimestampSelectString() = "select current_timestamp"
+
+    override fun supportsUnionAll() = true
+
+    override fun getAddColumnString() = "add column"
+
+    override fun getForUpdateString() = ""
+
+    override fun supportsOuterJoinForUpdate() = false
+
+    override fun supportsIfExistsBeforeTableName() = true
+
+    override fun supportsCascadeDelete() = false
 }

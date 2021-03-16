@@ -1,7 +1,7 @@
 package com.cuupa.classificator.controller
 
 import com.cuupa.classificator.knowledgebase.Classificator
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.springframework.http.HttpStatus
@@ -17,9 +17,7 @@ class ClassificatorController(private val classificator: Classificator) {
     private val log: Log = LogFactory.getLog(ClassificatorController::class.java)
 
     @GetMapping(value = ["/api/rest/1.0/ping"])
-    fun ping(): ResponseEntity<String> {
-        return ResponseEntity.ok().body("200")
-    }
+    fun ping(): ResponseEntity<String> = ResponseEntity.ok().body("200")
 
     @PostMapping(value = ["/api/rest/1.0/classifyText"])
     fun classify(@RequestBody text: String?): ResponseEntity<String> {
@@ -44,6 +42,6 @@ class ClassificatorController(private val classificator: Classificator) {
     }
 
     companion object {
-        private val gson = Gson()
+        private val gson = GsonBuilder().serializeNulls().create()
     }
 }

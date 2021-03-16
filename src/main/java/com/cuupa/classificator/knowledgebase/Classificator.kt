@@ -45,7 +45,7 @@ class Classificator(private val manager: KnowledgeManager, private val analyser:
         }
         try {
             PDDocument.load(ByteArrayInputStream(content)).use { document ->
-                val text = java.lang.String.join("", extractText(document))
+                val text = extractText(document).joinToString("", "")
                 results.addAll(manager.getResults(text))
                 val resultFromStructure = analyser.getResults(document)
             }
@@ -73,5 +73,4 @@ class Classificator(private val manager: KnowledgeManager, private val analyser:
     companion object {
         private val log = LogFactory.getLog(Classificator::class.java)
     }
-
 }

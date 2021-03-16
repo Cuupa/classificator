@@ -1,11 +1,16 @@
 server_port: 8080
+knowlegde_base: build/knowledgebase
 
-server:
-  port: ${server_port}
+server.port: ${server_port}
 
 logging.level:
   root: ERROR
-  com.cuupa.classificator: warn
+  com.cuupa.classificator: WARN
 
 classificator:
-  kbfiles: build/knowledgebase
+  kbfiles: ${knowlegde_base}
+
+  monitor:
+    enabled: true
+    logText: true
+    database-name: "monitor.db"

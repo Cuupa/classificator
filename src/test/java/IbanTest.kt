@@ -1,21 +1,21 @@
 import com.cuupa.classificator.knowledgebase.services.dataExtraction.IbanExtract
 import org.junit.jupiter.api.Test
+import java.util.stream.IntStream
 
 class IbanTest {
 
+    val unitToTest =
+        IbanExtract("[a-z]{2}[0-9]{2}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{2}")
+
     @Test
     fun test() {
-        val extract = IbanExtract("[a-z]{2}[0-9]{2}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{2}")
-        val pattern = extract.regex
-        //var matcher = pattern.matcher("DE19 1234 1234 1234 1234 12")
-       // if (matcher.find()) {
-        //    println(matcher.group())
-        //    println(extract.normalize(matcher.group()))
-        //}
-        //matcher = pattern.matcher("DE37123412341234123412")
-        //if (matcher.find()) {
-        //    println(matcher.group())
-        //    println(extract.normalize(matcher.group()))
-       // }
+        val pattern = unitToTest.regex
+        val result = pattern.find(IBANTestData.normalizedIBAN)
+        val groupValues = result?.groupValues
+        groupValues?.forEach { println(unitToTest.normalize(it)) }
+
+        val result2 = pattern.find(IBANTestData.withoutWhiteSpaces)
+        val groupValues2 = result2?.groupValues
+        groupValues2?.forEach { println(unitToTest.normalize(it)) }
     }
 }
