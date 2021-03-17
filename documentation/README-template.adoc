@@ -3,9 +3,9 @@
 Simon Thiel (Cuupa)
 :toc:
 
-include::Configuration.adoc[]
-
 include::Installation.adoc[]
+
+include::Configuration.adoc[]
 
 include::Customization.adoc[]
 
