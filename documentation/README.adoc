@@ -5,26 +5,13 @@ Simon Thiel (Cuupa)
 
 == Installation
 
+TIP: Be aware of
+the link:https://github.com/Cuupa/classificator/tree/master/src/main/resources/application.yml[application configuration].
+
 === Windows/Unix
 Since it is a simple .jar file, which can run on any device
 featuring link:https://www.java.com/de/download/manual.jsp[Java], you can run it by simply doubleclicking.
 
-TIP: Be aware of
-the link:https://github.com/Cuupa/classificator/tree/master/src/main/resources/application.yml[application configuration].
-
-The default port as in said configuration is `8080`
-[source,yaml]
-----
-server_port: 8080
-
-----
-So if you want to access the webUI on your local machine navigate to `https://localhost:8080`
-
-[source,yaml]
-----
-knowlegde_base: build/knowledgebase
-
-----
 === Docker
 
 ==== Dockerfile
