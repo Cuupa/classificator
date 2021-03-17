@@ -9,7 +9,7 @@ include::../src/main/resources/application.yml[File]
 ----
 
 === Server port
-The default port as in said configuration is "8080"
+The default port as in said configuration is `8080`
 So if you want to access the webUI on your local machine navigate to `https://localhost:8080`
 [source,yaml]
 ----
