@@ -35,5 +35,45 @@ TIP: There's also a method for pinging the application. This method simply retur
 "/api/rest/1.0/ping"
 ----
 
+==== How it works
+If no text is provided, the engine simply returns an empty result. Otherwise the text is processed in several steps.
+
+===== Text normalization
+This step is mandatory for all but metadata. The text is converted to all-lowercase, whitespaces are replaced with a `blank` and characters like "ä" are replaced with "ae"
+
+[source, kotlin]
+----
+private fun normalizeText(text: String): String {
+        return text.toLowerCase()
+            .replace(StringConstants.tabstop, StringConstants.blank)
+            .replace("\n\r", StringConstants.blank)
+            .replace("\r\n", StringConstants.blank)
+            .replace(StringConstants.carriageReturn, StringConstants.blank)
+            .replace(StringConstants.newLine, StringConstants.blank)
+            //		text = text.replace("-", StringConstants.BLANK);
+            .replace(",", StringConstants.blank)
+            .replace(": ", StringConstants.blank)
+            .replace("€", " €")
+            .replace("Ãœ", "ae")
+            .replace("ä", "ae")
+            .replace("ã¼", "ue")
+            .replace("ü", "ue")
+            .replace("/", StringConstants.blank)
+            .replace("_", StringConstants.blank)
+            .replace(RegexConstants.twoBlanksRegex, StringConstants.blank)
+            .trim()
+    }
+----
+
+CAUTION: Text which is parsed to extract the metadata will not be normalized
+
+===== Finding Topics
+This step is the most simple one. +
+First of all the text is normalized like described above.
+Then, it'll be passed through each token for that topic like `NOT` and `OneOf`. The token tries to find its value like "awesome" in the text using the `Levenshtein-distance`. The Levenshtein-distance computes the difference between the text and the tokenvalue itself.
+
+NOTE: "awesome" and "awesome" results in a distance of 0, where "awesome" and "awsome" has a distance of 1, whereas the number represents the number of changes for one string to become equal to the other string
+
+If the distance is less than 2 (so a distance of 0 or 1) it matches. This is done to counter OCR errors
 
 === Monitor
