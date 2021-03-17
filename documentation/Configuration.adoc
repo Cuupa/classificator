@@ -1,24 +1,57 @@
 == Configuration
+
+This is the default configuration of the application
+It sets the server port to 8080 and the knowledgebase-directory to `build/knowledgebase`
+
+[source,yaml]
+----
+include::../src/main/resources/application.yml[File]
+----
+
+=== Server port
 The default port as in said configuration is "8080"
+So if you want to access the webUI on your local machine navigate to `https://localhost:8080`
 [source,yaml]
 ----
 server_port: 8080
 
 ----
-So if you want to access the webUI on your local machine navigate to "https://localhost:8080"
 
+=== Knowledgebase
+This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
+knowledgebase to use, by changing it via the command line arguments (How that works will be covered by me
+a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]). If this entry only
+contains a folder name without the specific knowlegedbase, it will load the file with the highest version tag in that
+folder
 [source,yaml]
 ----
 knowlegde_base: build/knowledgebase
 
 ----
 
-This entry means, that there has to be a folder named "build/knowlegebase" beside your jar. You can specify which
-knowledgebase to use, by changing it via the command line arguments (How that works will be covered by me
-a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]). If this entry only
-contains a folder name without the specific knowlegedbase, it will load the file with the highest version tag in that
-folder
+=== Monitor
+The monitor is enabled by default and uses the database `monitor.db`
+[source,yaml]
+----
+ monitor:
+    enabled: true
+    logText: true
+    database-name: "monitor.db"
 
+----
+
+If `enabled` is set to `true`, all events will be logged. To turn it off, set it to `false`.
+If `logText` is enabled, the actual analyzed texts will be logged into the database. You might want to turn it off for privacy reasons
+
+==== Database name
+The database name is defined via `database-name`. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to
+[source,yaml]
+----
+database-name: "C:\Users\John Doe\monitor.db"
+----
+
+=== Changing
+==== Via config
 If you know about programming: Great! You can change it as you like for example
 [source,yaml]
 ----
@@ -32,12 +65,12 @@ or
 server_port: 1234
 ----
 
-
+==== Via command line arguments
 If you don't, don't panic. You can run the application by typing
 
 [source,shell]
 ----
-java -jar app.jar --server_port=8080 --knowledge_base=knowlegebase/kb-1.0.0.db
+java -jar app.jar --server_port=8080 --knowledge_base=knowlegebase/kb-1.0.0.db --classificator.monitor.logText=false
 ----
 
 The first part simply runs the jar by the name "app.jar"
