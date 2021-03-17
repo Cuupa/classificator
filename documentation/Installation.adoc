@@ -65,5 +65,5 @@ image:https://github.com/Cuupa/classificator/blob/master/documentation/images/do
 java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase'
 ----
 
-Finally run this container. You can access the webui by going to `http://your-nas-ip:your-port` For
+Finally, run this container. You can access the webui by going to `http://your-nas-ip:your-port` For
 example `http://192.168.0.3:8081`
