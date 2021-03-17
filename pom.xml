@@ -268,14 +268,14 @@
                 <!--<executions>
                     <execution>
                         <id>configuration-resolver</id>-->
-                <!--
+<!--
                 <configuration>
                     <templateDirectory>./documentation</templateDirectory>
-                    <templateFile>Configuration-template.adoc</templateFile>
+                    <templateFile>Components-template.adoc</templateFile>
                     <outputDirectory>./documentation</outputDirectory>
-                    <outputFile>Configuration.adoc</outputFile>
+                    <outputFile>Components.adoc</outputFile>
                     </configuration>
-                -->
+-->
                 <!--</execution>
 
                 <execution>
@@ -286,7 +286,6 @@
                     <outputDirectory>./documentation</outputDirectory>
                     <outputFile>README.adoc</outputFile>
                 </configuration>
-
                 <!--
             </execution>
         </executions>-->

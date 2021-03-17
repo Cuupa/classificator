@@ -20,9 +20,10 @@ server_port: 8080
 === Knowledgebase
 This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
 knowledgebase to use, by changing it via the command line arguments (How that works will be covered by me
-a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]). If this entry only
-contains a folder name without the specific knowlegedbase, it will load the file with the highest version tag in that
-folder
+a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]).
+
+TIP: If this entry only contains a folder name without the specific knowlegedbase, it will load the file with the highest version tag in that folder +
+For example if you have `kb-1.0.0.db` and `kb-1.0.1.db` it'll load the `kb-1.0.1.db`
 [source,yaml]
 ----
 knowlegde_base: build/knowledgebase
@@ -73,27 +74,27 @@ If you don't, don't panic. You can run the application by typing
 java -jar app.jar --server_port=8080 --knowledge_base=knowlegebase/kb-1.0.0.db --classificator.monitor.logText=false
 ----
 
-The first part simply runs the jar by the name "app.jar"
+NOTE: The first part simply runs the jar by the name "app.jar" +
 [source,shell]
 ----
 java -jar app.jar
 ----
 
-This part sets the port to 8080 and overwrites the value of the default configuration
+NOTE: This part sets the port to 8080 and overwrites the value of the default configuration
 [source,shell]
 ----
 --server_port=8080
 ----
 
-This part sets the location of the knowledgebase. You can use relative paths like
+NOTE: This part sets the location of the knowledgebase. You can use relative paths like
 [source,shell]
 ----
 --knowledge_base=knowlegebase/kb-1.0.0.db
 ----
 
-or absolute paths like
+NOTE: or absolute paths like
 [source,shell]
 ----
 --knowledge_base="C:\Users\John Doe\knowlegebase\kb-1.0.0.db"
 ----
-WARNING: Notice that, you need to quote the value as soon as you have spaces in a parameter
+CAUTION: Notice that, you need to quote the value as soon as you have spaces in a parameter

@@ -48,23 +48,23 @@ Please change the port of the application and change it accordingly.
 
 ==== Synology NAS
 . Create yourself a folder, where you upload the files to +
-image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker-classificator.png[folder]
+image:images/docker-classificator.png[folder]
 
 . Download the openJDK container +
-image:https://github.com/Cuupa/classificator/blob/master/documentation/images/open_jdk_download.png[openjdk]
+image:images/open_jdk_download.png[openjdk]
 
 . Create a new container from this image +
-image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_new_container_1.png[new container_1]
+image:images/docker_new_container_1.png[new container_1]
 
 . Give this container a name to your likings and click on the 'Advanced Settings' button +
-image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_new_container_2.png[new_container_2]
+image:images/docker_new_container_2.png[new_container_2]
 
 . Mount your folders and files to the docker container. It is also a good idea to change this to "read only" mode, as
 this program does not change these files +
-image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_volume_mounts.png[volume mounts]
+image:images/docker_volume_mounts.png[volume mounts]
 
 . Change the ports to your liking +
-image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_ports.png[ports]
+image:images/docker_ports.png[ports]
 
 . Go to the environment tab and paste this as command to run: +
 [source,shell]
@@ -112,9 +112,10 @@ server_port: 8080
 === Knowledgebase
 This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
 knowledgebase to use, by changing it via the command line arguments (How that works will be covered by me
-a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]). If this entry only
-contains a folder name without the specific knowlegedbase, it will load the file with the highest version tag in that
-folder
+a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]).
+
+TIP: If this entry only contains a folder name without the specific knowlegedbase, it will load the file with the highest version tag in that folder +
+For example if you have `kb-1.0.0.db` and `kb-1.0.1.db` it'll load the `kb-1.0.1.db`
 [source,yaml]
 ----
 knowlegde_base: build/knowledgebase
@@ -165,33 +166,68 @@ If you don't, don't panic. You can run the application by typing
 java -jar app.jar --server_port=8080 --knowledge_base=knowlegebase/kb-1.0.0.db --classificator.monitor.logText=false
 ----
 
-The first part simply runs the jar by the name "app.jar"
+NOTE: The first part simply runs the jar by the name "app.jar" +
 [source,shell]
 ----
 java -jar app.jar
 ----
 
-This part sets the port to 8080 and overwrites the value of the default configuration
+NOTE: This part sets the port to 8080 and overwrites the value of the default configuration
 [source,shell]
 ----
 --server_port=8080
 ----
 
-This part sets the location of the knowledgebase. You can use relative paths like
+NOTE: This part sets the location of the knowledgebase. You can use relative paths like
 [source,shell]
 ----
 --knowledge_base=knowlegebase/kb-1.0.0.db
 ----
 
-or absolute paths like
+NOTE: or absolute paths like
 [source,shell]
 ----
 --knowledge_base="C:\Users\John Doe\knowlegebase\kb-1.0.0.db"
 ----
-Notice that, you need to quote the value as soon as you have spaces in a parameter
+CAUTION: Notice that, you need to quote the value as soon as you have spaces in a parameter
 
 
 == Components
+:toc:
 
-* Engine
-* Monitor
+=== Engine
+The engine is the core component of this application. It classifies the text and extracts the metadata
+
+==== Using the GUI
+You can use the gui exposed at `http://address-of-your-server:port`
+
+You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button. The result will be presented in the right-hand area
+
+image::images/classification_ui.png[]
+
+
+==== Using the REST-API
+The engine exposes several methods for analyzing the input text. The most simple one receives the text as a string and returns a `List<SemantikResult>`
+
+The endpoint-path is:
+[source, kotlin]
+----
+"/api/rest/1.0/classifyText"
+----
+
+If you want to analyze anything except plain text the method accepts any byte array and uses a combination of `PDFBox` and `Apache Tika` to extract its contents for you.
+
+[source, kotlin]
+----
+"/api/rest/1.0/classify"
+----
+
+TIP: There's also a method for pinging the application. This method simply returns a HTTP/200
+
+[source, kotlin]
+----
+"/api/rest/1.0/ping"
+----
+
+
+=== Monitor
