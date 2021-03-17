@@ -5,22 +5,7 @@ It sets the server port to 8080 and the knowledgebase-directory to `build/knowle
 
 [source,yaml]
 ----
-server_port: 8080
-knowlegde_base: build/knowledgebase
-
-server.port: ${server_port}
-
-logging.level:
-  root: ERROR
-  com.cuupa.classificator: WARN
-
-classificator:
-  kbfiles: ${knowlegde_base}
-
-  monitor:
-    enabled: true
-    logText: true
-    database-name: "monitor.db"
+include::../src/main/resources/application.yml[]
 ----
 
 === Server port

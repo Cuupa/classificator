@@ -10,7 +10,22 @@ It sets the server port to 8080 and the knowledgebase-directory to `build/knowle
 
 [source,yaml]
 ----
-include::../src/main/resources/application.yml[]
+server_port: 8080
+knowlegde_base: build/knowledgebase
+
+server.port: ${server_port}
+
+logging.level:
+  root: ERROR
+  com.cuupa.classificator: WARN
+
+classificator:
+  kbfiles: ${knowlegde_base}
+
+  monitor:
+    enabled: true
+    logText: true
+    database-name: "monitor.db"
 ----
 
 === Server port
@@ -174,7 +189,7 @@ Finally run this container. You can access the webui by going to `http://your-na
 example `http://192.168.0.3:8081`
 
 
-= Components
+== Components
 
 * Engine
 * Monitor
