@@ -5,7 +5,7 @@ It sets the server port to 8080 and the knowledgebase-directory to `build/knowle
 
 [source,yaml]
 ----
-include::../src/main/resources/application.yml[File]
+include::../src/main/resources/application.yml[]
 ----
 
 === Server port
