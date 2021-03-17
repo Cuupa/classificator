@@ -1,0 +1,69 @@
+== Installation
+
+=== Windows/Unix
+Since it is a simple .jar file, which can run on any device
+featuring link:https://www.java.com/de/download/manual.jsp[Java], you can run it by simply doubleclicking. Be aware of
+the link:https://github.com/Cuupa/classificator/tree/master/src/main/resources/application.yml[application configuration].
+
+The default port as in said configuration is "8080"
+[source,yaml]
+----
+server_port: 8080
+
+----
+So if you want to access the webUI on your local machine navigate to "https://localhost:8080"
+
+[source,yaml]
+----
+knowlegde_base: build/knowledgebase
+
+----
+=== Docker
+
+==== Dockerfile
+If you can use a dockerfile, you can create one like this:
+Note to self: Need to test this!
+
+[source,dockerfile]
+----
+FROM openjdk:15-jdk
+MAINTAINER Cuupa
+WORKDIR /opt/app/classificator
+COPY knowlegebase/kb-1.0.0.db ./knowledgebase/kb-1.0.0.db
+COPY *.jar ./app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "./app.jar", "--server.port=8080", "--knowlegde_base=./knowlegebase/kb-1.0.0.db"]
+----
+
+Please change the port of the application and change it accordingly.
+
+==== Synology NAS
+. Create yourself a folder, where you upload the files to
+image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker-classificator.png[folder]
+
+. Download the openJDK container
+image:https://github.com/Cuupa/classificator/blob/master/documentation/images/open_jdk_download.png[openjdk]
+
+. Create a new container from this image
+image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_new_container_1.png[new container_1]
+
+. Give this container a name to your likings and click on the 'Advanced Settings' button
+image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_new_container_2.png[new_container_2]
+
+. Mount your folders and files to the docker container. It is also a good idea to change this to "read only" mode, as
+this program does not change these files
+image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_volume_mounts.png[volume mounts]
+
+. Change the ports to your liking
+image:https://github.com/Cuupa/classificator/blob/master/documentation/images/docker_ports.png[ports]
+
+. Go to the environment tab and paste this as command to run:
+[source,shell]
+----
+java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase'
+----
+
+Finally run this container. You can access the webui by going to http://your-nas-ip:your-port For
+example http://192.168.0.3:8081

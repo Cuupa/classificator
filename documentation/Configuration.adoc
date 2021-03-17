@@ -1,0 +1,66 @@
+== Configuration
+The default port as in said configuration is "8080"
+[source,yaml]
+----
+server_port: 8080
+
+----
+So if you want to access the webUI on your local machine navigate to "https://localhost:8080"
+
+[source,yaml]
+----
+knowlegde_base: build/knowledgebase
+
+----
+
+This entry means, that there has to be a folder named "build/knowlegebase" beside your jar. You can specify which
+knowledgebase to use, by changing it via the command line arguments (How that works will be covered by me
+a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]). If this entry only
+contains a folder name without the specific knowlegedbase, it will load the file with the highest version tag in that
+folder
+
+If you know about programming: Great! You can change it as you like for example
+[source,yaml]
+----
+knowlegde_base: knowledgebase/kb-1.0.0.db
+----
+
+or
+
+[source,yaml]
+----
+server_port: 1234
+----
+
+
+If you don't, don't panic. You can run the application by typing
+
+[source,shell]
+----
+java -jar app.jar --server_port=8080 --knowledge_base=knowlegebase/kb-1.0.0.db
+----
+
+The first part simply runs the jar by the name "app.jar"
+[source,shell]
+----
+java -jar app.jar
+----
+
+This part sets the port to 8080 and overwrites the value of the default configuration
+[source,shell]
+----
+--server_port=8080
+----
+
+This part sets the location of the knowledgebase. You can use relative paths like
+[source,shell]
+----
+--knowledge_base=knowlegebase/kb-1.0.0.db
+----
+
+or absolute paths like
+[source,shell]
+----
+--knowledge_base="C:\Users\John Doe\knowlegebase\kb-1.0.0.db"
+----
+Notice that, you need to quote the value as soon as you have spaces in a parameter

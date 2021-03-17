@@ -11,7 +11,7 @@ object Tokens {
         return token
     }
 
-    private operator fun get(tokenName: String): Token {
+    private fun get(tokenName: String): Token {
         return when (tokenName) {
             OneOf.name -> OneOf()
             Not.name -> Not()
