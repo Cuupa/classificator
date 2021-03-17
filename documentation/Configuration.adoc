@@ -3,10 +3,7 @@
 This is the default configuration of the application
 It sets the server port to 8080 and the knowledgebase-directory to `build/knowledgebase`
 
-[source,yaml]
-----
 include::../src/main/resources/application.yml[]
-----
 
 === Server port
 The default port as in said configuration is `8080`
