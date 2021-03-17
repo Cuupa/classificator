@@ -96,4 +96,4 @@ or absolute paths like
 ----
 --knowledge_base="C:\Users\John Doe\knowlegebase\kb-1.0.0.db"
 ----
-Notice that, you need to quote the value as soon as you have spaces in a parameter
+WARNING: Notice that, you need to quote the value as soon as you have spaces in a parameter
