@@ -5,7 +5,7 @@
 
     <groupId>com.cuupa</groupId>
     <artifactId>classificator</artifactId>
-    <version>1.0.2_SNAPSHOT</version>
+    <version>1.1.0_Release</version>
     <packaging>jar</packaging>
 
     <name>Classificator</name>
