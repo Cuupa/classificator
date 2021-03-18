@@ -23,7 +23,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <java.version>11</java.version>
-        <kotlin.version>1.4.30</kotlin.version>
+        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
+        <kotlin.version>1.4.31</kotlin.version>
         <kotlinx.version>1.4.2</kotlinx.version>
 
         <commons-io.version>2.8.0</commons-io.version>
@@ -268,24 +269,30 @@
                 <!--<executions>
                     <execution>
                         <id>configuration-resolver</id>-->
-<!--
-                <configuration>
-                    <templateDirectory>./documentation</templateDirectory>
-                    <templateFile>Components-template.adoc</templateFile>
-                    <outputDirectory>./documentation</outputDirectory>
-                    <outputFile>Components.adoc</outputFile>
-                    </configuration>
--->
+
+                <!--
+
+                            <configuration>
+                                <templateDirectory>./documentation</templateDirectory>
+                                <templateFile>Components-template.adoc</templateFile>
+                                <outputDirectory>./documentation</outputDirectory>
+                                <outputFile>Components.adoc</outputFile>
+                                </configuration>
+
+                            -->
+
                 <!--</execution>
 
                 <execution>
                     <id>global-resolver</id>-->
+
                 <configuration>
                     <templateDirectory>./documentation</templateDirectory>
                     <templateFile>README-template.adoc</templateFile>
                     <outputDirectory>./documentation</outputDirectory>
                     <outputFile>README.adoc</outputFile>
                 </configuration>
+
                 <!--
             </execution>
         </executions>-->
