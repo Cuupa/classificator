@@ -1,5 +1,5 @@
 server_port: 8080
-knowlegde_base: build/knowledgebase
+knowlegde_base:
 
 server.port: ${server_port}
 
@@ -11,6 +11,8 @@ classificator:
   kbfiles: ${knowlegde_base}
 
   monitor:
-    enabled: true
-    logText: true
-    database-name: "monitor.db"
+    username:
+    password:
+    enabled:
+    logText:
+    database-name:
