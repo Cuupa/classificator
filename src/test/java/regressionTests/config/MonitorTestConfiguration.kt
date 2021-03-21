@@ -11,7 +11,7 @@ open class MonitorTestConfiguration {
 
     @Bean
     open fun monitor(): Monitor {
-        return Monitor(eventStorage())
+        return Monitor(eventStorage(), true, true)
     }
 
     @Bean

@@ -19,7 +19,7 @@ class Not : Token() {
         get() = 0
 
     override fun clone(): Token {
-        val token: Token = Not()
+        val token = Not()
         token.tokenValue = ArrayList(tokenValue)
         return token
     }

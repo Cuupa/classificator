@@ -20,7 +20,7 @@ class OneOf : Token() {
     }
 
     override fun clone(): Token {
-        val token: Token = OneOf()
+        val token = OneOf()
         token.tokenValue = ArrayList(tokenValue)
         return token
     }

@@ -3,7 +3,6 @@ package com.cuupa.classificator.monitor
 import com.cuupa.classificator.knowledgebase.resultobjects.SemanticResult
 import org.apache.commons.lang3.time.DateUtils
 import org.apache.juli.logging.LogFactory
-import org.springframework.beans.factory.annotation.Value
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -12,13 +11,7 @@ import java.util.*
 import java.util.stream.IntStream
 import kotlin.math.roundToLong
 
-class Monitor(private val eventStorage: EventStorage) {
-
-    @Value("\${classificator.monitor.enabled:false}")
-    private var enabled: Boolean = false
-
-    @Value("\${classificator.monitor.logText:false}")
-    private var logText: Boolean = false
+class Monitor(private val eventStorage: EventStorage, private val enabled: Boolean, private val logText: Boolean) {
 
     private val hours = mutableListOf<String>()
 

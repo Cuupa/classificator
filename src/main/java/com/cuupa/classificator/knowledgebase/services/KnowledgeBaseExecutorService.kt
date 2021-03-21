@@ -48,13 +48,15 @@ class KnowledgeBaseExecutorService(
         if (mostFittingSender.isNullOrEmpty()) {
             mostFittingSender = Sender.UNKNOWN
         }
-        val distinctMetadata = metadata.distinctBy { it.value }.filter { it.name != "sender" }.toList()
-        semanticResults.forEach {
-            it.sender = mostFittingSender!!
-            it.metaData = distinctMetadata
-        }
-        if (semanticResults.isEmpty()) {
-            semanticResults.add(SemanticResult(Topic.OTHER, mostFittingSender!!, distinctMetadata))
+        mostFittingSender?.let { sender ->
+            val distinctMetadata = metadata.distinctBy { it.value }.filter { it.name != "sender" }
+            semanticResults.forEach {
+                it.sender = sender
+                it.metaData = distinctMetadata
+            }
+            if (semanticResults.isEmpty()) {
+                semanticResults.add(SemanticResult(Topic.OTHER, sender, distinctMetadata))
+            }
         }
         LOG.info(semanticResults)
         return semanticResults

@@ -125,7 +125,7 @@ class MetaDataToken {
     }
 
     private fun cloneTokens(token: Token, compiledText: List<List<Pair<String, String>>>): List<Token> {
-        val tokens: MutableList<Token> = ArrayList()
+        val tokens = mutableListOf<Token>()
         IntStream.range(0, compiledText[0].size).forEach { tokens.add(token.clone()) }
         return tokens
     }
@@ -143,7 +143,7 @@ class MetaDataToken {
         val entries = mutableMapOf<Int, MutableList<Metadata>>()
         match.forEach { (key: Metadata, value: Int) ->
             if (entries.containsKey(value)) {
-                entries[value]!!.add(key)
+                entries[value]?.add(key)
             } else {
                 entries[value] = mutableListOf(key)
             }

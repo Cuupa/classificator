@@ -33,6 +33,11 @@ class MonitorController(private val monitor: Monitor, private val gson: Gson) {
         return modelAndView
     }
 
+    @RequestMapping(value = ["/login"], method = [RequestMethod.GET])
+    fun login(): String {
+        return "login"
+    }
+
     @RequestMapping(value = ["/monitorWithFilter"], method = [RequestMethod.POST])
     fun monitorWithFilter(@ModelAttribute monitorProcess: MonitorProcess, model: Model): String {
         monitorProcess.events = load(monitorProcess)
@@ -61,12 +66,13 @@ class MonitorController(private val monitor: Monitor, private val gson: Gson) {
         val event = monitor.getEvents(startLocalDateTime.toLocalDate(), endLocalDateTime.toLocalDate())
             .firstOrNull { it.start.withNano(0) == startLocalDateTime && it.end.withNano(0) == endLocalDateTime }
         val httpHeaders = HttpHeaders()
-        if (event != null) {
+        event?.let {
             httpHeaders.contentType = MediaType.APPLICATION_OCTET_STREAM
             response.addHeader("Content-Disposition", "attachment; filename=${start}_$end.csv")
             val content = Event.headlines() + event.toCsvString()
             return HttpEntity<ByteArray>(content.encodeToByteArray(), httpHeaders)
         }
+
         return HttpEntity<ByteArray>(ByteArray(0), httpHeaders)
     }
 }

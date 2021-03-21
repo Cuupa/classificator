@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Testing</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         <tbody>
         <tr>
             <td width="50%">
-					<textarea autofocus="autofocus" cols="100%"
+					<textarea class="form-control input-lg" autofocus="autofocus" cols="100%"
                               rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea>
             </td>
             <td width="50%" align="center">
@@ -59,7 +59,7 @@
             </td>
         </tr>
         <tr>
-            <td><input type="submit"/></td>
+            <td><input type="submit" class="btn btn-lg btn-primary btn-block" value="Process"/></td>
         </tr>
         </tbody>
     </table>
