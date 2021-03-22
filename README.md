@@ -49,5 +49,5 @@ There is a simple test GUI at http://addressofyour.server/
 
 Currently I'm working on lemmatizing and different languages.
 
-##Documentation
-You can read the latest documentation [here](https://github.com/Cuupa/documentation/README.adoc).
+## Documentation
+You can read the latest documentation [here](https://github.com/Cuupa/classificator/blob/master/documentation/README.adoc).
