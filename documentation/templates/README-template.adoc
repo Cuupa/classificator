@@ -1,0 +1,12 @@
+= Classificator
+:author:
+Simon Thiel (Cuupa)
+:toc:
+
+include::../Installation.adoc[]
+
+include::../Configuration.adoc[]
+
+include::../Customization.adoc[]
+
+include::../Components.adoc[]

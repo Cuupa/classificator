@@ -2,6 +2,7 @@ package com.cuupa.classificator.configuration
 
 import com.cuupa.classificator.configuration.external.Config
 import com.cuupa.classificator.monitor.MonitorAccessDeniedHandler
+import com.cuupa.classificator.monitor.MonitorAuthenticationFailureHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.access.AccessDeniedHandler
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
 
 
 @Configuration
@@ -37,6 +39,7 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             .and()
             .formLogin()
                 .loginPage("/login")
+                //.failureHandler(authenticationFailureHandler())
                 .defaultSuccessUrl("/monitor")
                 .permitAll()
             .and()
@@ -45,6 +48,10 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             .and()
             .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
+    }
+
+    private fun authenticationFailureHandler(): AuthenticationFailureHandler? {
+        return MonitorAuthenticationFailureHandler()
     }
 
     @Bean

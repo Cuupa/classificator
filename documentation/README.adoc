@@ -5,8 +5,11 @@ Simon Thiel (Cuupa)
 
 == Installation
 
+=== Requirements
+This program requires an installed java runtime version 11 or higher
+
 TIP: Be aware of
-the link:https://github.com/Cuupa/classificator/tree/master/src/main/resources/application.yml[application configuration].
+the link:https://github.com/Cuupa/classificator/blob/feat_login/build/configuration.yml[application configuration].
 
 === Windows/Unix
 Since it is a simple .jar file, which can run on any device
@@ -22,8 +25,13 @@ Note to self: Need to test this!
 ----
 FROM openjdk:15-jdk
 MAINTAINER Cuupa
+
 WORKDIR /opt/app/classificator
-COPY knowlegebase/kb-1.0.0.db ./knowledgebase/kb-1.0.0.db
+
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/app-1.1.0_Release.jar /.app.jar
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/kb-1.0.2.db /.knowledgebase/kb-1.0.2.db
+
+COPY knowlegebase/*.db ./knowledgebase/
 COPY *.jar ./app.jar
 
 EXPOSE 8080
@@ -64,37 +72,26 @@ example `http://192.168.0.3:8081`
 
 == Configuration
 
-This is the default configuration of the application
+This is the default configuration of the application +
 It sets the server port to 8080 and the knowledgebase-directory to `build/knowledgebase`
 
 [source,yaml]
 ----
-server_port: 8080
-knowlegde_base: build/knowledgebase
-
-server.port: ${server_port}
-
-logging.level:
-  root: ERROR
-  com.cuupa.classificator: WARN
-
+---
 classificator:
-  kbfiles: ${knowlegde_base}
+  knowledge_base: build/knowledgebase
 
   monitor:
+    username: "John"
+    password: "Doe"
     enabled: true
     logText: true
     database-name: "monitor.db"
 ----
 
 === Server port
-The default port as in said configuration is `8080`
-So if you want to access the webUI on your local machine navigate to `https://localhost:8080`
-[source,yaml]
-----
-server_port: 8080
-
-----
+The default port of this application is `8080`
+So if you want to access the webUI on your local machine navigate to `https://localhost:8080`. If you want to change that port, see <<_via_command_line_arguments, Changing via command line arguments>>
 
 === Knowledgebase
 This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
@@ -114,14 +111,16 @@ The monitor is enabled by default and uses the database `monitor.db`
 [source,yaml]
 ----
  monitor:
+    username: "John"
+    password: "Doe"
     enabled: true
     logText: true
     database-name: "monitor.db"
 
 ----
 
-If `enabled` is set to `true`, all events will be logged. To turn it off, set it to `false`.
-If `logText` is enabled, the actual analyzed texts will be logged into the database. You might want to turn it off for privacy reasons
+==== Username and password
+These entries set the username and password for accessing the statistics under `/monitor`
 
 ==== Database name
 The database name is defined via `database-name`. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to
@@ -129,10 +128,16 @@ The database name is defined via `database-name`. You can change it to your liki
 ----
 database-name: "C:\Users\John Doe\monitor.db"
 ----
+==== Enabled and logText
+If `enabled` is set to `true`, all events will be logged. To turn it off, set it to `false`.
+If `logText` is enabled, the actual analyzed texts will be logged into the database. You might want to turn it off for privacy reasons, but it really helps finding errors in the classification process.
 
 === Changing
+
+CAUTION: If you use the command line arguments, the corresponding entry in the configuration.yml will be overwritten
+
 ==== Via config
-If you know about programming: Great! You can change it as you like for example
+If you want to change the configuration, just edit it with any text editor and change it to your likings
 [source,yaml]
 ----
 knowlegde_base: knowledgebase/kb-1.0.0.db
@@ -142,11 +147,18 @@ or
 
 [source,yaml]
 ----
-server_port: 1234
+monitor:
+  logText: false
 ----
 
+Save the file and restart your application.
+
+NOTE: Changing the config file and restarting the application is the recommended way of changing program parameters.
+
 ==== Via command line arguments
-If you don't, don't panic. You can run the application by typing
+You can also use the command line arguments
+
+CAUTION: The server port can only be changed by using the command line arguments
 
 [source,shell]
 ----
@@ -183,46 +195,113 @@ CAUTION: Notice that, you need to quote the value as soon as you have spaces in 
 :toc:
 
 === Engine
-The engine is the core component of this application. It classifies the text and extracts the metadata
+
+The engine is the core component of this application.It classifies the text and extracts the metadata
 
 ==== Using the GUI
+
 You can use the gui exposed at `http://address-of-your-server:port`
 
-You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button. The result will be presented in the right-hand area
+You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button.The result will be presented in the right-hand area
 
 image::images/classification_ui.png[]
 
-
 ==== Using the REST-API
-The engine exposes several methods for analyzing the input text. The most simple one receives the text as a string and returns a `List<SemantikResult>`
+
+The engine exposes several methods for analyzing the input text.The most simple one receives the text as a string and returns a `List<SemantikResult>`
 
 The endpoint-path is:
-[source, kotlin]
+
+[source,kotlin]
 ----
 "/api/rest/1.0/classifyText"
 ----
 
 If you want to analyze anything except plain text the method accepts any byte array and uses a combination of `PDFBox` and `Apache Tika` to extract its contents for you.
 
-[source, kotlin]
+[source,kotlin]
 ----
 "/api/rest/1.0/classify"
 ----
 
-TIP: There's also a method for pinging the application. This method simply returns a HTTP/200
+TIP: There's also a method for pinging the application.
+This method simply returns a HTTP/200
 
-[source, kotlin]
+[source,kotlin]
 ----
 "/api/rest/1.0/ping"
 ----
 
 ==== How it works
-If no text is provided, the engine simply returns an empty result. Otherwise the text is processed in several steps.
+
+If no text is provided, the engine simply returns an empty result.
+Otherwise the text is processed in several steps.
+
+===== The Knowledgebase
+
+The knowledgebase is just a simple 7z archive, containing descriptions of the topics, the senders, the metadata and regexes.
+
+The topics, senders and metadata may contain any number of following tokens:
+
+* All
+* Not
+* OneOf
+* WildcardBefore
+
+Example of a topic:
+
+[source,text]
+----
+BILL = {
+	oneOf("rechnung","jahresrechnung","Zahlung der","zahlen Sie den Betrag","Rechnungs-Nr","rechnungsbetrag"),
+	oneOf("eur, "euro", "€"),
+	not("beitragsrechnung"),
+	not("dauerauftrag", "quittungsbeleg"),
+	not("versicherungsschein", "versicherungs-nr"),
+	not("gehaltsabrechnungen"),
+	not("rechnung trägt"),
+	not("keine Zahlung erhalten"),
+	not("jahresdepotauszug")
+}
+----
+
+Example of a sender:
+
+[source,text]
+----
+Rundfunk Beitragsservice = {
+    oneOf("Deutschlandradio"),
+    oneOf("BEITRAGSSERVICE"),
+    oneOf("ARD", "ZDF");
+}
+----
+
+Example of a sender:
+
+[source,text]
+----
+$IBAN = {
+    oneOf("IBAN: [IBAN]", "IBAN [IBAN]")
+}
+----
+
+NOTE: The value inside the [] brackets is the file name of the regex definition, which shall be injected
+
+Example of a regex:
+
+[source,regexp]
+----
+[a-z]{2}[0-9]{2}[\s]?[0-9]{4}[\s]?[0-9]{4}[\s]?[0-9]{4}[\s]?[0-9]{4}[\s]?[0-9]{2}
+----
+
+CAUTION: The regular expressions are `case insensitive`
 
 ===== Text normalization
-This step is mandatory for all but metadata. The text is converted to all-lowercase, whitespaces are replaced with a `blank` and characters like "ä" are replaced with "ae"
 
-[source, kotlin]
+This step is mandatory for all but metadata.
+The text is converted to all-lowercase, whitespaces are replaced with a `blank` and characters like "ä" are replaced with "ae"
+
+[source,kotlin]
 ----
 private fun normalizeText(text: String): String {
         return text.toLowerCase()
@@ -249,12 +328,70 @@ private fun normalizeText(text: String): String {
 CAUTION: Text which is parsed to extract the metadata will not be normalized
 
 ===== Finding Topics
+
 This step is the most simple one. +
 First of all the text is normalized like described above.
-Then, it'll be passed through each token for that topic like `NOT` and `OneOf`. The token tries to find its value like "awesome" in the text using the `Levenshtein-distance`. The Levenshtein-distance computes the difference between the text and the tokenvalue itself.
+Then, it'll be passed through each token for that topic like `NOT` and `OneOf`.
+The token tries to find its value like "awesome" in the text using the `Levenshtein-distance`.
+The Levenshtein-distance computes the difference between the text and the tokenvalue itself.
 
 NOTE: "awesome" and "awesome" results in a distance of 0, where "awesome" and "awsome" has a distance of 1, whereas the number represents the number of changes for one string to become equal to the other string
 
-If the distance is less than 2 (so a distance of 0 or 1) it matches. This is done to counter OCR errors
+If the distance is less than 2 (so a distance of 0 or 1) it matches.
+This is done to counter OCR errors (like mistaking a lowercase-"L" for an uppercase-"i")
+
+===== Finding Senders
+
+Finding senders is a 2 stage process.
+In the first stage, the sender defintions inside the knowledgebase are matched against the text which should be analyzed.
+If a sender is found: great!
+
+If no sender is found, the text ist processed by the second stage.
+The engine tries to match the defintion
+
+[source,text]
+----
+$sender = {
+	oneOf("[SENDER]")
+}
+----
+
+with the regex
+
+[source,regexp]
+----
+((?!(Ihre|Handelsregister|Die)))[a-zA-Z0-9]{1}[0-9& a-zA-Zäöü\-]+ (AG|a\.G\.|GmbH|SE|OHG)
+
+----
+
+CAUTION: This regex is only valid for german companies
+
+Being a relatively coarse regex, this will match more words than the actual company name may be. +
+To determine the actual sender, the matched regex result is weighted by `number of occurences in the text * number of words matched`
+
+Finally the sender is determined by removing all matches with 5 or more `blanks` and returning the result with the most occurences in the text as the final sender.
+
+===== Finding Metadata
+Extracting the metadata is the most costly operation of all recognition, because of the ability to use regex and the need of recompiling the metadata defintions for every call.
+
+Every result then is normalized like inserting spaces in an IBAN.
 
 === Monitor
+The monitor is a statistical tool for getting informations on topic distributions, execution time and a history of processed texts with the recognized results etc.
+
+Currently, theres pie charts for topic and sender distribution, a line chart for execution time and a table with the history.
+
+The table consists of the columns:
+
+* Knowledgebase version
+* Received
+* Processing Time
+* Topics
+* Senders
+* Metadata
+* Analyzed Text
+* Download
+
+NOTE: The analyzed text is only persisted if you enabled it via the config file
+
+NOTE: The download column provides a link for saving this specific entry as a `CSV` file in case of reproducing classification errors etc.

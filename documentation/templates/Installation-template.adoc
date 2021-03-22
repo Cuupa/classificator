@@ -18,43 +18,30 @@ Note to self: Need to test this!
 
 [source,dockerfile]
 ----
-FROM openjdk:15-jdk
-MAINTAINER Cuupa
-
-WORKDIR /opt/app/classificator
-
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/app-1.1.0_Release.jar /.app.jar
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/kb-1.0.2.db /.knowledgebase/kb-1.0.2.db
-
-COPY knowlegebase/*.db ./knowledgebase/
-COPY *.jar ./app.jar
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "./app.jar", "--server.port=8080", "--knowlegde_base=./knowlegebase/kb-1.0.0.db"]
+include::../../build/dockerfile[]
 ----
 
 Please change the port of the application and change it accordingly.
 
 ==== Synology NAS
 . Create yourself a folder, where you upload the files to +
-image:../images/docker-classificator.png[folder]
+image:images/docker-classificator.png[folder]
 
 . Download the openJDK container +
-image:../images/open_jdk_download.png[openjdk]
+image:images/open_jdk_download.png[openjdk]
 
 . Create a new container from this image +
-image:../images/docker_new_container_1.png[new container_1]
+image:images/docker_new_container_1.png[new container_1]
 
 . Give this container a name to your likings and click on the 'Advanced Settings' button +
-image:../images/docker_new_container_2.png[new_container_2]
+image:images/docker_new_container_2.png[new_container_2]
 
 . Mount your folders and files to the docker container. It is also a good idea to change this to "read only" mode, as
 this program does not change these files +
-image:../images/docker_volume_mounts.png[volume mounts]
+image:images/docker_volume_mounts.png[volume mounts]
 
 . Change the ports to your liking +
-image:../images/docker_ports.png[ports]
+image:images/docker_ports.png[ports]
 
 . Go to the environment tab and paste this as command to run: +
 [source,shell]
