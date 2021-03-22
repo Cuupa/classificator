@@ -5,15 +5,22 @@ Simon Thiel (Cuupa)
 
 == Installation
 
+=== Required files
+
+You need the following files provided by the release `(example values)`
+
+* The JAR file `(app-1.1.0.jar)`
+* The knowlegdebase file `(kb-1.0.2.db)`
+* The configuration file `(configuration.yml)`
+CAUTION: The configuration file must be placed in the same location as the jar file
+
 === Requirements
+
 This program requires an installed java runtime version 11 or higher
 
-TIP: Be aware of
-the link:https://github.com/Cuupa/classificator/blob/feat_login/build/configuration.yml[application configuration].
-
 === Windows/Unix
-Since it is a simple .jar file, which can run on any device
-featuring link:https://www.java.com/de/download/manual.jsp[Java], you can run it by simply doubleclicking.
+
+Since it is a simple .jar file, which can run on any device featuring link:https://www.java.com/de/download/manual.jsp[Java], you can run it by simply doubleclicking.
 
 === Docker
 
@@ -204,7 +211,7 @@ You can use the gui exposed at `http://address-of-your-server:port`
 
 You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button.The result will be presented in the right-hand area
 
-image::images/classification_ui.png[]
+image::../images/classification_ui.png[]
 
 ==== Using the REST-API
 
