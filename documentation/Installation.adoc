@@ -7,6 +7,7 @@ You need the following files provided by the release `(example values)`
 * The JAR file `(app-1.1.0.jar)`
 * The knowlegdebase file `(kb-1.0.2.db)`
 * The configuration file `(configuration.yml)`
+
 CAUTION: The configuration file must be placed in the same location as the jar file
 
 === Requirements

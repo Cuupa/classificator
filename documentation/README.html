@@ -450,6 +450,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_installation">Installation</a>
 <ul class="sectlevel2">
+<li><a href="#_required_files">Required files</a></li>
+<li><a href="#_requirements">Requirements</a></li>
 <li><a href="#_windowsunix">Windows/Unix</a></li>
 <li><a href="#_docker">Docker</a></li>
 </ul>
@@ -475,24 +477,47 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_installation">Installation</h2>
 <div class="sectionbody">
-<div class="admonitionblock tip">
+<div class="sect2">
+<h3 id="_required_files">Required files</h3>
+<div class="paragraph">
+<p>You need the following files provided by the release <code>(example values)</code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The JAR file <code>(app-1.1.0.jar)</code></p>
+</li>
+<li>
+<p>The knowlegdebase file <code>(kb-1.0.2.db)</code></p>
+</li>
+<li>
+<p>The configuration file <code>(configuration.yml)</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock caution">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Tip</div>
+<div class="title">Caution</div>
 </td>
 <td class="content">
-Be aware of
-the <a href="https://github.com/Cuupa/classificator/tree/master/src/main/resources/application.yml">application configuration</a>.
+The configuration file must be placed in the same location as the jar file
 </td>
 </tr>
 </table>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_requirements">Requirements</h3>
+<div class="paragraph">
+<p>This program requires an installed java runtime version 11 or higher</p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_windowsunix">Windows/Unix</h3>
 <div class="paragraph">
-<p>Since it is a simple .jar file, which can run on any device
-featuring <a href="https://www.java.com/de/download/manual.jsp">Java</a>, you can run it by simply doubleclicking.</p>
+<p>Since it is a simple .jar file, which can run on any device featuring <a href="https://www.java.com/de/download/manual.jsp">Java</a>, you can run it by simply doubleclicking.</p>
 </div>
 </div>
 <div class="sect2">
@@ -507,8 +532,13 @@ Note to self: Need to test this!</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="dockerfile">FROM openjdk:15-jdk
 MAINTAINER Cuupa
+
 WORKDIR /opt/app/classificator
-COPY knowlegebase/kb-1.0.0.db ./knowledgebase/kb-1.0.0.db
+
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/app-1.1.0_Release.jar /.app.jar
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/kb-1.0.2.db /.knowledgebase/kb-1.0.2.db
+
+COPY knowlegebase/*.db ./knowledgebase/
 COPY *.jar ./app.jar
 
 EXPOSE 8080
@@ -571,24 +601,18 @@ example <code><a href="http://192.168.0.3:8081" class="bare">http://192.168.0.3:
 <h2 id="_configuration">Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the default configuration of the application
+<p>This is the default configuration of the application<br>
 It sets the server port to 8080 and the knowledgebase-directory to <code>build/knowledgebase</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">server_port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8080</span></span>
-<span style="color:#606">knowlegde_base</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">build/knowledgebase</span></span>
-
-<span style="color:#606">server.port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${server_port}</span></span>
-
-<span style="color:#606">logging.level</span>:
-  <span style="color:#606">root</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ERROR</span></span>
-  <span style="color:#606">com.cuupa.classificator</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">WARN</span></span>
-
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#f8f;background:#505"><span style="color:#f4f">---</span></span>
 <span style="color:#606">classificator</span>:
-  <span style="color:#606">kbfiles</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${knowlegde_base}</span></span>
+  <span style="color:#606">knowledge_base</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">build/knowledgebase</span></span>
 
   <span style="color:#606">monitor</span>:
+    <span style="color:#606">username</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">John</span><span style="color:#710">&quot;</span></span>
+    <span style="color:#606">password</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Doe</span><span style="color:#710">&quot;</span></span>
     <span style="color:#606">enabled</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
     <span style="color:#606">logText</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
     <span style="color:#606">database-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
@@ -597,13 +621,8 @@ It sets the server port to 8080 and the knowledgebase-directory to <code>build/k
 <div class="sect2">
 <h3 id="_server_port">Server port</h3>
 <div class="paragraph">
-<p>The default port as in said configuration is <code>8080</code>
-So if you want to access the webUI on your local machine navigate to <code><a href="https://localhost:8080" class="bare">https://localhost:8080</a></code></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">server_port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8080</span></span></code></pre>
-</div>
+<p>The default port of this application is <code>8080</code>
+So if you want to access the webUI on your local machine navigate to <code><a href="https://localhost:8080" class="bare">https://localhost:8080</a></code>. If you want to change that port, see <a href="#_via_command_line_arguments">Changing via command line arguments</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -640,14 +659,18 @@ For example if you have <code>kb-1.0.0.db</code> and <code>kb-1.0.1.db</code> it
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"> <span style="color:#606">monitor</span>:
+    <span style="color:#606">username</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">John</span><span style="color:#710">&quot;</span></span>
+    <span style="color:#606">password</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Doe</span><span style="color:#710">&quot;</span></span>
     <span style="color:#606">enabled</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
     <span style="color:#606">logText</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
     <span style="color:#606">database-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_username_and_password">Username and password</h4>
 <div class="paragraph">
-<p>If <code>enabled</code> is set to <code>true</code>, all events will be logged. To turn it off, set it to <code>false</code>.
-If <code>logText</code> is enabled, the actual analyzed texts will be logged into the database. You might want to turn it off for privacy reasons</p>
+<p>These entries set the username and password for accessing the statistics under <code>/monitor</code></p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_database_name">Database name</h4>
@@ -660,13 +683,32 @@ If <code>logText</code> is enabled, the actual analyzed texts will be logged int
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_enabled_and_logtext">Enabled and logText</h4>
+<div class="paragraph">
+<p>If <code>enabled</code> is set to <code>true</code>, all events will be logged. To turn it off, set it to <code>false</code>.
+If <code>logText</code> is enabled, the actual analyzed texts will be logged into the database. You might want to turn it off for privacy reasons, but it really helps finding errors in the classification process.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_changing">Changing</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+If you use the command line arguments, the corresponding entry in the configuration.yml will be overwritten
+</td>
+</tr>
+</table>
+</div>
 <div class="sect3">
 <h4 id="_via_config">Via config</h4>
 <div class="paragraph">
-<p>If you know about programming: Great! You can change it as you like for example</p>
+<p>If you want to change the configuration, just edit it with any text editor and change it to your likings</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -678,14 +720,42 @@ If <code>logText</code> is enabled, the actual analyzed texts will be logged int
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">server_port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1234</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">monitor</span>:
+  <span style="color:#606">logText</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Save the file and restart your application.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Changing the config file and restarting the application is the recommended way of changing program parameters.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_via_command_line_arguments">Via command line arguments</h4>
 <div class="paragraph">
-<p>If you don&#8217;t, don&#8217;t panic. You can run the application by typing</p>
+<p>You can also use the command line arguments</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+The server port can only be changed by using the command line arguments
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -782,7 +852,7 @@ Notice that, you need to quote the value as soon as you have spaces in a paramet
 <div class="sect2">
 <h3 id="_engine">Engine</h3>
 <div class="paragraph">
-<p>The engine is the core component of this application. It classifies the text and extracts the metadata</p>
+<p>The engine is the core component of this application.It classifies the text and extracts the metadata</p>
 </div>
 <div class="sect3">
 <h4 id="_using_the_gui">Using the GUI</h4>
@@ -790,7 +860,7 @@ Notice that, you need to quote the value as soon as you have spaces in a paramet
 <p>You can use the gui exposed at <code><a href="http://address-of-your-server:port" class="bare">http://address-of-your-server:port</a></code></p>
 </div>
 <div class="paragraph">
-<p>You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button. The result will be presented in the right-hand area</p>
+<p>You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button.The result will be presented in the right-hand area</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -801,7 +871,7 @@ Notice that, you need to quote the value as soon as you have spaces in a paramet
 <div class="sect3">
 <h4 id="_using_the_rest_api">Using the REST-API</h4>
 <div class="paragraph">
-<p>The engine exposes several methods for analyzing the input text. The most simple one receives the text as a string and returns a <code>List&lt;SemantikResult&gt;</code></p>
+<p>The engine exposes several methods for analyzing the input text.The most simple one receives the text as a string and returns a <code>List&lt;SemantikResult&gt;</code></p>
 </div>
 <div class="paragraph">
 <p>The endpoint-path is:</p>
@@ -826,7 +896,8 @@ Notice that, you need to quote the value as soon as you have spaces in a paramet
 <div class="title">Tip</div>
 </td>
 <td class="content">
-There&#8217;s also a method for pinging the application. This method simply returns a HTTP/200
+There&#8217;s also a method for pinging the application.
+This method simply returns a HTTP/200
 </td>
 </tr>
 </table>
@@ -837,17 +908,305 @@ There&#8217;s also a method for pinging the application. This method simply retu
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_how_it_works">How it works</h4>
+<div class="paragraph">
+<p>If no text is provided, the engine simply returns an empty result.
+Otherwise the text is processed in several steps.</p>
+</div>
+<div class="sect4">
+<h5 id="_the_knowledgebase">The Knowledgebase</h5>
+<div class="paragraph">
+<p>The knowledgebase is just a simple 7z archive, containing descriptions of the topics, the senders, the metadata and regexes.</p>
+</div>
+<div class="paragraph">
+<p>The topics, senders and metadata may contain any number of following tokens:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All</p>
+</li>
+<li>
+<p>Not</p>
+</li>
+<li>
+<p>OneOf</p>
+</li>
+<li>
+<p>WildcardBefore</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example of a topic:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">BILL = {
+        oneOf(&quot;rechnung&quot;,&quot;jahresrechnung&quot;,&quot;Zahlung der&quot;,&quot;zahlen Sie den Betrag&quot;,&quot;Rechnungs-Nr&quot;,&quot;rechnungsbetrag&quot;),
+        oneOf(&quot;eur, &quot;euro&quot;, &quot;€&quot;),
+        not(&quot;beitragsrechnung&quot;),
+        not(&quot;dauerauftrag&quot;, &quot;quittungsbeleg&quot;),
+        not(&quot;versicherungsschein&quot;, &quot;versicherungs-nr&quot;),
+        not(&quot;gehaltsabrechnungen&quot;),
+        not(&quot;rechnung trägt&quot;),
+        not(&quot;keine Zahlung erhalten&quot;),
+        not(&quot;jahresdepotauszug&quot;)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example of a sender:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">Rundfunk Beitragsservice = {
+    oneOf(&quot;Deutschlandradio&quot;),
+    oneOf(&quot;BEITRAGSSERVICE&quot;),
+    oneOf(&quot;ARD&quot;, &quot;ZDF&quot;);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example of a sender:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">$IBAN = {
+    oneOf(&quot;IBAN: [IBAN]&quot;, &quot;IBAN [IBAN]&quot;)
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The value inside the [] brackets is the file name of the regex definition, which shall be injected
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Example of a regex:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="regexp">[a-z]{2}[0-9]{2}[\s]?[0-9]{4}[\s]?[0-9]{4}[\s]?[0-9]{4}[\s]?[0-9]{4}[\s]?[0-9]{2}</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+The regular expressions are <code>case insensitive</code>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_text_normalization">Text normalization</h5>
+<div class="paragraph">
+<p>This step is mandatory for all but metadata.
+The text is converted to all-lowercase, whitespaces are replaced with a <code>blank</code> and characters like "ä" are replaced with "ae"</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="kotlin">private fun normalizeText(text: String): String {
+        return text.toLowerCase()
+            .replace(StringConstants.tabstop, StringConstants.blank)
+            .replace(&quot;\n\r&quot;, StringConstants.blank)
+            .replace(&quot;\r\n&quot;, StringConstants.blank)
+            .replace(StringConstants.carriageReturn, StringConstants.blank)
+            .replace(StringConstants.newLine, StringConstants.blank)
+            //                text = text.replace(&quot;-&quot;, StringConstants.BLANK);
+            .replace(&quot;,&quot;, StringConstants.blank)
+            .replace(&quot;: &quot;, StringConstants.blank)
+            .replace(&quot;€&quot;, &quot; €&quot;)
+            .replace(&quot;Ãœ&quot;, &quot;ae&quot;)
+            .replace(&quot;ä&quot;, &quot;ae&quot;)
+            .replace(&quot;ã¼&quot;, &quot;ue&quot;)
+            .replace(&quot;ü&quot;, &quot;ue&quot;)
+            .replace(&quot;/&quot;, StringConstants.blank)
+            .replace(&quot;_&quot;, StringConstants.blank)
+            .replace(RegexConstants.twoBlanksRegex, StringConstants.blank)
+            .trim()
+    }</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+Text which is parsed to extract the metadata will not be normalized
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_finding_topics">Finding Topics</h5>
+<div class="paragraph">
+<p>This step is the most simple one.<br>
+First of all the text is normalized like described above.
+Then, it&#8217;ll be passed through each token for that topic like <code>NOT</code> and <code>OneOf</code>.
+The token tries to find its value like "awesome" in the text using the <code>Levenshtein-distance</code>.
+The Levenshtein-distance computes the difference between the text and the tokenvalue itself.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+"awesome" and "awesome" results in a distance of 0, where "awesome" and "awsome" has a distance of 1, whereas the number represents the number of changes for one string to become equal to the other string
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If the distance is less than 2 (so a distance of 0 or 1) it matches.
+This is done to counter OCR errors (like mistaking a lowercase-"L" for an uppercase-"i")</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_finding_senders">Finding Senders</h5>
+<div class="paragraph">
+<p>Finding senders is a 2 stage process.
+In the first stage, the sender defintions inside the knowledgebase are matched against the text which should be analyzed.
+If a sender is found: great!</p>
+</div>
+<div class="paragraph">
+<p>If no sender is found, the text ist processed by the second stage.
+The engine tries to match the defintion</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">$sender = {
+        oneOf(&quot;[SENDER]&quot;)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>with the regex</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="regexp">((?!(Ihre|Handelsregister|Die)))[a-zA-Z0-9]{1}[0-9&amp; a-zA-Zäöü\-]+ (AG|a\.G\.|GmbH|SE|OHG)</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+This regex is only valid for german companies
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Being a relatively coarse regex, this will match more words than the actual company name may be.<br>
+To determine the actual sender, the matched regex result is weighted by <code>number of occurences in the text * number of words matched</code></p>
+</div>
+<div class="paragraph">
+<p>Finally the sender is determined by removing all matches with 5 or more <code>blanks</code> and returning the result with the most occurences in the text as the final sender.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_finding_metadata">Finding Metadata</h5>
+<div class="paragraph">
+<p>Extracting the metadata is the most costly operation of all recognition, because of the ability to use regex and the need of recompiling the metadata defintions for every call.</p>
+</div>
+<div class="paragraph">
+<p>Every result then is normalized like inserting spaces in an IBAN.</p>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_monitor_2">Monitor</h3>
-
+<div class="paragraph">
+<p>The monitor is a statistical tool for getting informations on topic distributions, execution time and a history of processed texts with the recognized results etc.</p>
+</div>
+<div class="paragraph">
+<p>Currently, theres pie charts for topic and sender distribution, a line chart for execution time and a table with the history.</p>
+</div>
+<div class="paragraph">
+<p>The table consists of the columns:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Knowledgebase version</p>
+</li>
+<li>
+<p>Received</p>
+</li>
+<li>
+<p>Processing Time</p>
+</li>
+<li>
+<p>Topics</p>
+</li>
+<li>
+<p>Senders</p>
+</li>
+<li>
+<p>Metadata</p>
+</li>
+<li>
+<p>Analyzed Text</p>
+</li>
+<li>
+<p>Download</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The analyzed text is only persisted if you enabled it via the config file
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The download column provides a link for saving this specific entry as a <code>CSV</code> file in case of reproducing classification errors etc.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-03-17 23:59:07 +0100
+Last updated 2021-03-22 19:06:37 +0100
 </div>
 </div>
 </body>
