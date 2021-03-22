@@ -25,20 +25,7 @@ Note to self: Need to test this!
 
 [source,dockerfile]
 ----
-FROM openjdk:15-jdk
-MAINTAINER Cuupa
-
-WORKDIR /opt/app/classificator
-
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/app-1.1.0_Release.jar /.app.jar
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/kb-1.0.2.db /.knowledgebase/kb-1.0.2.db
-
-COPY knowlegebase/*.db ./knowledgebase/
-COPY *.jar ./app.jar
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "./app.jar", "--server.port=8080", "--knowlegde_base=./knowlegebase/kb-1.0.0.db"]
+include::../../build/dockerfile[]
 ----
 
 Please change the port of the application and change it accordingly.

@@ -1,5 +1,6 @@
 package com.cuupa.classificator.configuration
 
+import com.cuupa.classificator.configuration.external.Config
 import com.cuupa.classificator.knowledgebase.Classificator
 import com.cuupa.classificator.knowledgebase.KnowledgeManager
 import com.cuupa.classificator.knowledgebase.services.KnowledgeBaseExecutorService
@@ -17,14 +18,17 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
 @Configuration
-@Import(value = [MonitorConfiguration::class])
+@Import(value = [MonitorConfiguration::class, ExternalConfiguration::class, SecurityConfiguration::class])
 open class ApplicationConfiguration {
 
     @Autowired
     private var monitor: Monitor? = null
 
+    @Autowired
+    private var configuration: Config? = null
+
     @Value("\${classificator.kbfiles}")
-    var knowledgbaseDir: String = ""
+    private var knowledgbaseDir: String = ""
 
     @Bean
     open fun classificator(): Classificator {
@@ -63,11 +67,19 @@ open class ApplicationConfiguration {
 
     @Bean
     open fun knowledgeBaseInitiator(): KnowledgeBaseInitiator {
-        return KnowledgeBaseInitiator(knowledgbaseDir)
+        return KnowledgeBaseInitiator(getKnowledgeBaseDir())
     }
 
     @Bean
     open fun analyser(): PdfAnalyser {
         return PdfAnalyser()
+    }
+
+    private fun getKnowledgeBaseDir(): String {
+        return if (knowledgbaseDir.isNullOrEmpty()) {
+            configuration?.classificator?.knowledgeBase ?: ""
+        } else {
+            knowledgbaseDir
+        }
     }
 }

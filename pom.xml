@@ -51,6 +51,11 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
@@ -112,6 +117,12 @@
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite-jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.12.2</version>
         </dependency>
 
         <dependency>
@@ -266,36 +277,12 @@
                 <groupId>io.whelk.asciidoc</groupId>
                 <artifactId>asciidoc-template-maven-plugin</artifactId>
                 <version>1.0.17</version>
-                <!--<executions>
-                    <execution>
-                        <id>configuration-resolver</id>-->
-
-                <!--
-
-                            <configuration>
-                                <templateDirectory>./documentation</templateDirectory>
-                                <templateFile>Components-template.adoc</templateFile>
-                                <outputDirectory>./documentation</outputDirectory>
-                                <outputFile>Components.adoc</outputFile>
-                                </configuration>
-
-                            -->
-
-                <!--</execution>
-
-                <execution>
-                    <id>global-resolver</id>-->
-
                 <configuration>
-                    <templateDirectory>./documentation</templateDirectory>
+                    <templateDirectory>./documentation/templates</templateDirectory>
                     <templateFile>README-template.adoc</templateFile>
                     <outputDirectory>./documentation</outputDirectory>
                     <outputFile>README.adoc</outputFile>
                 </configuration>
-
-                <!--
-            </execution>
-        </executions>-->
             </plugin>
         </plugins>
     </build>

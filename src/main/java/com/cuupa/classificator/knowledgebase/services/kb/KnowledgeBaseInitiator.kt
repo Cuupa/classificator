@@ -12,20 +12,7 @@ class KnowledgeBaseInitiator(private val knowledgebaseDir: String) {
     fun initKnowledgeBase(): KnowledgeBase {
         val knowledgebase = File(knowledgebaseDir)
 
-        val kb = if (isFileSpecified(knowledgebase)) {
-            KnowledgeFileExtractor.extractKnowledgebase(knowledgebase)
-        } else if (knowledgebase.isDirectory) {
-            val files = knowledgebase.list()?.filter { it.endsWith(knowledgebaseEnding) } ?: listOf()
-            val filename = getFilename(getMaxVersion(files), files)
-
-            if (filename.isNullOrEmpty()) {
-                KnowledgeBase()
-            } else {
-                KnowledgeFileExtractor.extractKnowledgebase(File(knowledgebase, filename))
-            }
-        } else {
-            KnowledgeBase()
-        }
+        val kb = getKnowledgebase(knowledgebase)
 
         if (!kb.isValid()) {
             log.error("No knowledgebase found for $knowledgebase")
@@ -39,24 +26,32 @@ class KnowledgeBaseInitiator(private val knowledgebaseDir: String) {
         return kb
     }
 
+    private fun getKnowledgebase(knowledgebase: File): KnowledgeBase {
+        if (isFileSpecified(knowledgebase)) {
+           return  KnowledgeFileExtractor.extractKnowledgebase(knowledgebase)
+        } else if (knowledgebase.isDirectory) {
+            val files = knowledgebase.list()?.filter { it.endsWith(knowledgebaseEnding) } ?: listOf()
+            val filename = getFilename(getMaxVersion(files), files)
+
+            if (!filename.isNullOrEmpty()) {
+                return KnowledgeFileExtractor.extractKnowledgebase(File(knowledgebase, filename))
+            }
+        }
+        return KnowledgeBase()
+    }
+
     private fun isFileSpecified(knowledgebase: File) =
         knowledgebase.isFile && knowledgebase.name.endsWith(knowledgebaseEnding)
 
-    private fun getFilename(maxVersion: Int?, files: List<String>) =
-        if (maxVersion != null) {
-            val regex = "[$maxVersion.]+.db".toRegex()
-            files.findLast { matches(regex, it) }
-        } else {
-            files.findLast { it.endsWith(".db") }
+    private fun getFilename(maxVersion: Int?, files: List<String>): String? {
+        maxVersion?.let {
+            return files.findLast { matches("[$maxVersion.]+.db".toRegex(), it) }
         }
+        return files.findLast { it.endsWith(".db") }
+    }
 
-    private fun matches(regex: Regex, it: String): Boolean {
-        val result = regex.find(it)
-        return if (result == null) {
-            false
-        } else {
-            it.endsWith(result.value)
-        }
+    private fun matches(regex: Regex, string: String): Boolean {
+        return regex.find(string)?.let { string.endsWith(it.value) } ?: false
     }
 
     private fun getMaxVersion(files: List<String>) =

@@ -2,12 +2,12 @@ package com.cuupa.classificator.knowledgebase.services.kb
 
 import com.cuupa.classificator.knowledgebase.resultobjects.Sender
 import com.cuupa.classificator.knowledgebase.resultobjects.Topic
-import com.cuupa.classificator.knowledgebase.services.token.MetaDataToken
 import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeFileParser.parseDatabaseMetadata
 import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeFileParser.parseMetaFile
 import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeFileParser.parseRegexFile
 import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeFileParser.parseSenderFile
 import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeFileParser.parseTopicFile
+import com.cuupa.classificator.knowledgebase.services.token.MetaDataToken
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import java.io.File
@@ -27,19 +27,15 @@ object KnowledgeFileExtractor {
                 if (isToParse(entry)) {
                     continue
                 }
-                val filename = entry!!.name
-                when {
-                    isTopicFile(filename) -> topicList.add(parseTopicFile(readIntoString(entry, sevenZFile)))
-                    isSenderFile(filename) -> senderList.add(parseSenderFile(readIntoString(entry, sevenZFile)))
-                    isMetadataFile(filename) -> metadataList.add(parseMetaFile(readIntoString(entry, sevenZFile)))
-                    isRegexFile(filename) -> regexList.add(
-                        parseRegexFile(
-                            getRegexName(filename),
-                            readIntoString(entry, sevenZFile)
-                        )
-                    )
-                    isDatabaseMetaInfo(filename) -> kb.knowledgeBaseMetadata =
-                        parseDatabaseMetadata(readIntoString(entry, sevenZFile))
+                entry?.name?.let { filename ->
+                    when {
+                        isTopicFile(filename) -> topicList.add(parseTopicFile(readIntoString(entry, sevenZFile)))
+                        isSenderFile(filename) -> senderList.add(parseSenderFile(readIntoString(entry, sevenZFile)))
+                        isMetadataFile(filename) -> metadataList.add(parseMetaFile(readIntoString(entry, sevenZFile)))
+                        isRegexFile(filename) -> regexList.add(parseRegexFile(getRegexName(filename), readIntoString(entry, sevenZFile)))
+                        isDatabaseMetaInfo(filename) -> kb.knowledgeBaseMetadata = parseDatabaseMetadata(readIntoString(entry, sevenZFile))
+                        else -> { }
+                    }
                 }
             }
             kb.topicList = topicList

@@ -1,36 +1,25 @@
 == Configuration
 
-This is the default configuration of the application
+This is the default configuration of the application +
 It sets the server port to 8080 and the knowledgebase-directory to `build/knowledgebase`
 
 [source,yaml]
 ----
-server_port: 8080
-knowlegde_base: build/knowledgebase
-
-server.port: ${server_port}
-
-logging.level:
-  root: ERROR
-  com.cuupa.classificator: WARN
-
+---
 classificator:
-  kbfiles: ${knowlegde_base}
+  knowledge_base: build/knowledgebase
 
   monitor:
+    username: "John"
+    password: "Doe"
     enabled: true
     logText: true
     database-name: "monitor.db"
 ----
 
 === Server port
-The default port as in said configuration is `8080`
-So if you want to access the webUI on your local machine navigate to `https://localhost:8080`
-[source,yaml]
-----
-server_port: 8080
-
-----
+The default port of this application is `8080`
+So if you want to access the webUI on your local machine navigate to `https://localhost:8080`. If you want to change that port, see <<_via_command_line_arguments, Changing via command line arguments>>
 
 === Knowledgebase
 This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
@@ -50,14 +39,16 @@ The monitor is enabled by default and uses the database `monitor.db`
 [source,yaml]
 ----
  monitor:
+    username: "John"
+    password: "Doe"
     enabled: true
     logText: true
     database-name: "monitor.db"
 
 ----
 
-If `enabled` is set to `true`, all events will be logged. To turn it off, set it to `false`.
-If `logText` is enabled, the actual analyzed texts will be logged into the database. You might want to turn it off for privacy reasons
+==== Username and password
+These entries set the username and password for accessing the statistics under `/monitor`
 
 ==== Database name
 The database name is defined via `database-name`. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to
@@ -65,10 +56,16 @@ The database name is defined via `database-name`. You can change it to your liki
 ----
 database-name: "C:\Users\John Doe\monitor.db"
 ----
+==== Enabled and logText
+If `enabled` is set to `true`, all events will be logged. To turn it off, set it to `false`.
+If `logText` is enabled, the actual analyzed texts will be logged into the database. You might want to turn it off for privacy reasons, but it really helps finding errors in the classification process.
 
 === Changing
+
+CAUTION: If you use the command line arguments, the corresponding entry in the configuration.yml will be overwritten
+
 ==== Via config
-If you know about programming: Great! You can change it as you like for example
+If you want to change the configuration, just edit it with any text editor and change it to your likings
 [source,yaml]
 ----
 knowlegde_base: knowledgebase/kb-1.0.0.db
@@ -78,11 +75,18 @@ or
 
 [source,yaml]
 ----
-server_port: 1234
+monitor:
+  logText: false
 ----
 
+Save the file and restart your application.
+
+NOTE: Changing the config file and restarting the application is the recommended way of changing program parameters.
+
 ==== Via command line arguments
-If you don't, don't panic. You can run the application by typing
+You can also use the command line arguments
+
+CAUTION: The server port can only be changed by using the command line arguments
 
 [source,shell]
 ----

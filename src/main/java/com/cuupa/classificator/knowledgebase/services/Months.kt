@@ -12,8 +12,7 @@ object Months {
         } catch (e: Exception) {
             return value
         }
-        val calendar = Calendar.getInstance()
-        calendar.time = date
+        val calendar = Calendar.getInstance().apply { time = date }
         val month = calendar.get(Calendar.MONTH) + 1
         return if (month < 10) {
             "0$month"

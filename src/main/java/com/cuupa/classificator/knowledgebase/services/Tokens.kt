@@ -6,9 +6,7 @@ import org.apache.logging.log4j.util.Strings
 object Tokens {
 
     operator fun get(tokenTextPointer: TokenTextPointer): Token {
-        val token = get(findTokenName(tokenTextPointer))
-        token.tokenValue = findTokenValue(tokenTextPointer)
-        return token
+        return get(findTokenName(tokenTextPointer)).apply { tokenValue = findTokenValue(tokenTextPointer) }
     }
 
     private fun get(tokenName: String): Token {

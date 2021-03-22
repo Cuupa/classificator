@@ -69,9 +69,8 @@ object KnowledgeFileParser {
     fun parseTopicFile(kbFile: String): Topic {
         val split = kbFile.split(RegexConstants.equalPattern)
         val topicName = split[0].trim()
-        val topic = fillToken(kbFile, Topic()) as Topic
-        topic.name = topicName
-        return topic
+        return(fillToken(kbFile, Topic()) as Topic)
+            .apply { name = topicName }
     }
 
     private fun findExtractName(charArray: CharArray, index: Int): String {
