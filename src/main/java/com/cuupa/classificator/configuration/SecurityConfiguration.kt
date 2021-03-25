@@ -34,28 +34,33 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/fonts/**").permitAll()
                 .antMatchers("/js/**").permitAll()
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/rest/1.0/classifyText").permitAll()
                 .antMatchers("/monitor", "/download").hasAnyRole("USER")
                 .anyRequest().authenticated()
             .and()
             .formLogin()
                 .loginPage("/login")
-                //.failureHandler(authenticationFailureHandler())
+                .failureHandler(authenticationFailureHandler())
                 .defaultSuccessUrl("/monitor")
+                .failureUrl("/login?error")
                 .permitAll()
             .and()
             .logout()
-                .permitAll()
+            .permitAll()
             .and()
             .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
+
+        http.headers().frameOptions().sameOrigin()
     }
 
-    private fun authenticationFailureHandler(): AuthenticationFailureHandler? {
+    private fun authenticationFailureHandler(): AuthenticationFailureHandler {
         return MonitorAuthenticationFailureHandler()
     }
 
     @Bean
-    open fun accessDeniedHandler(): AccessDeniedHandler{
+    open fun accessDeniedHandler(): AccessDeniedHandler {
         return MonitorAccessDeniedHandler()
     }
 

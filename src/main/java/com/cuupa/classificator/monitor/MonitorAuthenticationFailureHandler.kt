@@ -21,7 +21,6 @@ class MonitorAuthenticationFailureHandler : AuthenticationFailureHandler {
                 "User '${it.name}:${it.credentials}' attempted to access the protected URL: ${request.requestURI}"
             )
         }
-        response.sendRedirect("${request.contextPath}/login?error")
     }
 
     companion object {

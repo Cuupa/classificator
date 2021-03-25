@@ -71,7 +71,7 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
             }
 
             val average = events.filter { !it.text.isNullOrBlank() }
-                .map { it.text!!.length }
+                .mapNotNull { it.text?.length }
                 .average()
             monitorStatistics.averageTextLength = if (!average.isNaN()) {
                 average.roundToLong()
@@ -139,8 +139,6 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
         val resultMap = mutableMapOf<String, Int>()
         events.forEach(calculateDistributionForResults(resultMap))
         return resultMap.toList().sortedByDescending { (_, value) -> value }.toMap()
-
-
     }
 
     private fun getSenderDistribution(events: List<Event>): Map<String, Int> {
@@ -158,19 +156,11 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
     }
 
     private fun calculateDistributionForResults(resultMap: MutableMap<String, Int>): (Event) -> Unit {
-        return { event ->
-            event.results.forEach {
-                calculateDistributionForEntry(resultMap, it)
-            }
-        }
+        return { event -> event.results.forEach { calculateDistributionForEntry(resultMap, it) } }
     }
 
     private fun calculateDistributionsForSenders(resultMap: MutableMap<String, Int>): (Event) -> Unit {
-        return { event ->
-            event.senders.forEach {
-                calculateDistributionForEntry(resultMap, it)
-            }
-        }
+        return { event -> event.senders.forEach { calculateDistributionForEntry(resultMap, it) } }
     }
 
     private fun getTopics(results: List<SemanticResult>) = results.map { it.topicName }

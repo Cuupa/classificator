@@ -3,8 +3,9 @@ MAINTAINER Cuupa
 
 WORKDIR /opt/app/classificator
 
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/app-1.1.0_Release.jar /.app.jar
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/kb-1.0.2.db /.knowledgebase/kb-1.0.2.db
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.1/app-1.1.1_Release.jar /.app.jar
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.1/kb-1.0.1.db /.knowledgebase/kb-1.0.2.db
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.1/configuration.yml /.configuration.yml
 
 COPY knowlegebase/*.db ./knowledgebase/
 COPY *.jar ./app.jar

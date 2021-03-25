@@ -58,7 +58,7 @@ class MonitorController(private val monitor: Monitor, private val gson: Gson) {
         return monitor.getEvents(start, end)
     }
 
-    @GetMapping(value = ["/download"])
+    @GetMapping(value = ["/download"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @ResponseBody
     fun download(@RequestParam(name = "start") start: Long, @RequestParam(name = "end") end: Long, response: HttpServletResponse): HttpEntity<ByteArray> {
         val startLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), TimeZone.getDefault().toZoneId())

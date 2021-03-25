@@ -196,7 +196,7 @@ NOTE: or absolute paths like
 ----
 --knowledge_base="C:\Users\John Doe\knowlegebase\kb-1.0.0.db"
 ----
-CAUTION: Notice that, you need to quote the value as soon as you have spaces in a parameter
+CAUTION: If your parameter contains a whitespace (eg a `blank`) you need to quote the value
 
 
 == Components

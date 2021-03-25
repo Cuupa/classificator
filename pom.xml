@@ -5,7 +5,7 @@
 
     <groupId>com.cuupa</groupId>
     <artifactId>classificator</artifactId>
-    <version>1.0.2_SNAPSHOT</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>Classificator</name>
@@ -33,10 +33,26 @@
         <sevenzip.version>1.8</sevenzip.version>
         <pdfbox.version>2.0.22</pdfbox.version>
 
+        <openapi.version>1.5.6</openapi.version>
+
         <app.filename>app</app.filename>
+
+        <documentation-to-build>README</documentation-to-build>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-kotlin</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
 
         <!-- ============= Setting up Spring dependencies ============= -->
         <dependency>
@@ -279,9 +295,9 @@
                 <version>1.0.17</version>
                 <configuration>
                     <templateDirectory>./documentation/templates</templateDirectory>
-                    <templateFile>README-template.adoc</templateFile>
+                    <templateFile>${documentation-to-build}-template.adoc</templateFile>
                     <outputDirectory>./documentation</outputDirectory>
-                    <outputFile>README.adoc</outputFile>
+                    <outputFile>${documentation-to-build}.adoc</outputFile>
                 </configuration>
             </plugin>
         </plugins>
