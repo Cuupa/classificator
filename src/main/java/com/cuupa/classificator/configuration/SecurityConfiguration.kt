@@ -35,7 +35,6 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
                 .antMatchers("/fonts/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/api/rest/1.0/classifyText").permitAll()
                 .antMatchers("/monitor", "/download").hasAnyRole("USER")
                 .anyRequest().authenticated()
             .and()
