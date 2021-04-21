@@ -1,5 +1,7 @@
 == Installation
 
+:icons: font
+
 === Required files
 
 You need the following files provided by the release `(example values)`

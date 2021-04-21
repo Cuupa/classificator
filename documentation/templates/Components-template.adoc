@@ -1,6 +1,8 @@
 == Components
 :toc:
 
+:icons: font
+
 === Engine
 
 The engine is the core component of this application.It classifies the text and extracts the metadata

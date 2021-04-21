@@ -2,6 +2,7 @@
 :author:
 Simon Thiel (Cuupa)
 :toc:
+:icons: font
 
 include::../Installation.adoc[]
 
