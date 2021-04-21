@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.4</version>
+        <version>2.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -32,9 +32,9 @@
         <commons-compress.version>1.20</commons-compress.version>
         <sevenzip.version>1.9</sevenzip.version>
         <pdfbox.version>2.0.23</pdfbox.version>
-        <jackson-yaml.version>2.12.2</jackson-yaml.version>
+        <jackson-yaml.version>2.12.3</jackson-yaml.version>
 
-        <openapi.version>1.5.6</openapi.version>
+        <openapi.version>1.5.7</openapi.version>
 
         <app.filename>app</app.filename>
 
