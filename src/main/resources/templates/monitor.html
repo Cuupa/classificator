@@ -77,7 +77,7 @@
             <td width="12%"><span th:text="${result.senders}">Senders</span></td>
             <td width="12%"><span th:text="${result.metadata}">Metadata</span></td>
             <td width="12%"><span
-                    th:text="${result.text.length()} > 99 ? ${result.text.substring(0,99)} + ' ...' : ${result.text}">Text</span>
+                    th:text="${result.text != null} ? (${result.text.length()} > 99 ? ${result.text.substring(0,99)} + ' ...' : ${result.text}) : ${result.text}">Text</span>
             </td>
             <td width="12%"><a
                     th:href="@{download?start={start}&end={end}(start=${result.getStartTimestamp()},end=${result.getEndTimestamp()})}">Download</a>
