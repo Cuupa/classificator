@@ -21,9 +21,6 @@ open class MonitorConfiguration {
     @Autowired
     private var configuration: Config? = null
 
-    @Autowired
-    private var repository: EventRepository? = null
-
     @Value("\${classificator.monitor.database-name}")
     private var databaseName: String? = null
 
@@ -34,18 +31,18 @@ open class MonitorConfiguration {
     private var logText: Boolean? = null
 
     @Bean
-    open fun monitor(): Monitor {
-        return Monitor(eventStorage(), isEnabled(), isLogText())
+    open fun monitor(eventStorage: EventStorage): Monitor {
+        return Monitor(eventStorage, isEnabled(), isLogText())
     }
 
     @Bean
-    open fun eventStorage(): EventStorage {
-        return SqliteEventStorage(eventService())
+    open fun eventStorage(eventService: EventService): EventStorage {
+        return SqliteEventStorage(eventService)
     }
 
     @Bean
-    open fun eventService(): EventService {
-        return EventService(repository!!)
+    open fun eventService(eventRepository: EventRepository): EventService {
+        return EventService(eventRepository)
     }
 
     @Bean
@@ -57,10 +54,11 @@ open class MonitorConfiguration {
     }
 
     @Bean
-    open fun entityManagerFactory(): LocalSessionFactoryBean? {
+    open fun entityManagerFactory(dataSource: DataSource): LocalSessionFactoryBean? {
         return LocalSessionFactoryBean().apply {
-            setDataSource(dataSource()); setPackagesToScan("com.cuupa.classificator"); hibernateProperties =
-            hibernateProperties()
+            setDataSource(dataSource)
+            setPackagesToScan("com.cuupa.classificator")
+            hibernateProperties = hibernateProperties()
         }
     }
 

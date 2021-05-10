@@ -22,27 +22,24 @@ import org.springframework.context.annotation.Import
 open class ApplicationConfiguration {
 
     @Autowired
-    private var monitor: Monitor? = null
-
-    @Autowired
     private var configuration: Config? = null
 
     @Value("\${classificator.kbfiles}")
     private var knowledgbaseDir: String = ""
 
     @Bean
-    open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser(), monitor!!)
+    open fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor): Classificator {
+        return Classificator(knowledgeManager, analyser, monitor)
     }
 
     @Bean
-    open fun knowledgeManager(): KnowledgeManager {
-        return KnowledgeManager(knowledgeBase(), knowledgeBaseExecutorService())
+    open fun knowledgeManager(knowledgeBase: KnowledgeBase, executorService: KnowledgeBaseExecutorService): KnowledgeManager {
+        return KnowledgeManager(knowledgeBase, executorService)
     }
 
     @Bean
-    open fun knowledgeBaseExecutorService(): KnowledgeBaseExecutorService {
-        return KnowledgeBaseExecutorService(topicService(), senderService(), metadataService())
+    open fun knowledgeBaseExecutorService(topicService: TopicService, senderService: SenderService, metadataService: MetadataService): KnowledgeBaseExecutorService {
+        return KnowledgeBaseExecutorService(topicService, senderService, metadataService)
     }
 
     @Bean
@@ -51,18 +48,18 @@ open class ApplicationConfiguration {
     }
 
     @Bean
-    open fun topicService(): TopicService {
-        return TopicService(knowledgeBase().topicList)
+    open fun topicService(knowledgeBase: KnowledgeBase): TopicService {
+        return TopicService(knowledgeBase.topicList)
     }
 
     @Bean
-    open fun senderService(): SenderService {
-        return SenderService(knowledgeBase().sendersList)
+    open fun senderService(knowledgeBase: KnowledgeBase): SenderService {
+        return SenderService(knowledgeBase.sendersList)
     }
 
     @Bean
-    open fun metadataService(): MetadataService {
-        return MetadataService(knowledgeBase().metadataList)
+    open fun metadataService(knowledgeBase: KnowledgeBase): MetadataService {
+        return MetadataService(knowledgeBase.metadataList)
     }
 
     @Bean
@@ -76,7 +73,7 @@ open class ApplicationConfiguration {
     }
 
     private fun getKnowledgeBaseDir(): String {
-        return if (knowledgbaseDir.isNullOrEmpty()) {
+        return if (knowledgbaseDir.isEmpty()) {
             configuration?.classificator?.knowledgeBase ?: ""
         } else {
             knowledgbaseDir

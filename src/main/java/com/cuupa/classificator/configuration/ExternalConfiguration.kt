@@ -14,9 +14,8 @@ open class ExternalConfiguration {
     @Bean
     open fun jackson(): ObjectMapper {
         return ObjectMapper(YAMLFactory()).apply {
-            enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT); disable(
-            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
-        )
+            enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+            disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         }
     }
 
