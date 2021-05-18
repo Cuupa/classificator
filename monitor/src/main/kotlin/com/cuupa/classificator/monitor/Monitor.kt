@@ -1,6 +1,6 @@
 package com.cuupa.classificator.monitor
 
-import com.cuupa.classificator.knowledgebase.resultobjects.SemanticResult
+import com.cuupa.classificator.domain.SemanticResult
 import org.apache.commons.lang3.time.DateUtils
 import org.apache.juli.logging.LogFactory
 import java.text.SimpleDateFormat
@@ -14,14 +14,11 @@ import kotlin.math.roundToLong
 class Monitor(private val eventStorage: EventStorage, private val enabled: Boolean, private val logText: Boolean) {
 
     private val hours = mutableListOf<String>()
-
     private val format = SimpleDateFormat("HH:mm")
-
     private val formatDate = SimpleDateFormat("dd.MM.yyyy HH:mm")
 
     init {
-        val calendar = GregorianCalendar.getInstance()
-        calendar.set(2000, Calendar.JANUARY, 1, 0, 0, 0)
+        val calendar = GregorianCalendar.getInstance().apply { set(2000, Calendar.JANUARY, 1, 0, 0, 0) }
         hours.add(format.format(calendar.time))
         IntStream.range(0, 23).forEach {
             calendar.add(Calendar.HOUR_OF_DAY, 1)
