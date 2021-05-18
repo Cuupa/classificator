@@ -10,7 +10,8 @@
         <version>1.1.1</version>
     </parent>
 
-    <artifactId>ui</artifactId>
+    <groupId>com.cuupa</groupId>
+    <artifactId>api</artifactId>
 
     <dependencies>
         <dependency>
@@ -22,6 +23,12 @@
         <dependency>
             <groupId>com.cuupa</groupId>
             <artifactId>monitor</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cuupa</groupId>
+            <artifactId>configuration</artifactId>
             <version>1.1.1</version>
         </dependency>
     </dependencies>

@@ -6,7 +6,7 @@
     <groupId>com.cuupa</groupId>
     <artifactId>classificator</artifactId>
     <version>1.1.1</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>Classificator</name>
     <description>Classification of documents</description>
@@ -21,10 +21,15 @@
     <modules>
         <module>monitor</module>
         <module>engine</module>
+        <module>api</module>
+        <module>configuration</module>
+        <module>domain</module>
         <module>ui</module>
     </modules>
 
     <properties>
+        <start-class>com.cuupa.classificator.engine.SpringBootClassificatorApplication</start-class>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -193,11 +198,6 @@
     <build>
         <finalName>${app.filename}-${project.version}</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
