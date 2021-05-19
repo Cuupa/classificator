@@ -1,21 +1,26 @@
 package com.cuupa.classificator.monitor.configuration
 
 import com.cuupa.classificator.externalconfiguration.Config
-import com.cuupa.classificator.monitor.EventStorage
-import com.cuupa.classificator.monitor.Monitor
-import com.cuupa.classificator.monitor.sqlite.EventRepository
-import com.cuupa.classificator.monitor.sqlite.EventService
-import com.cuupa.classificator.monitor.sqlite.SqliteEventStorage
+import com.cuupa.classificator.monitor.persistence.EventStorage
+import com.cuupa.classificator.monitor.persistence.sqlite.EventRepository
+import com.cuupa.classificator.monitor.persistence.sqlite.EventService
+import com.cuupa.classificator.monitor.persistence.sqlite.SqliteDialect
+import com.cuupa.classificator.monitor.persistence.sqlite.SqliteEventStorage
+import com.cuupa.classificator.monitor.service.Monitor
+import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean
 import java.util.*
+import javax.annotation.PostConstruct
 import javax.sql.DataSource
 
 @Configuration
+@EnableJpaRepositories(basePackages = ["com.cuupa.classificator.monitor.persistence"])
 open class MonitorConfiguration {
 
     @Autowired
@@ -65,7 +70,7 @@ open class MonitorConfiguration {
     private fun hibernateProperties(): Properties {
         return Properties().apply {
             setProperty("hibernate.hbm2ddl.auto", "update")
-            setProperty("hibernate.dialect", "com.cuupa.classificator.monitor.sqlite.SqliteDialect")
+            setProperty("hibernate.dialect", SqliteDialect::class.java.canonicalName)
         }
     }
 
@@ -91,5 +96,14 @@ open class MonitorConfiguration {
         } else {
             logText ?: false
         }
+    }
+
+    @PostConstruct
+    fun configLoaded() {
+        log.info("Loaded ${MonitorConfiguration::class.simpleName}")
+    }
+
+    companion object {
+        private val log = LogFactory.getLog(MonitorConfiguration::class.java)
     }
 }

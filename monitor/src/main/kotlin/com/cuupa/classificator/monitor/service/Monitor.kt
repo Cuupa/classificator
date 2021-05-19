@@ -1,6 +1,7 @@
-package com.cuupa.classificator.monitor
+package com.cuupa.classificator.monitor.service
 
 import com.cuupa.classificator.domain.SemanticResult
+import com.cuupa.classificator.monitor.persistence.EventStorage
 import org.apache.commons.lang3.time.DateUtils
 import org.apache.commons.logging.LogFactory
 import java.text.SimpleDateFormat
@@ -50,37 +51,42 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
 
     fun getStatistics(start: LocalDate?, end: LocalDate?): MonitorStatistics {
         val events = getEvents(start, end)
-        val monitorStatistics = MonitorStatistics()
-        if (events.isNotEmpty()) {
-            monitorStatistics.topicDistribution = getTopicDistribution(events)
-            monitorStatistics.senderDistribution = getSenderDistribution(events)
-            monitorStatistics.maxProcessingTime = events.maxOf { it.getElapsedTime() }
-            monitorStatistics.minProcessingTime = events.minOf { it.getElapsedTime() }
-            val elapsedTime = events.map { it.getElapsedTime() }
-                .average()
-
-            monitorStatistics.averageProcessingTime = if (elapsedTime.isNaN()) {
-                0L
-            } else {
-                elapsedTime.toLong()
+        return MonitorStatistics().apply {
+            if (events.isNotEmpty()) {
+                topicDistribution = getTopicDistribution(events)
+                senderDistribution = getSenderDistribution(events)
+                maxProcessingTime = events.maxOf { it.getElapsedTime() }
+                minProcessingTime = events.minOf { it.getElapsedTime() }
+                averageProcessingTime = getAverageProcessingTime(events)
+                averageTextLength = getAverageTextLength(events)
+                processingHistory = fillEmptyTimeSlots(groupHistory(events))
             }
-
-            val average = events.filter { !it.text.isNullOrBlank() }
-                .mapNotNull { it.text?.length }
-                .average()
-            monitorStatistics.averageTextLength = if (!average.isNaN()) {
-                average.roundToLong()
-            } else {
-                0L
-            }
-
-            val processingHistory = groupBy(events)
-                .mapValues { it.value.map { event -> event.getElapsedTime() }.average() }.mapValues { getDefault(it) }
-                .mapValues { it.value / 1000 }.toList().sortedBy { it.first }.toMap().toMutableMap()
-
-            monitorStatistics.processingHistory = fillEmptyTimeSlots(processingHistory)
         }
-        return monitorStatistics
+    }
+
+    private fun groupHistory(events: List<Event>) = groupBy(events)
+        .mapValues { it.value.map { event -> event.getElapsedTime() }.average() }
+        .mapValues { getDefault(it) }
+        .mapValues { it.value / 1000 }.toList().sortedBy { it.first }.toMap().toMutableMap()
+
+    private fun getAverageTextLength(events: List<Event>): Long {
+        val average = events.filter { !it.text.isNullOrBlank() }
+            .mapNotNull { it.text?.length }
+            .average()
+        return if (!average.isNaN()) {
+            average.roundToLong()
+        } else {
+            0L
+        }
+    }
+
+    private fun getAverageProcessingTime(events: List<Event>): Long {
+        val elapsedTime = events.map { it.getElapsedTime() }.average()
+        return if (elapsedTime.isNaN()) {
+            0L
+        } else {
+            elapsedTime.toLong()
+        }
     }
 
     private fun fillEmptyTimeSlots(processingHistory: MutableMap<String, Double>): Map<String, Double> {

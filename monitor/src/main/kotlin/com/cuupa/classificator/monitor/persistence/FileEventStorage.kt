@@ -1,5 +1,6 @@
-package com.cuupa.classificator.monitor
+package com.cuupa.classificator.monitor.persistence
 
+import com.cuupa.classificator.monitor.service.Event
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value
 import java.io.File

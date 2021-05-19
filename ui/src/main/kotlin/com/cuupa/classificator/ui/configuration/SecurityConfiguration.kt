@@ -1,3 +1,6 @@
+package com.cuupa.classificator.ui.configuration
+
+import com.cuupa.classificator.engine.configuration.EngineConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -6,6 +9,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import com.cuupa.classificator.externalconfiguration.Config
+import com.cuupa.classificator.ui.handler.MonitorAccessDeniedHandler
+import com.cuupa.classificator.ui.handler.MonitorAuthenticationFailureHandler
+import org.apache.commons.logging.LogFactory
+import javax.annotation.PostConstruct
 
 @Configuration
 open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
@@ -73,5 +80,14 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
         } else {
             password ?: ""
         }
+    }
+
+    @PostConstruct
+    fun configLoaded() {
+        log.info("Loaded ${SecurityConfiguration::class.simpleName}")
+    }
+
+    companion object {
+        private val log = LogFactory.getLog(SecurityConfiguration::class.java)
     }
 }

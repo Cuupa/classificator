@@ -1,7 +1,6 @@
-package com.cuupa.classificator.monitor.sqlite
+package com.cuupa.classificator.monitor.persistence.sqlite
 
-import com.cuupa.classificator.monitor.Event
-import org.springframework.beans.factory.annotation.Autowired
+import com.cuupa.classificator.monitor.service.Event
 
 class EventService(private val eventRepository: EventRepository) {
 

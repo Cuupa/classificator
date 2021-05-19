@@ -1,7 +1,7 @@
-package com.cuupa.classificator.monitor.sqlite
+package com.cuupa.classificator.monitor.persistence.sqlite
 
-import com.cuupa.classificator.monitor.Event
-import com.cuupa.classificator.monitor.EventStorage
+import com.cuupa.classificator.monitor.persistence.EventStorage
+import com.cuupa.classificator.monitor.service.Event
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

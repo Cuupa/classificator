@@ -1,3 +1,5 @@
+package com.cuupa.classificator.ui.handler
+
 import org.apache.commons.logging.LogFactory
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication

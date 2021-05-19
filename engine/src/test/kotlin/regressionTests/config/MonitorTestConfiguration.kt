@@ -1,8 +1,8 @@
 package regressionTests.config
 
-import com.cuupa.classificator.monitor.EventStorage
-import com.cuupa.classificator.monitor.MockEventStorage
-import com.cuupa.classificator.monitor.Monitor
+import com.cuupa.classificator.monitor.persistence.EventStorage
+import com.cuupa.classificator.monitor.persistence.MockEventStorage
+import com.cuupa.classificator.monitor.service.Monitor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -11,7 +11,7 @@ open class MonitorTestConfiguration {
 
     @Bean
     open fun monitor(): Monitor {
-        return Monitor(eventStorage(), true, true)
+        return Monitor(eventStorage(), enabled = true, logText = true)
     }
 
     @Bean

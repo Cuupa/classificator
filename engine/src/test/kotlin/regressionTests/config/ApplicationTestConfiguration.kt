@@ -9,7 +9,7 @@ import com.cuupa.classificator.engine.services.TopicService
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
-import com.cuupa.classificator.monitor.Monitor
+import com.cuupa.classificator.monitor.service.Monitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean

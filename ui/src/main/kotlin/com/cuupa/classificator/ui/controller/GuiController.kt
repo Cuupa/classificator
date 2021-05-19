@@ -1,5 +1,8 @@
+package com.cuupa.classificator.ui.controller
+
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.ui.GuiProcess
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ModelAttribute

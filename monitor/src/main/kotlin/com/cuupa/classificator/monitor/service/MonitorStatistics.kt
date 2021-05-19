@@ -1,4 +1,4 @@
-package com.cuupa.classificator.monitor
+package com.cuupa.classificator.monitor.service
 
 class MonitorStatistics {
 

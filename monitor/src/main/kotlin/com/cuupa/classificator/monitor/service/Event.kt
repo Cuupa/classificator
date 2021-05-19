@@ -1,4 +1,4 @@
-package com.cuupa.classificator.monitor
+package com.cuupa.classificator.monitor.service
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder
 import java.time.LocalDateTime

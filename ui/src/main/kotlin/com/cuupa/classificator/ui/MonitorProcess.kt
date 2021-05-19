@@ -1,4 +1,6 @@
-import com.cuupa.classificator.monitor.Event
+package com.cuupa.classificator.ui
+
+import com.cuupa.classificator.monitor.service.Event
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 

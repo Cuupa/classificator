@@ -10,14 +10,19 @@ import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.externalconfiguration.Config
-import com.cuupa.classificator.monitor.Monitor
+import com.cuupa.classificator.externalconfiguration.ExternalConfiguration
+import com.cuupa.classificator.monitor.service.Monitor
+import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
+import javax.annotation.PostConstruct
 
 @Configuration
-open class ApplicationConfiguration {
+@Import(value = [ExternalConfiguration::class])
+open class EngineConfiguration {
 
     @Autowired
     private var configuration: Config? = null
@@ -82,5 +87,14 @@ open class ApplicationConfiguration {
         } else {
             knowledgbaseDir
         }
+    }
+
+    @PostConstruct
+    fun configLoaded() {
+        log.info("Loaded ${EngineConfiguration::class.simpleName}")
+    }
+
+    companion object {
+        private val log = LogFactory.getLog(EngineConfiguration::class.java)
     }
 }

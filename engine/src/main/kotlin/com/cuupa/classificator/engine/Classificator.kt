@@ -4,7 +4,7 @@ import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.domain.Sender
 import com.cuupa.classificator.domain.Topic
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
-import com.cuupa.classificator.monitor.Monitor
+import com.cuupa.classificator.monitor.service.Monitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

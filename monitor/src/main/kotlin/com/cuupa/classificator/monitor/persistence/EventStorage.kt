@@ -1,5 +1,6 @@
-package com.cuupa.classificator.monitor
+package com.cuupa.classificator.monitor.persistence
 
+import com.cuupa.classificator.monitor.service.Event
 import java.time.LocalDate
 
 abstract class EventStorage {

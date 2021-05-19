@@ -1,4 +1,4 @@
-package com.cuupa.classificator.monitor.sqlite
+package com.cuupa.classificator.monitor.persistence.sqlite
 
 import java.time.LocalDateTime
 import javax.persistence.Entity

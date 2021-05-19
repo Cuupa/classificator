@@ -1,4 +1,4 @@
-knowlegde_base: build/knowledgebase
+knowlegde_base: ../build/knowledgebase
 
 server.port: 8080
 

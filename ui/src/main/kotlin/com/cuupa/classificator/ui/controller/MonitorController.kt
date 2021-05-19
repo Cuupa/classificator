@@ -1,4 +1,6 @@
-import com.cuupa.classificator.monitor.Event
+package com.cuupa.classificator.ui.controller
+
+import com.cuupa.classificator.monitor.service.Event
 import com.google.gson.Gson
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -12,7 +14,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import javax.servlet.http.HttpServletResponse
-import com.cuupa.classificator.monitor.Monitor
+import com.cuupa.classificator.monitor.service.Monitor
+import com.cuupa.classificator.ui.MonitorProcess
 
 @Controller
 class MonitorController(private val monitor: Monitor, private val gson: Gson) {
