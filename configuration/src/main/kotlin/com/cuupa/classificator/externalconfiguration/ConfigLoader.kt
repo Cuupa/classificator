@@ -3,13 +3,12 @@ package com.cuupa.classificator.externalconfiguration
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.File
 
-class ConfigLoader(private val jackson: ObjectMapper) {
+class ConfigLoader(private val jackson: ObjectMapper, private val configFile: File) {
 
-    fun getConfig(): Config? {
-        return jackson.readValue(configFile, Config::class.java)
-    }
-
-    companion object {
-        val configFile = File("configuration.yml")
+    fun getConfig(): Config {
+        if(configFile.exists()) {
+            return jackson.readValue(configFile, Config::class.java)
+        }
+        return Config()
     }
 }

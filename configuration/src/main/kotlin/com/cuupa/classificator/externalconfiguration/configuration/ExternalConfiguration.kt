@@ -1,10 +1,13 @@
-package com.cuupa.classificator.externalconfiguration
+package com.cuupa.classificator.externalconfiguration.configuration
 
+import com.cuupa.classificator.externalconfiguration.Config
+import com.cuupa.classificator.externalconfiguration.ConfigLoader
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.io.File
 
 @Configuration
 open class ExternalConfiguration {
@@ -18,7 +21,7 @@ open class ExternalConfiguration {
     }
 
     @Bean
-    open fun configuration(): Config? {
-        return ConfigLoader(jackson()).getConfig()
+    open fun configuration(jackson: ObjectMapper): Config {
+        return ConfigLoader(jackson, File("configuration.yml")).getConfig()
     }
 }
