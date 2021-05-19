@@ -1,4 +1,4 @@
-import com.cuupa.classificator.knowledgebase.stripper.TextAndPosition
+import com.cuupa.classificator.engine.stripper.TextAndPosition
 
 class SplittedText {
     private var topText: List<TextAndPosition>? = null

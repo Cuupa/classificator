@@ -1,7 +1,7 @@
 package com.cuupa.classificator.api
 
-import com.cuupa.classificator.knowledgebase.Classificator
-import com.cuupa.classificator.knowledgebase.resultobjects.SemanticResult
+import com.cuupa.classificator.domain.SemanticResult
+import com.cuupa.classificator.engine.Classificator
 import com.google.gson.GsonBuilder
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema

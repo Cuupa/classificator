@@ -1,14 +1,14 @@
 package regressionTests.config
 
-import com.cuupa.classificator.knowledgebase.Classificator
-import com.cuupa.classificator.knowledgebase.KnowledgeManager
-import com.cuupa.classificator.knowledgebase.services.KnowledgeBaseExecutorService
-import com.cuupa.classificator.knowledgebase.services.MetadataService
-import com.cuupa.classificator.knowledgebase.services.SenderService
-import com.cuupa.classificator.knowledgebase.services.TopicService
-import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeBase
-import com.cuupa.classificator.knowledgebase.services.kb.KnowledgeBaseInitiator
-import com.cuupa.classificator.knowledgebase.stripper.PdfAnalyser
+import com.cuupa.classificator.engine.Classificator
+import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
+import com.cuupa.classificator.engine.services.MetadataService
+import com.cuupa.classificator.engine.services.SenderService
+import com.cuupa.classificator.engine.services.TopicService
+import com.cuupa.classificator.engine.services.kb.KnowledgeBase
+import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
+import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.monitor.Monitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value

@@ -1,21 +1,20 @@
 package com.cuupa.classificator.engine.configuration
 
-import com.cuupa.classificator.engine.knowledgebase.Classificator
-import com.cuupa.classificator.engine.knowledgebase.KnowledgeManager
-import com.cuupa.classificator.engine.knowledgebase.services.KnowledgeBaseExecutorService
-import com.cuupa.classificator.engine.knowledgebase.services.MetadataService
-import com.cuupa.classificator.engine.knowledgebase.services.SenderService
-import com.cuupa.classificator.engine.knowledgebase.services.TopicService
-import com.cuupa.classificator.engine.knowledgebase.services.kb.KnowledgeBase
-import com.cuupa.classificator.engine.knowledgebase.services.kb.KnowledgeBaseInitiator
-import com.cuupa.classificator.engine.knowledgebase.stripper.PdfAnalyser
+import com.cuupa.classificator.engine.Classificator
+import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
+import com.cuupa.classificator.engine.services.MetadataService
+import com.cuupa.classificator.engine.services.SenderService
+import com.cuupa.classificator.engine.services.TopicService
+import com.cuupa.classificator.engine.services.kb.KnowledgeBase
+import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
+import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.externalconfiguration.Config
 import com.cuupa.classificator.monitor.Monitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 
 @Configuration
 open class ApplicationConfiguration {
@@ -32,19 +31,25 @@ open class ApplicationConfiguration {
     }
 
     @Bean
-    open fun knowledgeManager(knowledgeBase: KnowledgeBase, executorService: KnowledgeBaseExecutorService): KnowledgeManager {
+    open fun knowledgeManager(
+        knowledgeBase: KnowledgeBase,
+        executorService: KnowledgeBaseExecutorService
+    ): KnowledgeManager {
         return KnowledgeManager(knowledgeBase, executorService)
     }
 
     @Bean
-    open fun knowledgeBaseExecutorService(topicService: TopicService, senderService: SenderService, metadataService: MetadataService): KnowledgeBaseExecutorService {
+    open fun knowledgeBaseExecutorService(
+        topicService: TopicService,
+        senderService: SenderService,
+        metadataService: MetadataService
+    ): KnowledgeBaseExecutorService {
         return KnowledgeBaseExecutorService(topicService, senderService, metadataService)
     }
 
     @Bean
-    open fun knowledgeBase(): KnowledgeBase {
-        return knowledgeBaseInitiator().initKnowledgeBase()
-    }
+    open fun knowledgeBase() = knowledgeBaseInitiator().initKnowledgeBase()
+
 
     @Bean
     open fun topicService(knowledgeBase: KnowledgeBase): TopicService {

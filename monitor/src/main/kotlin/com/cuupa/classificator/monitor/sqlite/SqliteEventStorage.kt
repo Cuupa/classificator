@@ -6,15 +6,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class SqliteEventStorage(private val eventService: EventService) : EventStorage() {
+internal class SqliteEventStorage(private val eventService: EventService) : EventStorage() {
 
-    override fun write(event: Event) {
-        eventService.save(event)
-    }
+    override fun write(event: Event) = eventService.save(event)
 
-    override fun get(start: LocalDate?, end: LocalDate?): List<Event> {
-        return eventService.list().filter { inBetween(it, start, end) }
-    }
+    override fun get(start: LocalDate?, end: LocalDate?) = eventService.list().filter { inBetween(it, start, end) }
 
     private fun inBetween(event: Event, start: LocalDate?, end: LocalDate?): Boolean {
         val startLocal = when {

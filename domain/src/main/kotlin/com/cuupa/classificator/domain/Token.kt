@@ -2,7 +2,7 @@ package com.cuupa.classificator.domain
 
 abstract class Token {
 
-    var tokenValue= mutableListOf<String>()
+    var tokenValue = mutableListOf<String>()
 
     abstract fun match(text: String?): Boolean
 
@@ -10,7 +10,5 @@ abstract class Token {
 
     abstract fun clone(): Token
 
-    override fun toString(): String {
-        return tokenValue.joinToString(",", "", "")
-    }
+    override fun toString() = tokenValue.joinToString(",", "", "")
 }

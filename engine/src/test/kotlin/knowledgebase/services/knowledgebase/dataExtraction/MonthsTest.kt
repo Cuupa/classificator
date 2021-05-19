@@ -1,6 +1,6 @@
 package knowledgebase.services.knowledgebase.dataExtraction
 
-import com.cuupa.classificator.knowledgebase.services.Months
+import com.cuupa.classificator.engine.services.Months
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

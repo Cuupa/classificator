@@ -1,7 +1,3 @@
 import com.cuupa.classificator.domain.SemanticResult
 
-class GuiProcess {
-    var inputText: String? = null
-    var result: List<SemanticResult>? = null
-
-}
+data class GuiProcess(var inputText: String?, var result: List<SemanticResult>?)

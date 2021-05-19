@@ -1,13 +1,11 @@
 package com.cuupa.classificator.domain
 
-import org.apache.juli.logging.LogFactory
-import org.apache.logging.log4j.util.Strings
+import org.apache.commons.logging.LogFactory
 
 class Topic : SemanticResultData() {
 
-    private val log = LogFactory.getLog(Topic::class.java)
-    private val tokenList: MutableList<Token> = mutableListOf()
-    var name: String = Strings.EMPTY
+    private val tokenList = mutableListOf<Token>()
+    var name: String = ""
 
     override fun addToken(token: Token) {
         tokenList.add(token)
@@ -27,5 +25,6 @@ class Topic : SemanticResultData() {
 
     companion object {
         const val OTHER = "OTHER"
+        private val log = LogFactory.getLog(Topic::class.java)
     }
 }

@@ -1,13 +1,8 @@
 package knowledgebase.stripper
 
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.junit.jupiter.api.Test
-import java.awt.Color
+import com.cuupa.classificator.engine.stripper.PdfAnalyser
+import com.cuupa.classificator.engine.stripper.TextAndPosition
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 
 internal class PdfAnalyserTest {
 

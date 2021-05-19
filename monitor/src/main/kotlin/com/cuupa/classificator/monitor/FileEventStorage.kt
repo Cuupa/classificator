@@ -1,6 +1,6 @@
 package com.cuupa.classificator.monitor
 
-import org.apache.juli.logging.LogFactory
+import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value
 import java.io.File
 import java.nio.file.Files
@@ -37,9 +37,7 @@ class FileEventStorage : EventStorage() {
         }
     }
 
-    private fun createDirectories(path: Path) {
-        path.toFile().parentFile.mkdirs()
-    }
+    private fun createDirectories(path: Path) = path.toFile().parentFile.mkdirs()
 
     private fun directoryExists(path: Path) = path.toFile().parentFile.exists()
 
@@ -51,9 +49,9 @@ class FileEventStorage : EventStorage() {
         }
 
         val files = Files.list(directoryOfFiles)
-                .filter { isCsv(it) }
-                .filter { isDatabase(it) }
-                .collect(Collectors.toList())
+            .filter { isCsv(it) }
+            .filter { isDatabase(it) }
+            .collect(Collectors.toList())
             .filterNotNull()
 
         val updatedFiles = files.filter { lastModifiedEventStorage < it.toFile().lastModified() }
@@ -106,8 +104,7 @@ class FileEventStorage : EventStorage() {
                 toLocalDateTime(fields, "PROCESSED")
             )
         } catch (e: Exception) {
-            log.error(data)
-            log.error(fields)
+            log.error(data, e)
             null
         }
     }
@@ -121,9 +118,7 @@ class FileEventStorage : EventStorage() {
         }
     }
 
-    private fun toString(fields: List<String>, fieldName: String): String {
-        return fields[Event.statisticalFields.indexOf(fieldName)]
-    }
+    private fun toString(fields: List<String>, fieldName: String) = fields[Event.statisticalFields.indexOf(fieldName)]
 
     private fun toLocalDateTime(fields: List<String>, fieldName: String) = LocalDateTime.parse(
         fields[Event.statisticalFields.indexOf(

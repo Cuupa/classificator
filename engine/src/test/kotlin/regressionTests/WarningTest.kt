@@ -1,6 +1,6 @@
 package regressionTests
 
-import com.cuupa.classificator.knowledgebase.KnowledgeManager
+import com.cuupa.classificator.engine.KnowledgeManager
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith

@@ -1,4 +1,4 @@
-import com.cuupa.classificator.knowledgebase.services.dataExtraction.IbanExtract
+import com.cuupa.classificator.engine.services.dataExtraction.IbanExtract
 import org.junit.jupiter.api.Test
 
 class IbanTest {

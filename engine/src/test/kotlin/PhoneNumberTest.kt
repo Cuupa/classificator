@@ -1,4 +1,4 @@
-import com.cuupa.classificator.knowledgebase.services.dataExtraction.PhoneNumberExtract
+import com.cuupa.classificator.engine.services.dataExtraction.PhoneNumberExtract
 import org.junit.jupiter.api.Test
 
 class PhoneNumberTest {

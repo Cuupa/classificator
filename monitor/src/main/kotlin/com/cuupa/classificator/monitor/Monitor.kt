@@ -2,7 +2,7 @@ package com.cuupa.classificator.monitor
 
 import com.cuupa.classificator.domain.SemanticResult
 import org.apache.commons.lang3.time.DateUtils
-import org.apache.juli.logging.LogFactory
+import org.apache.commons.logging.LogFactory
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -37,7 +37,7 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
             val event = if (logText) {
                 Event(version, text, getTopics(results), getSenders(results), getMetadata(results), start, end)
             } else {
-                Event(version, getTopics(results), getSenders(results), getMetadata(results), start, end)
+                Event(version, null, getTopics(results), getSenders(results), getMetadata(results), start, end)
             }
             eventStorage.write(event)
             if (log.isDebugEnabled) {
@@ -46,14 +46,12 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
         }
     }
 
-    fun getEvents(start: LocalDate?, end: LocalDate?): List<Event> {
-        return eventStorage.get(start, end)
-    }
+    fun getEvents(start: LocalDate?, end: LocalDate?) = eventStorage.get(start, end)
 
     fun getStatistics(start: LocalDate?, end: LocalDate?): MonitorStatistics {
         val events = getEvents(start, end)
         val monitorStatistics = MonitorStatistics()
-        if(events.isNotEmpty()) {
+        if (events.isNotEmpty()) {
             monitorStatistics.topicDistribution = getTopicDistribution(events)
             monitorStatistics.senderDistribution = getSenderDistribution(events)
             monitorStatistics.maxProcessingTime = events.maxOf { it.getElapsedTime() }

@@ -64,10 +64,8 @@ open class MonitorConfiguration {
 
     private fun hibernateProperties(): Properties {
         return Properties().apply {
-            setProperty("hibernate.hbm2ddl.auto", "update"); setProperty(
-            "hibernate.dialect",
-            "com.cuupa.classificator.monitor.sqlite.SqliteDialect"
-        )
+            setProperty("hibernate.hbm2ddl.auto", "update")
+            setProperty("hibernate.dialect", "com.cuupa.classificator.monitor.sqlite.SqliteDialect")
         }
     }
 

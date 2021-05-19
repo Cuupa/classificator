@@ -1,13 +1,11 @@
 package com.cuupa.classificator.domain
 
-import org.apache.logging.log4j.util.Strings
-
 /**
  * @author Simon Thiel (https://github.com/cuupa)
  */
 class Sender : SemanticResultData() {
 
-    private val tokenList: MutableList<Token> = mutableListOf()
+    private val tokenList = mutableListOf<Token>()
     var name: String = ""
     var numberOfOccurrences = 0
 

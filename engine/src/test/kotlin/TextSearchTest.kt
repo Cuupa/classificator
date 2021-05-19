@@ -1,4 +1,4 @@
-import com.cuupa.classificator.knowledgebase.services.text.TextSearch
+import com.cuupa.classificator.engine.services.text.TextSearch
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

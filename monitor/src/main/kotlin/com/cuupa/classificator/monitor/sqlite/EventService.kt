@@ -1,13 +1,14 @@
 package com.cuupa.classificator.monitor.sqlite
 
 import com.cuupa.classificator.monitor.Event
+import org.springframework.beans.factory.annotation.Autowired
 
 class EventService(private val eventRepository: EventRepository) {
 
     fun list(): List<Event> {
         return try {
             eventRepository.findAll().map { mapToDomainObject(it) }
-        } catch (e : Exception){
+        } catch (e: Exception) {
             listOf()
         }
     }
@@ -17,15 +18,15 @@ class EventService(private val eventRepository: EventRepository) {
     }
 
     private fun mapToEntity(event: Event): EventEntity {
-        val entity = EventEntity()
-        entity.kbVersion = event.kbVersion
-        entity.start = event.start
-        entity.end = event.end
-        entity.metadata = event.metadata.joinToString(";", "", "")
-        entity.results = event.results.joinToString(";", "", "")
-        entity.senders = event.senders.joinToString(";", "", "")
-        entity.text = event.text
-        return entity
+        return EventEntity().apply {
+            kbVersion = event.kbVersion
+            start = event.start
+            end = event.end
+            metadata = event.metadata.joinToString(";", "", "")
+            results = event.results.joinToString(";", "", "")
+            senders = event.senders.joinToString(";", "", "")
+            text = event.text
+        }
     }
 
     private fun mapToDomainObject(it: EventEntity): Event {

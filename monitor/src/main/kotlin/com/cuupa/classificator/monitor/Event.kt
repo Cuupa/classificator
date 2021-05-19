@@ -16,17 +16,7 @@ data class Event(
     val end: LocalDateTime
 ) {
 
-
     val processingTime = getElapsedTime().toString() + " ms"
-
-    constructor(
-        kbVersion: String,
-        results: List<String>,
-        senders: List<String>,
-        metadata: List<String>,
-        start: LocalDateTime,
-        end: LocalDateTime
-    ) : this(kbVersion, null, results, senders, metadata, start, end)
 
     override fun toString(): String {
         return ReflectionToStringBuilder.reflectionToString(this)
