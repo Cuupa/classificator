@@ -1,0 +1,29 @@
+package com.cuupa.classificator.engine.services.token
+
+import com.cuupa.classificator.domain.Token
+import com.cuupa.classificator.engine.services.text.TextSearch
+
+class OneOf : Token() {
+
+    override var distance = 0
+        private set
+
+    override fun match(text: String?): Boolean {
+        val textSearch = TextSearch(text)
+        for (value in tokenValue) {
+            if (textSearch.contains(value)) {
+                distance = textSearch.distance
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun clone() = OneOf().apply { tokenValue = ArrayList(tokenValue) }
+
+    override fun toString() = "OneOf ${super.toString()}"
+
+    companion object {
+        const val name = "oneOf"
+    }
+}

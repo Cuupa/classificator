@@ -1,0 +1,15 @@
+knowlegde_base: ../build/knowledgebase
+
+server.port: 8080
+
+logging.level:
+  root: ERROR
+  com.cuupa.classificator: WARN
+
+classificator:
+  kbfiles: ${knowlegde_base}
+
+  monitor:
+    enabled: true
+    logText: true
+    database-name: "monitor.db"
