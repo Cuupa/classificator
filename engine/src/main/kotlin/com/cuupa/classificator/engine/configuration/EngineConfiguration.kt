@@ -10,7 +10,7 @@ import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.externalconfiguration.Config
-import com.cuupa.classificator.externalconfiguration.ExternalConfiguration
+import com.cuupa.classificator.externalconfiguration.configuration.ExternalConfiguration
 import com.cuupa.classificator.monitor.service.Monitor
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired

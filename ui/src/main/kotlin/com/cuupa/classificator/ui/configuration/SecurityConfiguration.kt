@@ -1,6 +1,9 @@
 package com.cuupa.classificator.ui.configuration
 
-import com.cuupa.classificator.engine.configuration.EngineConfiguration
+import com.cuupa.classificator.externalconfiguration.Config
+import com.cuupa.classificator.ui.handler.MonitorAccessDeniedHandler
+import com.cuupa.classificator.ui.handler.MonitorAuthenticationFailureHandler
+import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -8,10 +11,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import com.cuupa.classificator.externalconfiguration.Config
-import com.cuupa.classificator.ui.handler.MonitorAccessDeniedHandler
-import com.cuupa.classificator.ui.handler.MonitorAuthenticationFailureHandler
-import org.apache.commons.logging.LogFactory
 import javax.annotation.PostConstruct
 
 @Configuration
