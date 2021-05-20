@@ -1,20 +1,31 @@
 import com.cuupa.classificator.engine.services.dataExtraction.IbanExtract
+import com.cuupa.classificator.engine.services.kb.KnowledgeFileExtractor
 import org.junit.jupiter.api.Test
+import java.io.File
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class IbanTest {
 
-    val unitToTest =
-        IbanExtract("[a-z]{2}[0-9]{2}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{4}[\\s]?[0-9]{2}")
+    val unitToTest = IbanExtract(knowledgeFile.regex.find { it.first == "IBAN" }?.second ?: "")
 
     @Test
-    fun test() {
-        val pattern = unitToTest.regex
-        val result = pattern.find(IBANTestData.normalizedIBAN)
-        val groupValues = result?.groupValues
-        groupValues?.forEach { println(unitToTest.normalize(it)) }
+    fun testValidIbans() {
+        IBANTestData.validIbans.forEach {
+            val values = unitToTest.regex.find(it)?.groupValues
+            assertNotNull(values, it)
+        }
+    }
 
-        val result2 = pattern.find(IBANTestData.withoutWhiteSpaces)
-        val groupValues2 = result2?.groupValues
-        groupValues2?.forEach { println(unitToTest.normalize(it)) }
+    @Test
+    fun testInvalidIbans() {
+        IBANTestData.invalidIbans.forEach {
+            val values = unitToTest.regex.find(it)?.groupValues
+            assertNull(values, it)
+        }
+    }
+
+    companion object {
+        val knowledgeFile = KnowledgeFileExtractor.extractKnowledgebase(File("../build/knowledgebase/kb-DEV.db"))
     }
 }
