@@ -19,10 +19,8 @@ class PdfAnalyser {
         return null
     }
 
-    private fun getStripper(startPage: Int, endPage: Int): LocationAndSizeStripper {
-        val stripper = LocationAndSizeStripper()
-        stripper.startPage = startPage
-        stripper.endPage = endPage
-        return stripper
+    private fun getStripper(startPage: Int, endPage: Int) = LocationAndSizeStripper().apply {
+        this.startPage = startPage
+        this.endPage = endPage
     }
 }

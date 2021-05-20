@@ -46,10 +46,9 @@ class MetaDataToken {
             searchStream.forEach {
                 if (tokens[it] !is Not && tokens[it].match(text)) {
                     val metadataValue = compiledText[0][it].second
-                    if (parallel) {
-                        addMetadataSynchronized(match, metadataValue, tokens, it)
-                    } else {
-                        addMetadata(match, metadataValue, tokens, it)
+                    when {
+                        parallel -> addMetadataSynchronized(match, metadataValue, tokens, it)
+                        else -> addMetadata(match, metadataValue, tokens, it)
                     }
                 }
             }
@@ -115,9 +114,10 @@ class MetaDataToken {
 
     private fun getIntStream(size: Int): IntStream {
         val searchStream = IntStream.range(0, size)
-        return if (size > 50) {
-            searchStream.parallel()
-        } else searchStream
+        return when {
+            size > 50 -> searchStream.parallel()
+            else -> searchStream
+        }
     }
 
     private fun cloneTokens(token: Token, compiledText: List<List<Pair<String, String>>>): List<Token> {
@@ -138,10 +138,9 @@ class MetaDataToken {
     private fun getMatchesMap(match: Map<Metadata, Int>): Map<Int, MutableList<Metadata>> {
         val entries = mutableMapOf<Int, MutableList<Metadata>>()
         match.forEach { (key: Metadata, value: Int) ->
-            if (entries.containsKey(value)) {
-                entries[value]?.add(key)
-            } else {
-                entries[value] = mutableListOf(key)
+            when {
+                entries.containsKey(value) -> entries[value]?.add(key)
+                else -> entries[value] = mutableListOf(key)
             }
         }
         return entries
@@ -163,13 +162,14 @@ class MetaDataToken {
 
     private fun getExtractForName(name: String): Extract {
         for (pair in regexContent) {
-            when {
-                isDateExtract(name, pair) -> return DateExtract(pair.second)
-                isIbanExtract(name, pair) -> return IbanExtract(pair.second)
-                isSenderExtract(name, pair) -> return SenderExtract(pair.second)
-                isRegexExtract(name, pair) -> return RegexExtract(pair.second)
-                isPhoneNumberExtract(name, pair) -> return PhoneNumberExtract(pair.second)
-                isTimespanExtract(name, pair) -> return TimespanExtract(pair.second)
+            return when {
+                isDateExtract(name, pair) ->  DateExtract(pair.second)
+                isIbanExtract(name, pair) ->  IbanExtract(pair.second)
+                isSenderExtract(name, pair) ->  SenderExtract(pair.second)
+                isRegexExtract(name, pair) ->  RegexExtract(pair.second)
+                isPhoneNumberExtract(name, pair) ->  PhoneNumberExtract(pair.second)
+                isTimespanExtract(name, pair) ->  TimespanExtract(pair.second)
+                else -> throw RuntimeException("There is no extract for $name specified")
             }
         }
         throw RuntimeException("There is no extract for $name specified")

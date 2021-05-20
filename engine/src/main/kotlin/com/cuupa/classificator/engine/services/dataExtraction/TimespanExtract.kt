@@ -2,9 +2,7 @@ package com.cuupa.classificator.engine.services.dataExtraction
 
 class TimespanExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.IGNORE_CASE)) {
 
-    override fun normalize(value: String): String {
-        return value
-    }
+    override fun normalize(value: String) = value
 
     override fun get(
         text: String,
@@ -33,5 +31,4 @@ class TimespanExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.I
     companion object {
         const val name = "[TIMESPAN]"
     }
-
 }

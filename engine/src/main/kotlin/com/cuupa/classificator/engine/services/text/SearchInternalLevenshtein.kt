@@ -36,9 +36,7 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
                 }
                 currentPositionPlainText++
             }
-            else -> {
-                currentPositionPlainText++
-            }
+            else -> currentPositionPlainText++
         }
         return this
     }

@@ -46,10 +46,9 @@ object KnowledgeFileParser {
         return MetaDataToken().apply {
             val charArray = kbFile.toCharArray()
             for (index in charArray.indices) {
-                if (charArray[index] == '$') {
-                    name = findExtractName(charArray, index)
-                } else if (charArray[index] == '(' && name.isNotEmpty()) {
-                    addToken(Tokens[TokenTextPointer(charArray, index)])
+                when {
+                    charArray[index] == '$' -> name = findExtractName(charArray, index)
+                    charArray[index] == '(' && name.isNotEmpty() -> addToken(Tokens[TokenTextPointer(charArray, index)])
                 }
             }
         }
@@ -64,7 +63,7 @@ object KnowledgeFileParser {
     fun parseTopicFile(kbFile: String): Topic {
         val split = kbFile.split(RegexConstants.equalPattern)
         val topicName = split[0].trim()
-        return(fillToken(kbFile, Topic()) as Topic)
+        return (fillToken(kbFile, Topic()) as Topic)
             .apply { name = topicName }
     }
 

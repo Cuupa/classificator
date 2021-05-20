@@ -21,11 +21,15 @@ class LocationAndSizeStripper : PDFTextStripper() {
         var textAndPosition = TextAndPosition()
         for (textPosition in textPositions) {
             if (!isEmpty(textPosition)) {
-                textAndPosition.add(textPosition.unicode, textPosition.xDirAdj,
-                        textPosition.widthDirAdj, textPosition.yDirAdj, textPosition.heightDir)
+                textAndPosition.add(
+                    textPosition.unicode, textPosition.xDirAdj,
+                    textPosition.widthDirAdj, textPosition.yDirAdj, textPosition.heightDir
+                )
             } else {
-                textAndPosition.add(textPosition.unicode, textPosition.xDirAdj,
-                        textPosition.widthDirAdj, textPosition.yDirAdj, textPosition.heightDir)
+                textAndPosition.add(
+                    textPosition.unicode, textPosition.xDirAdj,
+                    textPosition.widthDirAdj, textPosition.yDirAdj, textPosition.heightDir
+                )
                 list.add(textAndPosition)
                 textAndPosition = TextAndPosition()
             }
@@ -35,9 +39,7 @@ class LocationAndSizeStripper : PDFTextStripper() {
         }
     }
 
-    private fun isEmpty(textPosition: TextPosition): Boolean {
-        return textPosition.unicode == null || textPosition.unicode == " "
-    }
+    private fun isEmpty(textPosition: TextPosition) = textPosition.unicode == null || textPosition.unicode == " "
 
     fun setTextAlreadyParsed() {
         textAlreadyParsed = true

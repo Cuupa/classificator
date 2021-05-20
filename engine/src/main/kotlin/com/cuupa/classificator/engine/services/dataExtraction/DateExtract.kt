@@ -7,15 +7,16 @@ class DateExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.IGNOR
 
     // TODO: normalize months in non numeric values
     override fun normalize(value: String): String {
-        if (value.contains(".")) {
+        return if (value.contains(".")) {
             val dateFields = value.split(RegexConstants.dotPattern)
             return when {
                 dateFields.size == 3 -> normalizeDate(dateFields)
                 dateFields.size == 2 && value.contains(" ") -> parseAndNormalizeDate(dateFields)
                 else -> value
             }
+        } else {
+            value
         }
-        return value
     }
 
     private fun parseAndNormalizeDate(dateFields: List<String>): String {
@@ -24,18 +25,9 @@ class DateExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.IGNOR
     }
 
     private fun fill(day: String, month: String, year: String): String {
-        var day1 = day
-        var month1 = month
-        var year1 = year
-        if (day1.length == 1) {
-            day1 = "0$day1"
-        }
-        if (month1.length == 1) {
-            month1 = "0$month1"
-        }
-        if (year1.length == 2) {
-            year1 = "20$year1"
-        }
+        val day1 = if(day.length == 1) "0$day" else day
+        val month1 = if(month.length == 1) "0$month" else month
+        val year1 = if(year.length == 2) "20$year" else year
         return "$day1.$month1.$year1"
     }
 

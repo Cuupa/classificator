@@ -13,9 +13,10 @@ class TextSearch(plainText: String?) {
         if (searchText.isEmpty || plainText.isEmpty) {
             return false
         }
-        return if (searchText.text == plainText.text) {
-            true
-        } else search(plainText, searchText, tolerance)
+        return when (searchText.text) {
+            plainText.text -> true
+            else -> search(plainText, searchText, tolerance)
+        }
     }
 
     operator fun contains(text: String?): Boolean {
@@ -24,9 +25,10 @@ class TextSearch(plainText: String?) {
 
     fun countOccurence(text: String?): Int {
         val searchText = SearchText(text ?: "")
-        return if (searchText.isEmpty || plainText.isEmpty) {
-            0
-        } else count(plainText, searchText, 1)
+        return when {
+            searchText.isEmpty || plainText.isEmpty -> 0
+            else -> count(plainText, searchText, 1)
+        }
     }
 
     //TODO: This is still a little bit buggy. Need to redesign this

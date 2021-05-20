@@ -6,9 +6,7 @@ object StringConstants {
     const val newLine = "\n"
     const val carriageReturn = "\r"
 
-    const val metaSuffix = ".meta"
-    const val dslSuffix = ".dsl"
-    const val regxSuffix = ".regx"
+
 
     private const val oneOf = "oneOf"
     private const val not = "not"

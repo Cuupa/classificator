@@ -23,10 +23,11 @@ object Tokens {
         var tokenName = ""
         for (i in pointer.index - 1 downTo 1) {
             tokenName =
-                if (pointer[i] != '{' && pointer[i] != ',' && pointer[i].toInt() > 64 && pointer[i].toInt() < 123) {
-                    pointer[i].toString() + tokenName
-                } else {
-                    return tokenName
+                when {
+                    pointer[i] != '{' && pointer[i] != ',' && pointer[i].toInt() > 64 && pointer[i].toInt() < 123 -> {
+                        pointer[i].toString() + tokenName
+                    }
+                    else -> return tokenName
                 }
         }
         return tokenName
@@ -36,14 +37,18 @@ object Tokens {
         val value: MutableList<String> = mutableListOf()
         var tokenValue = StringBuilder()
         for (i in pointer.index + 1 until pointer.charSize) {
-            if (pointer[i] == ',') {
-                value.add(tokenValue.toString())
-                tokenValue = StringBuilder()
-            } else if (pointer[i] != '"' && pointer[i] != ')') {
-                tokenValue.append(pointer[i])
-            } else if (pointer[i] == ')') {
-                value.add(tokenValue.toString())
-                return value
+            when {
+                pointer[i] == ',' -> {
+                    value.add(tokenValue.toString())
+                    tokenValue = StringBuilder()
+                }
+                pointer[i] != '"' && pointer[i] != ')' -> {
+                    tokenValue.append(pointer[i])
+                }
+                pointer[i] == ')' -> {
+                    value.add(tokenValue.toString())
+                    return value
+                }
             }
         }
         return value

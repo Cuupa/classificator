@@ -11,7 +11,6 @@ class KnowledgeBaseInitiator(private val knowledgebaseDir: String) {
 
     fun initKnowledgeBase(): KnowledgeBase {
         val knowledgebase = File(knowledgebaseDir)
-
         val kb = getKnowledgebase(knowledgebase)
 
         if (!kb.isValid()) {
@@ -27,17 +26,19 @@ class KnowledgeBaseInitiator(private val knowledgebaseDir: String) {
     }
 
     private fun getKnowledgebase(knowledgebase: File): KnowledgeBase {
-        if (isFileSpecified(knowledgebase)) {
-           return KnowledgeFileExtractor.extractKnowledgebase(knowledgebase)
-        } else if (knowledgebase.isDirectory) {
-            val files = knowledgebase.list()?.filter { it.endsWith(knowledgebaseEnding) } ?: listOf()
-            val filename = getFilename(getMaxVersion(files), files)
+        return when {
+            isFileSpecified(knowledgebase) -> KnowledgeFileExtractor.extractKnowledgebase(knowledgebase).create()
+            knowledgebase.isDirectory -> {
+                val files = knowledgebase.list()?.filter { it.endsWith(knowledgebaseEnding) } ?: listOf()
+                val filename = getFilename(getMaxVersion(files), files)
 
-            if (!filename.isNullOrEmpty()) {
-                return KnowledgeFileExtractor.extractKnowledgebase(File(knowledgebase, filename))
+                when {
+                    !filename.isNullOrEmpty() -> KnowledgeFileExtractor.extractKnowledgebase(File(knowledgebase, filename)).create()
+                    else -> KnowledgeBase()
+                }
             }
+            else -> KnowledgeBase()
         }
-        return KnowledgeBase()
     }
 
     private fun isFileSpecified(knowledgebase: File) =
@@ -55,16 +56,20 @@ class KnowledgeBaseInitiator(private val knowledgebaseDir: String) {
     }
 
     private fun getMaxVersion(files: List<String>) =
-        files.mapNotNull { versionRegex.find(it) }.map { it.value.replace(".", "") }.map {
-            try {
-                it.toInt()
-            } catch(e: Exception){
-                0
-            }
-        }
+        files.mapNotNull { versionRegex.find(it) }
+            .map { it.value.replace(".", "") }
+            .map { it.tryToInt() }
             .maxOfOrNull { it }
 
     companion object {
         private val log = LogFactory.getLog(KnowledgeBaseInitiator::class.java)
+    }
+}
+
+private fun String.tryToInt(): Int {
+    return try {
+        this.toInt()
+    } catch (e: Exception) {
+        0
     }
 }

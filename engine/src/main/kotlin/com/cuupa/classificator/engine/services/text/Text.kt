@@ -45,21 +45,19 @@ open class Text internal constructor(var text: String) {
         get() = stringArray.isEmpty()
 
     override fun equals(other: Any?): Boolean {
-        if (other !is Array<*>) {
-            return false
-        }
-        if (stringArray == other) {
-            return true
-        }
-        if (stringArray.size != other.size) {
-            return false
-        }
-        for (i in stringArray.indices) {
-            if (stringArray[i] != other[i]) {
-                return false
+        return when {
+            other !is Array<*> -> false
+            stringArray == other -> true
+            stringArray.size != other.size -> false
+            else -> {
+                for (i in stringArray.indices) {
+                    if (stringArray[i] != other[i]) {
+                        false
+                    }
+                }
+                true
             }
         }
-        return true
     }
 
     override fun hashCode(): Int {
