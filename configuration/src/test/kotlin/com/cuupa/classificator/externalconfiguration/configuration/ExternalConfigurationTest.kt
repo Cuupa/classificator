@@ -8,15 +8,14 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
-import org.springframework.context.annotation.Profile
 import java.io.File
 
 @Configuration
 @Primary
-open class ExternalConfigurationTest {
+class ExternalConfigurationTest {
 
     @Bean
-    open fun jackson(): ObjectMapper {
+    fun jackson(): ObjectMapper {
         return ObjectMapper(YAMLFactory()).apply {
             enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -24,7 +23,7 @@ open class ExternalConfigurationTest {
     }
 
     @Bean
-    open fun configurationPrimary(jackson: ObjectMapper): Config {
+    fun configurationPrimary(jackson: ObjectMapper): Config {
         return ConfigLoader(jackson, File("src/test/resources/configuration.yml")).getConfig()
     }
 }

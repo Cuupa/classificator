@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 @SpringBootTest(classes = [ApplicationTestConfiguration::class])
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
-open class SEPATest : LocalRegressionTest() {
+class SEPATest : LocalRegressionTest() {
 
     private val path = "/home/${System.getProperty("user.name")}/testdata/SEPA"
 
@@ -29,7 +29,7 @@ open class SEPATest : LocalRegressionTest() {
      * So just comment it in if its running localy and comment out if pushing
      */
     @Test
-    open fun testShouldBeBill() {
+    fun testShouldBeBill() {
         val files = getFilesOfPath(path)
         val contents = files.map { getFileContent(it) }
         var bill = 0

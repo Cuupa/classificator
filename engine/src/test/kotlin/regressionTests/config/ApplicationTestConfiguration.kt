@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Import
  */
 @Configuration
 @Import(value = [MonitorTestConfiguration::class])
-open class ApplicationTestConfiguration {
+class ApplicationTestConfiguration {
 
     @Autowired
     private var monitor: Monitor? = null
@@ -30,47 +30,47 @@ open class ApplicationTestConfiguration {
     var knowledgbaseDir: String = ""
 
     @Bean
-    open fun classificator(): Classificator {
+    fun classificator(): Classificator {
         return Classificator(knowledgeManager(), analyser(), monitor!!)
     }
 
     @Bean
-    open fun knowledgeManager(): KnowledgeManager {
+    fun knowledgeManager(): KnowledgeManager {
         return KnowledgeManager(knowledgeBase(), knowledgeBaseExecutorService())
     }
 
     @Bean
-    open fun knowledgeBaseExecutorService(): KnowledgeBaseExecutorService {
+    fun knowledgeBaseExecutorService(): KnowledgeBaseExecutorService {
         return KnowledgeBaseExecutorService(topicService(), senderService(), metadataService())
     }
 
     @Bean
-    open fun knowledgeBase(): KnowledgeBase {
+    fun knowledgeBase(): KnowledgeBase {
         return knowledgeBaseInitiator().initKnowledgeBase()
     }
 
     @Bean
-    open fun topicService(): TopicService {
+    fun topicService(): TopicService {
         return TopicService(knowledgeBase().topicList)
     }
 
     @Bean
-    open fun senderService(): SenderService {
+    fun senderService(): SenderService {
         return SenderService(knowledgeBase().sendersList)
     }
 
     @Bean
-    open fun metadataService(): MetadataService {
+    fun metadataService(): MetadataService {
         return MetadataService(knowledgeBase().metadataList)
     }
 
     @Bean
-    open fun knowledgeBaseInitiator(): KnowledgeBaseInitiator {
+    fun knowledgeBaseInitiator(): KnowledgeBaseInitiator {
         return KnowledgeBaseInitiator(knowledgbaseDir)
     }
 
     @Bean
-    open fun analyser(): PdfAnalyser {
+    fun analyser(): PdfAnalyser {
         return PdfAnalyser()
     }
 }

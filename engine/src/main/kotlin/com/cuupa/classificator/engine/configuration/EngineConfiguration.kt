@@ -22,7 +22,7 @@ import javax.annotation.PostConstruct
 
 @Configuration
 @Import(value = [ExternalConfiguration::class])
-open class EngineConfiguration {
+class EngineConfiguration {
 
     @Autowired
     private var configuration: Config? = null
@@ -31,12 +31,12 @@ open class EngineConfiguration {
     private var knowledgbaseDir: String = ""
 
     @Bean
-    open fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor): Classificator {
+    fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor): Classificator {
         return Classificator(knowledgeManager, analyser, monitor)
     }
 
     @Bean
-    open fun knowledgeManager(
+    fun knowledgeManager(
         knowledgeBase: KnowledgeBase,
         executorService: KnowledgeBaseExecutorService
     ): KnowledgeManager {
@@ -44,7 +44,7 @@ open class EngineConfiguration {
     }
 
     @Bean
-    open fun knowledgeBaseExecutorService(
+    fun knowledgeBaseExecutorService(
         topicService: TopicService,
         senderService: SenderService,
         metadataService: MetadataService
@@ -53,31 +53,31 @@ open class EngineConfiguration {
     }
 
     @Bean
-    open fun knowledgeBase() = knowledgeBaseInitiator().initKnowledgeBase()
+    fun knowledgeBase() = knowledgeBaseInitiator().initKnowledgeBase()
 
 
     @Bean
-    open fun topicService(knowledgeBase: KnowledgeBase): TopicService {
+    fun topicService(knowledgeBase: KnowledgeBase): TopicService {
         return TopicService(knowledgeBase.topicList)
     }
 
     @Bean
-    open fun senderService(knowledgeBase: KnowledgeBase): SenderService {
+    fun senderService(knowledgeBase: KnowledgeBase): SenderService {
         return SenderService(knowledgeBase.sendersList)
     }
 
     @Bean
-    open fun metadataService(knowledgeBase: KnowledgeBase): MetadataService {
+    fun metadataService(knowledgeBase: KnowledgeBase): MetadataService {
         return MetadataService(knowledgeBase.metadataList)
     }
 
     @Bean
-    open fun knowledgeBaseInitiator(): KnowledgeBaseInitiator {
+    fun knowledgeBaseInitiator(): KnowledgeBaseInitiator {
         return KnowledgeBaseInitiator(getKnowledgeBaseDir())
     }
 
     @Bean
-    open fun analyser(): PdfAnalyser {
+    fun analyser(): PdfAnalyser {
         return PdfAnalyser()
     }
 

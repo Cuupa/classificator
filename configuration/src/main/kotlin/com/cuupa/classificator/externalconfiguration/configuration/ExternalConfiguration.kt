@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration
 import java.io.File
 
 @Configuration
-open class ExternalConfiguration {
+class ExternalConfiguration {
 
     @Bean
-    open fun jackson(): ObjectMapper {
+    fun jackson(): ObjectMapper {
         return ObjectMapper(YAMLFactory()).apply {
             enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -21,7 +21,7 @@ open class ExternalConfiguration {
     }
 
     @Bean
-    open fun configuration(jackson: ObjectMapper): Config {
+    fun configuration(jackson: ObjectMapper): Config {
         return ConfigLoader(jackson, File("configuration.yml")).getConfig()
     }
 }

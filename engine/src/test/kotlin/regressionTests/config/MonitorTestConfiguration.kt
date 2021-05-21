@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class MonitorTestConfiguration {
+class MonitorTestConfiguration {
 
     @Bean
-    open fun monitor(): Monitor {
+    fun monitor(): Monitor {
         return Monitor(eventStorage(), enabled = true, logText = true)
     }
 
     @Bean
-    open fun eventStorage(): EventStorage {
+    fun eventStorage(): EventStorage {
         return MockEventStorage()
     }
 }

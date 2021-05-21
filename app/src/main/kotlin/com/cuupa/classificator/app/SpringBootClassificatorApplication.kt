@@ -1,16 +1,16 @@
 package com.cuupa.classificator.app
 
-import org.springframework.boot.SpringApplication
+import org.springframework.boot.SpringApplication.run
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
-open class SpringBootClassificatorApplication : SpringBootServletInitializer() {
+class SpringBootClassificatorApplication : SpringBootServletInitializer() {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            SpringApplication.run(SpringBootClassificatorApplication::class.java, *args)
+            run(SpringBootClassificatorApplication::class.java, *args)
         }
     }
 }

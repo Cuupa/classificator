@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct
 @Configuration
 @Import(value = [EngineConfiguration::class, SecurityConfiguration::class, MonitorConfiguration::class])
 @ComponentScan(basePackages = ["com.cuupa.classificator"])
-open class ApplicationConfiguration {
+class ApplicationConfiguration {
 
     @PostConstruct
     fun configLoaded() {

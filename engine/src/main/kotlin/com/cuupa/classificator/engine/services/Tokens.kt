@@ -24,7 +24,7 @@ object Tokens {
         for (i in pointer.index - 1 downTo 1) {
             tokenName =
                 when {
-                    pointer[i] != '{' && pointer[i] != ',' && pointer[i].toInt() > 64 && pointer[i].toInt() < 123 -> {
+                    pointer[i] != '{' && pointer[i] != ',' && pointer[i].code > 64 && pointer[i].code < 123 -> {
                         pointer[i].toString() + tokenName
                     }
                     else -> return tokenName

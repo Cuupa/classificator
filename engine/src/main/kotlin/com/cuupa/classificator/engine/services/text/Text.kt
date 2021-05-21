@@ -2,6 +2,7 @@ package com.cuupa.classificator.engine.services.text
 
 import com.cuupa.classificator.engine.RegexConstants
 import com.cuupa.classificator.engine.StringConstants
+import java.util.*
 
 open class Text internal constructor(var text: String) {
 
@@ -13,7 +14,7 @@ open class Text internal constructor(var text: String) {
     }
 
     private fun normalizeText(text: String): String {
-        return text.toLowerCase()
+        return text.lowercase(Locale.getDefault())
             .replace(StringConstants.tabstop, StringConstants.blank)
             .replace("\n\r", StringConstants.blank)
             .replace("\r\n", StringConstants.blank)

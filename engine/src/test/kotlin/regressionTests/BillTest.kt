@@ -18,7 +18,7 @@ import kotlin.test.assertEquals
 @SpringBootTest(classes = [ApplicationTestConfiguration::class, MonitorTestConfiguration::class])
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
-open class BillTest : LocalRegressionTest() {
+class BillTest : LocalRegressionTest() {
 
     private val path = "/home/${System.getProperty("user.name")}/testdata/bill"
 
@@ -30,7 +30,7 @@ open class BillTest : LocalRegressionTest() {
      * So just comment it in if its running localy and comment out if pushing
      */
     @Test
-    open fun testShouldBeBill() {
+    fun testShouldBeBill() {
         val files = getFilesOfPath(path)
         val contents = files.map { getFileContent(it) }
         var bill = 0

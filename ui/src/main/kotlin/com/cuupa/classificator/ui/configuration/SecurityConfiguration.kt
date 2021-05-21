@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import javax.annotation.PostConstruct
 
 @Configuration
-open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
     private var configuration: Config? = null
@@ -56,10 +56,10 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     private fun authenticationFailureHandler() = MonitorAuthenticationFailureHandler()
 
     @Bean
-    open fun accessDeniedHandler() = MonitorAccessDeniedHandler()
+    fun accessDeniedHandler() = MonitorAccessDeniedHandler()
 
     @Autowired
-    open fun configureGlobal(auth: AuthenticationManagerBuilder) {
+    fun configureGlobal(auth: AuthenticationManagerBuilder) {
         auth.inMemoryAuthentication()
             .withUser(getUsername()).password("{noop}${getPassword()}").roles("USER")
     }
