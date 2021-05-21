@@ -62,7 +62,7 @@ data class Event(
             return statisticalFields.joinToString(semicolon, "", newLine())
         }
 
-        private val semicolon = ";"
+        private const val semicolon = ";"
         private fun newLine() = System.getProperty("line.separator")
     }
 }

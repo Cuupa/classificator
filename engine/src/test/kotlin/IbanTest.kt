@@ -7,7 +7,7 @@ import kotlin.test.assertNull
 
 class IbanTest {
 
-    val unitToTest = IbanExtract(knowledgeFile.regex.find { it.first == "IBAN" }?.second ?: "")
+    private val unitToTest = IbanExtract(knowledgeFile.regex.find { it.first == "IBAN" }?.second ?: "")
 
     @Test
     fun testValidIbans() {

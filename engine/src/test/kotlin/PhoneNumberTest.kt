@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test
 
 class PhoneNumberTest {
 
-    val unitToTest = PhoneNumberExtract("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")
+    private val unitToTest = PhoneNumberExtract("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")
 
     @Test
     fun test() {

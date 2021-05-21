@@ -6,8 +6,6 @@ object StringConstants {
     const val newLine = "\n"
     const val carriageReturn = "\r"
 
-
-
     private const val oneOf = "oneOf"
     private const val not = "not"
     private const val all = "all"

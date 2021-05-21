@@ -5,9 +5,9 @@ class TextAndPosition {
     var value = ""
         private set
     var x = 0f
-    var toX = 0f
+    private var toX = 0f
     var y = 0f
-    var height = 0f
+    private var height = 0f
 
     fun add(value: String, xDirAdj: Float, width: Float, yDirAdj: Float,
             heightDir: Float) {

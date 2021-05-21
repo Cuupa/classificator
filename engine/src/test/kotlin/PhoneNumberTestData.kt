@@ -1,6 +1,6 @@
 object PhoneNumberTestData {
 
-    val test = "0301234567"
+    const val test = "0301234567"
 
-    val germanPrefix = "+4930 1234567"
+    const val germanPrefix = "+4930 1234567"
 }

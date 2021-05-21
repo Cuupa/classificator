@@ -7,7 +7,7 @@ class Sender : SemanticResultData() {
 
     private val tokenList = mutableListOf<Token>()
     var name: String = ""
-    var numberOfOccurrences = 0
+    private var numberOfOccurrences = 0
 
     override fun addToken(token: Token) {
         tokenList.add(token)
