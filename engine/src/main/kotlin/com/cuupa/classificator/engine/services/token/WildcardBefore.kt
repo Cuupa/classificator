@@ -46,7 +46,11 @@ class WildcardBefore : Token() {
         return stringBuilder.toString()
     }
 
-    override fun clone() = WildcardBefore().apply { tokenValue = ArrayList(tokenValue) }
+    override fun clone(): WildcardBefore {
+        val token = WildcardBefore()
+        token.tokenValue = tokenValue
+        return token
+    }
 
     companion object {
         const val name = "wildcardBefore"

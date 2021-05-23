@@ -18,7 +18,11 @@ class Not : Token() {
     override val distance: Int
         get() = 0
 
-    override fun clone() = Not().apply { tokenValue = ArrayList(tokenValue) }
+    override fun clone(): Not {
+        val token = Not()
+        token.tokenValue = tokenValue
+        return token
+    }
 
     override fun toString() = "NOT ${super.toString()}"
 

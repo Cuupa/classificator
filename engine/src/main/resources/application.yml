@@ -9,7 +9,7 @@ springdoc:
 
 logging.level:
   root: ERROR
-  com.cuupa.classificator: WARN
+  com.cuupa.classificator: DEBUG
 
 classificator:
   kbfiles: ${knowlegde_base}

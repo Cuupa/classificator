@@ -15,7 +15,11 @@ class All : Token() {
         return isMatching
     }
 
-    override fun clone() = All().apply { tokenValue = ArrayList(tokenValue) }
+    override fun clone(): All {
+        val token = All()
+        token.tokenValue = tokenValue
+        return token
+    }
 
     override fun toString() = "ALL ${super.toString()}"
 

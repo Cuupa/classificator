@@ -12,10 +12,10 @@ import java.io.File
 
 @Configuration
 @Primary
-class ExternalConfigurationTest {
+open class ExternalConfigurationTest {
 
     @Bean
-    fun jackson(): ObjectMapper {
+    open fun jackson(): ObjectMapper {
         return ObjectMapper(YAMLFactory()).apply {
             enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -23,7 +23,7 @@ class ExternalConfigurationTest {
     }
 
     @Bean
-    fun configurationPrimary(jackson: ObjectMapper): Config {
+    open fun configurationPrimary(jackson: ObjectMapper): Config {
         return ConfigLoader(jackson, File("src/test/resources/configuration.yml")).getConfig()
     }
 }

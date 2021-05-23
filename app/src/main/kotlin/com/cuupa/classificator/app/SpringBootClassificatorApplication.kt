@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
-class SpringBootClassificatorApplication : SpringBootServletInitializer() {
+open class SpringBootClassificatorApplication : SpringBootServletInitializer() {
 
     companion object {
         @JvmStatic

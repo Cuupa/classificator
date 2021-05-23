@@ -12,7 +12,7 @@ import java.io.File
 
 @Configuration
 @Profile("no-file")
-class ExternalConfigurationEmptyTest {
+open class ExternalConfigurationEmptyTest {
 
     @Bean
     fun jackson(): ObjectMapper {

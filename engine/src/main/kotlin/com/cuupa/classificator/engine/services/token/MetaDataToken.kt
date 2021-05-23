@@ -147,7 +147,7 @@ class MetaDataToken {
     }
 
     private fun compileText(text: String?, tokenValue: String): List<Pair<String, String>> {
-        if (text == null || !hasVariable(tokenValue)) {
+        if (text.isNullOrEmpty() || !hasVariable(tokenValue)) {
             return listOf(Pair(tokenValue, tokenValue))
         }
         val split = tokenValue.split(RegexConstants.squareBracketOpenPattern)
@@ -156,8 +156,11 @@ class MetaDataToken {
         val textAfterToken = getTextAfterToken(variable)
         variable = variable.split(RegexConstants.squareBracketClosePattern)[0] + "]"
 
+        log.info("Looking for $variable")
         val extract = getExtractForName(variable)
+        log.info("Found extract $extract")
         return extract.get(text, textBeforeToken, textAfterToken)
+            .also { log.info(extract.get(text, textBeforeToken, textAfterToken)) }
     }
 
     private fun getExtractForName(name: String): Extract {

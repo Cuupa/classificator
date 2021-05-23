@@ -316,9 +316,6 @@
                 </executions>
                 <configuration>
                     <jvmTarget>11</jvmTarget>
-                    <compilerPlugins>
-                        <plugin>spring</plugin>
-                    </compilerPlugins>
                 </configuration>
             </plugin>
 

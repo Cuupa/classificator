@@ -10,8 +10,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import regressionTests.config.ApplicationTestConfiguration
 
 @SpringBootTest(classes = [ApplicationTestConfiguration::class])
-@ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
+@ActiveProfiles("test")
 class KBTest {
 
     @Autowired

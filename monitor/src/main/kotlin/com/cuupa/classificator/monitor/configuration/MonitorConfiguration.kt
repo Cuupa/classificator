@@ -21,7 +21,7 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["com.cuupa.classificator.monitor.persistence"])
-class MonitorConfiguration {
+open class MonitorConfiguration {
 
     @Autowired
     private var configuration: Config? = null
@@ -36,22 +36,22 @@ class MonitorConfiguration {
     private var logText: Boolean? = null
 
     @Bean
-    fun monitor(eventStorage: EventStorage): Monitor {
+    open fun monitor(eventStorage: EventStorage): Monitor {
         return Monitor(eventStorage, isEnabled(), isLogText())
     }
 
     @Bean
-    fun eventStorage(eventService: EventService): EventStorage {
+    open fun eventStorage(eventService: EventService): EventStorage {
         return SqliteEventStorage(eventService)
     }
 
     @Bean
-    fun eventService(eventRepository: EventRepository): EventService {
+    open fun eventService(eventRepository: EventRepository): EventService {
         return EventService(eventRepository)
     }
 
     @Bean
-    fun dataSource(): DataSource {
+    open fun dataSource(): DataSource {
         return DataSourceBuilder.create()
             .driverClassName("org.sqlite.JDBC")
             .url("jdbc:sqlite:${getDatabaseName()}")
@@ -59,7 +59,7 @@ class MonitorConfiguration {
     }
 
     @Bean
-    fun entityManagerFactory(dataSource: DataSource): LocalSessionFactoryBean? {
+    open fun entityManagerFactory(dataSource: DataSource): LocalSessionFactoryBean? {
         return LocalSessionFactoryBean().apply {
             setDataSource(dataSource)
             setPackagesToScan("com.cuupa.classificator")

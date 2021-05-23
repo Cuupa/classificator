@@ -1,3 +1,5 @@
+package com.cuupa.classificator.engine.services.dataExtraction
+
 object IBANTestData {
 
     val validIbans = listOf(

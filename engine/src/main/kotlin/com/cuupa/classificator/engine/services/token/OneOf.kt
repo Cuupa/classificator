@@ -19,7 +19,11 @@ class OneOf : Token() {
         return false
     }
 
-    override fun clone() = OneOf().apply { tokenValue = ArrayList(tokenValue) }
+    override fun clone(): OneOf {
+        val oneOf = OneOf()
+        oneOf.tokenValue = tokenValue
+        return oneOf
+    }
 
     override fun toString() = "OneOf ${super.toString()}"
 

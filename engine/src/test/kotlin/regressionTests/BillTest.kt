@@ -1,12 +1,10 @@
 package regressionTests
 
 import com.cuupa.classificator.engine.KnowledgeManager
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import regressionTests.config.ApplicationTestConfiguration
 import regressionTests.config.MonitorTestConfiguration
@@ -16,7 +14,6 @@ import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = [ApplicationTestConfiguration::class, MonitorTestConfiguration::class])
-@ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
 class BillTest : LocalRegressionTest() {
 
@@ -29,7 +26,7 @@ class BillTest : LocalRegressionTest() {
      * I don't feel like publishing my private test documents to a public github repo.
      * So just comment it in if its running localy and comment out if pushing
      */
-    @Test
+   // @Test
     fun testShouldBeBill() {
         val files = getFilesOfPath(path)
         val contents = files.map { getFileContent(it) }

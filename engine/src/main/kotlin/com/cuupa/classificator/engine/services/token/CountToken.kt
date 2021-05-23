@@ -10,7 +10,11 @@ class CountToken : Token() {
     override val distance: Int
         get() = 0
 
-    override fun clone() = CountToken().apply { tokenValue = ArrayList(tokenValue) }
+    override fun clone(): CountToken {
+        val token = CountToken()
+        token.tokenValue = tokenValue
+        return token
+    }
 
     fun countOccurences(textToSearch: String?, text: String?) = TextSearch(text).countOccurence(textToSearch)
 }
