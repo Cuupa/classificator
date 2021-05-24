@@ -36,9 +36,16 @@ object KnowledgeFileExtractor {
                             isTopicFile(filename) -> topicList.add(parseTopicFile(getString(entry, sevenZFile)))
                             isSenderFile(filename) -> senderList.add(parseSenderFile(getString(entry, sevenZFile)))
                             isMetadataFile(filename) -> metadataList.add(parseMetaFile(getString(entry, sevenZFile)))
-                            isRegexFile(filename) -> regexList.add(parseRegexFile(getRegexName(filename), getString(entry, sevenZFile)))
-                            isDatabaseMetaInfo(filename) -> kbMetadata = parseDatabaseMetadata(getString(entry, sevenZFile))
-                            else -> { } // Nothing
+                            isRegexFile(filename) -> regexList.add(
+                                parseRegexFile(
+                                    getRegexName(filename),
+                                    getString(entry, sevenZFile)
+                                )
+                            )
+                            isDatabaseMetaInfo(filename) -> kbMetadata =
+                                parseDatabaseMetadata(getString(entry, sevenZFile))
+                            else -> {
+                            } // Nothing
                         }
                     }
                 }
