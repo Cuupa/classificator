@@ -48,7 +48,7 @@ class WildcardBefore : Token() {
 
     override fun clone(): WildcardBefore {
         val token = WildcardBefore()
-        token.tokenValue = tokenValue
+        token.tokenValue = tokenValue.toMutableList()
         return token
     }
 

@@ -17,7 +17,7 @@ class All : Token() {
 
     override fun clone(): All {
         val token = All()
-        token.tokenValue = tokenValue
+        token.tokenValue = tokenValue.toMutableList()
         return token
     }
 

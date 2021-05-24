@@ -8,7 +8,7 @@ class KnowledgeManager(
     private val knowledgeBaseExecutorService: KnowledgeBaseExecutorService
 ) {
 
-    fun getResults(text: String) = knowledgeBaseExecutorService.submit(text)
+    fun getResults(text: String?) = knowledgeBaseExecutorService.submit(text)
 
     fun getVersion() = knowledgeBase.knowledgeBaseMetadata.version
 }

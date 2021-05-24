@@ -46,7 +46,7 @@ class IntegrationTests {
 
     @Test
     fun shouldHaveBirthdate() {
-        val dateOfBirth = result.first().metadata.find { it.name == "DATE_OF_BIRTH" }
+        val dateOfBirth = result.first().metadata.find { it.name == "date_of_birth" }
         assertEquals("01.01.1999", dateOfBirth?.value)
     }
 
@@ -62,10 +62,17 @@ class IntegrationTests {
         assertEquals("32103847298", iban?.value)
     }
 
+    @Test
+    fun shouldHavePhoneNumber() {
+        val phoneNumber = result.first().metadata.find { it.name == "phone_Number" }
+        assertEquals("+49301234567", phoneNumber?.value)
+    }
+
     companion object {
         val smokeText = """Sehr geehrte Damen und Herren,
-            hiermit kündige ich, Max Mustermann, geboren am 01.01.1999, meinen Vertrag zur Vertrangsnummer 32103847298 zum 31.12.3030.
-            Bitte überweisen Sie den verbleibenden Betrag auf mein Konto DE19 1234 1234 1234 1234 12.
+            |hiermit kündige ich, Max Mustermann, geboren am 01.01.1999, meinen Vertrag zur Vertrangsnummer 32103847298 zum 31.12.3030.
+            |Bitte überweisen Sie den verbleibenden Betrag auf mein Konto mit der IBAN DE19123412341234123412.
+            |Bei Rückfragen stehe ich unter der Tel: +49301234567 zur Verfügung
         """.trimMargin()
     }
 }

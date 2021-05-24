@@ -12,7 +12,7 @@ class CountToken : Token() {
 
     override fun clone(): CountToken {
         val token = CountToken()
-        token.tokenValue = tokenValue
+        token.tokenValue = tokenValue.toMutableList()
         return token
     }
 

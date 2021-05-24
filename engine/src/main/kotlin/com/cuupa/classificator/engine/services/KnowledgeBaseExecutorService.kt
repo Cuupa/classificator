@@ -16,7 +16,11 @@ class KnowledgeBaseExecutorService(
     private val metadataService: MetadataService
 ) {
 
-    fun submit(text: String): List<SemanticResult> {
+    fun submit(text: String?): List<SemanticResult> {
+        if(text.isNullOrBlank()){
+            return listOf(SemanticResult())
+        }
+
         var semanticResults = mutableListOf<SemanticResult>()
         var mostFittingSender: String? = null
         var metadata = listOf<Metadata>()

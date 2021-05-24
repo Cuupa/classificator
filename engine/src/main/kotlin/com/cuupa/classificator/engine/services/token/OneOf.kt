@@ -21,7 +21,7 @@ class OneOf : Token() {
 
     override fun clone(): OneOf {
         val oneOf = OneOf()
-        oneOf.tokenValue = tokenValue
+        oneOf.tokenValue = tokenValue.toMutableList()
         return oneOf
     }
 

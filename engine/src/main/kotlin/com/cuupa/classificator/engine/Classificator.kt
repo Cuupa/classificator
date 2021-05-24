@@ -23,20 +23,12 @@ class Classificator(
 
     fun classify(text: String?): List<SemanticResult> {
         val start = LocalDateTime.now()
-        val result = getResultFromInputText(text)
+        val result = manager.getResults(text)
         val done = LocalDateTime.now()
         scope.launch {
             monitor.writeEvent(manager.getVersion(), text, result, start, done)
         }
         return result
-    }
-
-    private fun getResultFromInputText(text: String?): List<SemanticResult> {
-        return if (text.isNullOrBlank()) {
-            listOf(SemanticResult())
-        } else {
-            manager.getResults(text)
-        }
     }
 
     fun classify(content: ByteArray?): List<SemanticResult> {

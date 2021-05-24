@@ -1,6 +1,6 @@
 ---
 classificator:
-  knowledge_base: ../build/knowledgebase
+  knowledge_base: ../build/knowledgebase/kb-DEV.db
 
   monitor:
     username: "John"
