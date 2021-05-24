@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Import
  */
 @Configuration
 @Import(value = [MonitorTestConfiguration::class])
-open class ApplicationTestConfiguration {
+open class EngineTestConfiguration {
 
     @Autowired
     private var monitor: Monitor? = null

@@ -21,9 +21,9 @@ class EventService(private val eventRepository: EventRepository) {
             kbVersion = event.kbVersion
             start = event.start
             end = event.end
-            metadata = event.metadata.joinToString(";", "", "")
-            results = event.results.joinToString(";", "", "")
-            senders = event.senders.joinToString(";", "", "")
+            metadata = event.metadata.joinToString(separator = ";")
+            results = event.results.joinToString(separator = ";")
+            senders = event.senders.joinToString(separator = ";")
             text = event.text
         }
     }

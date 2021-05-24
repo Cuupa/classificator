@@ -38,13 +38,13 @@ object KnowledgeFileExtractor {
                             isMetadataFile(filename) -> metadataList.add(parseMetaFile(getString(entry, sevenZFile)))
                             isRegexFile(filename) -> regexList.add(parseRegexFile(getRegexName(filename), getString(entry, sevenZFile)))
                             isDatabaseMetaInfo(filename) -> kbMetadata = parseDatabaseMetadata(getString(entry, sevenZFile))
-                            else -> { }
+                            else -> { } // Nothing
                         }
                     }
                 }
                 topics = topicList
                 metadata = metadataList
-                senders= senderList
+                senders = senderList
                 regex = regexList
             }
         }
@@ -70,11 +70,11 @@ object KnowledgeFileExtractor {
         entry: SevenZArchiveEntry?,
         sevenZFile: SevenZFile
     ): String {
-        if (entry == null) {
-            return ""
+        entry?.let {
+            val byteArray = ByteArray(entry.size.toInt()).also { sevenZFile.read(it, 0, it.size) }
+            return String(byteArray, StandardCharsets.UTF_8)
         }
-        val byteArray = ByteArray(entry.size.toInt()).also { sevenZFile.read(it, 0, it.size) }
-        return String(byteArray, StandardCharsets.UTF_8)
+        return ""
     }
 
     internal object Constants {

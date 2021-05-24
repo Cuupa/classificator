@@ -1,5 +1,6 @@
 package com.cuupa.classificator.engine.stripper
 
+import com.cuupa.classificator.engine.extensions.Extension.isBlank
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.apache.pdfbox.text.TextPosition
@@ -20,7 +21,7 @@ class LocationAndSizeStripper : PDFTextStripper() {
     private fun parse(textPositions: List<TextPosition>) {
         var textAndPosition = TextAndPosition()
         for (textPosition in textPositions) {
-            if (!isEmpty(textPosition)) {
+            if (!textPosition.isBlank()) {
                 textAndPosition.add(
                     textPosition.unicode, textPosition.xDirAdj,
                     textPosition.widthDirAdj, textPosition.yDirAdj, textPosition.heightDir
@@ -38,8 +39,6 @@ class LocationAndSizeStripper : PDFTextStripper() {
             list.add(textAndPosition)
         }
     }
-
-    private fun isEmpty(textPosition: TextPosition) = textPosition.unicode == null || textPosition.unicode == " "
 
     fun setTextAlreadyParsed() {
         textAlreadyParsed = true

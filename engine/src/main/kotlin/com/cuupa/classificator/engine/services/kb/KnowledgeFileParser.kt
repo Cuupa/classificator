@@ -5,6 +5,7 @@ import com.cuupa.classificator.domain.Sender
 import com.cuupa.classificator.domain.Topic
 import com.cuupa.classificator.engine.RegexConstants
 import com.cuupa.classificator.engine.StringConstants
+import com.cuupa.classificator.engine.extensions.Extension.substringBetween
 import com.cuupa.classificator.engine.services.Tokens
 import com.cuupa.classificator.engine.services.token.InvalidTokenException
 import com.cuupa.classificator.engine.services.token.MetaDataToken
@@ -56,7 +57,7 @@ object KnowledgeFileParser {
 
     fun parseDatabaseMetadata(metaInfContent: String): KnowledgeBaseMetadata {
         return KnowledgeBaseMetadata().apply {
-            version = metaInfContent.substringAfter("version=").substringBefore("\n")
+            version = metaInfContent.substringBetween("version=", "\n")
         }
     }
 

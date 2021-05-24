@@ -52,10 +52,10 @@ class KnowledgeBaseExecutorService(
             val distinctMetadata = metadata.distinctBy { it.value }.filter { it.name != "sender" }
             semanticResults.forEach {
                 it.sender = sender
-                it.metaData = distinctMetadata
+                it.metadata = distinctMetadata
             }
             if (semanticResults.isEmpty()) {
-                semanticResults.add(SemanticResult(Topic.OTHER, sender, distinctMetadata))
+                semanticResults.add(SemanticResult(sender = sender, metadata = distinctMetadata))
             }
         }
         LOG.info(semanticResults)

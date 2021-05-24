@@ -7,5 +7,5 @@ import com.cuupa.classificator.domain.Topic
 class TopicService(private val topics: List<Topic>) {
 
     fun getTopics(text: String) =
-        topics.filter { it.match(text) }.map { SemanticResult(it.name, Sender.UNKNOWN, listOf()) }.toMutableList()
+        topics.filter { it.match(text) }.map { SemanticResult(it.name, Sender.UNKNOWN) }.toMutableList()
 }

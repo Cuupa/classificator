@@ -166,10 +166,8 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
 
     private fun getTopics(results: List<SemanticResult>) = results.map { it.topicName }
 
-    private fun getMetadata(results: List<SemanticResult>) = results.flatMap {
-        it.metaData.map { metadata ->
-            metadata.name + ":" + metadata.value
-        }
+    private fun getMetadata(results: List<SemanticResult>) = results.flatMap { result ->
+        result.metadata.map { it.name + ":" + it.value }
     }
 
     private fun getSenders(results: List<SemanticResult>) = results.map { it.sender }

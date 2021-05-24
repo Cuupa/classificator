@@ -73,7 +73,9 @@ class MetaDataToken {
     }
 
     private fun addMetadata(
-        match: MutableMap<Metadata, Int>, metadataValue: String, tokens: List<Token>,
+        match: MutableMap<Metadata, Int>,
+        metadataValue: String,
+        tokens: List<Token>,
         value: Int
     ) {
         if (isMetadataAlreadyRegistered(match, metadataValue)) {
@@ -100,6 +102,7 @@ class MetaDataToken {
         return match.entries.stream().noneMatch { name == it.key.name && it.key.value == metadataValue }
     }
 
+    // FIXME: Tokenvalues are overridden
     private fun replaceCompiledTextInTokenValue(
         compiledText: List<List<Pair<String, String>>>,
         tokens: List<Token>
@@ -122,7 +125,7 @@ class MetaDataToken {
 
     private fun cloneTokens(token: Token, compiledText: List<List<Pair<String, String>>>): List<Token> {
         val tokens = mutableListOf<Token>()
-        IntStream.range(0, compiledText[0].size).forEach { tokens.add(token.clone()) }
+        compiledText[0].forEach { _ -> tokens.add(token.clone()) }
         return tokens
     }
 
@@ -156,22 +159,19 @@ class MetaDataToken {
         val textAfterToken = getTextAfterToken(variable)
         variable = variable.split(RegexConstants.squareBracketClosePattern)[0] + "]"
 
-        log.info("Looking for $variable")
         val extract = getExtractForName(variable)
-        log.info("Found extract $extract")
         return extract.get(text, textBeforeToken, textAfterToken)
-            .also { log.info(extract.get(text, textBeforeToken, textAfterToken)) }
     }
 
     private fun getExtractForName(name: String): Extract {
         for (pair in regexContent) {
             return when {
-                isDateExtract(name, pair) ->  DateExtract(pair.second)
-                isIbanExtract(name, pair) ->  IbanExtract(pair.second)
-                isSenderExtract(name, pair) ->  SenderExtract(pair.second)
-                isRegexExtract(name, pair) ->  RegexExtract(pair.second)
-                isPhoneNumberExtract(name, pair) ->  PhoneNumberExtract(pair.second)
-                isTimespanExtract(name, pair) ->  TimespanExtract(pair.second)
+                isDateExtract(name, pair) -> DateExtract(pair.second)
+                isIbanExtract(name, pair) -> IbanExtract(pair.second)
+                isSenderExtract(name, pair) -> SenderExtract(pair.second)
+                isRegexExtract(name, pair) -> RegexExtract(pair.second)
+                isPhoneNumberExtract(name, pair) -> PhoneNumberExtract(pair.second)
+                isTimespanExtract(name, pair) -> TimespanExtract(pair.second)
                 else -> throw RuntimeException("There is no extract for $name specified")
             }
         }

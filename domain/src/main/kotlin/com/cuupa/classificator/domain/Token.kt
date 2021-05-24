@@ -10,5 +10,5 @@ abstract class Token {
 
     abstract fun clone(): Token
 
-    override fun toString() = tokenValue.joinToString(",", "", "")
+    override fun toString() = tokenValue.joinToString(separator = ",")
 }

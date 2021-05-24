@@ -8,12 +8,12 @@ import java.time.temporal.ChronoUnit
 
 data class Event(
     val kbVersion: String,
-    val text: String?,
-    val results: List<String>,
-    val senders: List<String>,
-    val metadata: List<String>,
-    val start: LocalDateTime,
-    val end: LocalDateTime
+    val text: String? = null,
+    val results: List<String> = listOf(),
+    val senders: List<String> = listOf(),
+    val metadata: List<String> = listOf(),
+    val start: LocalDateTime = LocalDateTime.now(),
+    val end: LocalDateTime = LocalDateTime.now()
 ) {
 
     val processingTime = getElapsedTime().toString() + " ms"

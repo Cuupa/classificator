@@ -6,14 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import regressionTests.config.ApplicationTestConfiguration
+import regressionTests.config.EngineTestConfiguration
 import regressionTests.config.MonitorTestConfiguration
 import java.util.stream.IntStream
 import kotlin.system.measureTimeMillis
 import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(classes = [ApplicationTestConfiguration::class, MonitorTestConfiguration::class])
+@SpringBootTest(classes = [EngineTestConfiguration::class, MonitorTestConfiguration::class])
 @ExtendWith(SpringExtension::class)
 class BillTest : LocalRegressionTest() {
 
