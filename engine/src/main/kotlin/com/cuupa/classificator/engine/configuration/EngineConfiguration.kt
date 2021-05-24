@@ -2,10 +2,7 @@ package com.cuupa.classificator.engine.configuration
 
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
-import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
-import com.cuupa.classificator.engine.services.MetadataService
-import com.cuupa.classificator.engine.services.SenderService
-import com.cuupa.classificator.engine.services.TopicService
+import com.cuupa.classificator.engine.services.*
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
@@ -47,9 +44,10 @@ open class EngineConfiguration {
     open fun knowledgeBaseExecutorService(
         topicService: TopicService,
         senderService: SenderService,
-        metadataService: MetadataService
+        metadataService: MetadataService,
+        languageDetectionService: LanguageDetectionService
     ): KnowledgeBaseExecutorService {
-        return KnowledgeBaseExecutorService(topicService, senderService, metadataService)
+        return KnowledgeBaseExecutorService(topicService, senderService, metadataService, languageDetectionService)
     }
 
     @Bean
@@ -68,6 +66,11 @@ open class EngineConfiguration {
     @Bean
     open fun metadataService(knowledgeBase: KnowledgeBase): MetadataService {
         return MetadataService(knowledgeBase.metadataList)
+    }
+
+    @Bean
+    open fun languageDetectionService(): LanguageDetectionService {
+        return LanguageDetectionService()
     }
 
     @Bean

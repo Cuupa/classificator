@@ -2,10 +2,7 @@ package regressionTests.config
 
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
-import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
-import com.cuupa.classificator.engine.services.MetadataService
-import com.cuupa.classificator.engine.services.SenderService
-import com.cuupa.classificator.engine.services.TopicService
+import com.cuupa.classificator.engine.services.*
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
@@ -41,7 +38,12 @@ open class EngineTestConfiguration {
 
     @Bean
     open fun knowledgeBaseExecutorService(): KnowledgeBaseExecutorService {
-        return KnowledgeBaseExecutorService(topicService(), senderService(), metadataService())
+        return KnowledgeBaseExecutorService(topicService(), senderService(), metadataService(), languageDetectionService())
+    }
+
+    @Bean
+    open fun languageDetectionService(): LanguageDetectionService {
+        return LanguageDetectionService()
     }
 
     @Bean

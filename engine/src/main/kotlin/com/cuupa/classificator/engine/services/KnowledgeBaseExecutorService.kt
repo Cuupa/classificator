@@ -1,25 +1,27 @@
 package com.cuupa.classificator.engine.services
 
+import com.cuupa.classificator.domain.Metadata
 import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.domain.Sender
-import com.cuupa.classificator.domain.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.logging.LogFactory
-import com.cuupa.classificator.domain.Metadata
 
 class KnowledgeBaseExecutorService(
     private val topicService: TopicService,
     private val senderService: SenderService,
-    private val metadataService: MetadataService
+    private val metadataService: MetadataService,
+    private val languageDetectionService: LanguageDetectionService
 ) {
 
     fun submit(text: String): List<SemanticResult> {
         var semanticResults = mutableListOf<SemanticResult>()
         var mostFittingSender: String? = null
         var metadata = listOf<Metadata>()
+        var language = listOf<String>()
+
         runBlocking {
             val job = launch(Dispatchers.Default) {
                 val asyncMetadata = async {
@@ -34,12 +36,16 @@ class KnowledgeBaseExecutorService(
                     topicService.getTopics(text)
                 }
 
+                val asyncLanguage = async {
+                    languageDetectionService.getLanguages(text)
+                }
+
                 mostFittingSender = asyncSenders.await()
                 metadata = asyncMetadata.await()
                 if (mostFittingSender.isNullOrEmpty()) {
                     mostFittingSender = senderService.findSenderFromMetadata(metadata, text)
                 }
-
+                language = asyncLanguage.await()
                 semanticResults = asyncTopics.await()
             }
             job.join()
@@ -49,7 +55,9 @@ class KnowledgeBaseExecutorService(
             mostFittingSender = Sender.UNKNOWN
         }
         mostFittingSender?.let { sender ->
-            val distinctMetadata = metadata.distinctBy { it.value }.filter { it.name != "sender" }
+
+            val distinctMetadata = metadata.distinctBy { it.value }.filter { it.name != "sender" }.toMutableList()
+            language.forEach { distinctMetadata.add(Metadata("language", it)) }
             semanticResults.forEach {
                 it.sender = sender
                 it.metadata = distinctMetadata
@@ -58,6 +66,7 @@ class KnowledgeBaseExecutorService(
                 semanticResults.add(SemanticResult(sender = sender, metadata = distinctMetadata))
             }
         }
+
         LOG.info(semanticResults)
         return semanticResults
     }
