@@ -8,7 +8,7 @@ import com.cuupa.classificator.engine.services.token.CountToken
 
 class SenderService(private val senders: List<Sender>) {
 
-    fun getSender(text: String): String? {
+    fun getSender(text: String, languages: List<String>): String? {
         val foundSenders = getSenders(text)
         return getMostFittingSender(foundSenders, text)
     }

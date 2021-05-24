@@ -10,7 +10,7 @@ class LanguageDetectionService {
     init {
         languageDetector =
             try {
-                LanguageDetector.getDefaultLanguageDetector()
+                LanguageDetector.getDefaultLanguageDetector().loadModels()
             } catch (e: IllegalStateException) {
                 log.error(e)
                 null

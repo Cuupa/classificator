@@ -62,6 +62,12 @@ class IntegrationTests {
         assertEquals("32103847298", iban?.value)
     }
 
+    @Test
+    fun shouldHaveLanguage() {
+        val iban = result.first().metadata.find { it.name == "language" }
+        assertEquals("de", iban?.value)
+    }
+
     companion object {
         val smokeText = """Sehr geehrte Damen und Herren,
             hiermit kündige ich, Max Mustermann, geboren am 01.01.1999, meinen Vertrag zur Vertrangsnummer 32103847298 zum 31.12.3030.

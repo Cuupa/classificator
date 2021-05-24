@@ -20,24 +20,22 @@ class KnowledgeBaseExecutorService(
         var semanticResults = mutableListOf<SemanticResult>()
         var mostFittingSender: String? = null
         var metadata = listOf<Metadata>()
-        var language = listOf<String>()
+        var languages = listOf<String>()
 
         runBlocking {
             val job = launch(Dispatchers.Default) {
+                languages = languageDetectionService.getLanguages(text)
+
                 val asyncMetadata = async {
-                    metadataService.getMetadata(text)
+                    metadataService.getMetadata(text, languages)
                 }
 
                 val asyncSenders = async {
-                    senderService.getSender(text)
+                    senderService.getSender(text, languages)
                 }
 
                 val asyncTopics = async {
-                    topicService.getTopics(text)
-                }
-
-                val asyncLanguage = async {
-                    languageDetectionService.getLanguages(text)
+                    topicService.getTopics(text, languages)
                 }
 
                 mostFittingSender = asyncSenders.await()
@@ -45,7 +43,6 @@ class KnowledgeBaseExecutorService(
                 if (mostFittingSender.isNullOrEmpty()) {
                     mostFittingSender = senderService.findSenderFromMetadata(metadata, text)
                 }
-                language = asyncLanguage.await()
                 semanticResults = asyncTopics.await()
             }
             job.join()
@@ -57,7 +54,7 @@ class KnowledgeBaseExecutorService(
         mostFittingSender?.let { sender ->
 
             val distinctMetadata = metadata.distinctBy { it.value }.filter { it.name != "sender" }.toMutableList()
-            language.forEach { distinctMetadata.add(Metadata("language", it)) }
+            languages.forEach { distinctMetadata.add(Metadata("language", it)) }
             semanticResults.forEach {
                 it.sender = sender
                 it.metadata = distinctMetadata
