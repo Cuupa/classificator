@@ -20,7 +20,7 @@ class Not : Token() {
 
     override fun clone(): Not {
         val token = Not()
-        token.tokenValue = tokenValue
+        token.tokenValue = tokenValue.toMutableList()
         return token
     }
 

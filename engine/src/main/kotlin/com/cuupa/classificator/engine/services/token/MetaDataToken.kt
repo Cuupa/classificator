@@ -2,7 +2,8 @@ package com.cuupa.classificator.engine.services.token
 
 import com.cuupa.classificator.domain.Metadata
 import com.cuupa.classificator.domain.Token
-import com.cuupa.classificator.engine.RegexConstants
+import com.cuupa.classificator.engine.RegexConstants.squareBracketClosePattern
+import com.cuupa.classificator.engine.RegexConstants.squareBracketOpenPattern
 import com.cuupa.classificator.engine.services.dataExtraction.*
 import org.apache.commons.logging.LogFactory
 import org.apache.logging.log4j.util.Strings
@@ -153,11 +154,11 @@ class MetaDataToken {
         if (text.isNullOrEmpty() || !hasVariable(tokenValue)) {
             return listOf(Pair(tokenValue, tokenValue))
         }
-        val split = tokenValue.split(RegexConstants.squareBracketOpenPattern)
+        val split = tokenValue.split(squareBracketOpenPattern)
         val textBeforeToken = split[0]
         var variable = "[" + split[1]
         val textAfterToken = getTextAfterToken(variable)
-        variable = variable.split(RegexConstants.squareBracketClosePattern)[0] + "]"
+        variable = variable.split(squareBracketClosePattern)[0] + "]"
 
         val extract = getExtractForName(variable)
         return extract.get(text, textBeforeToken, textAfterToken)
@@ -201,20 +202,16 @@ class MetaDataToken {
     ) = DateExtract.name == name && name.contains(pair.first)
 
     private fun getTextAfterToken(value: String): String {
-        val split = value.split("]".toPattern())
+        val split = value.split(squareBracketClosePattern)
         return when (split.size) {
             in 2..Int.MAX_VALUE -> split[1]
             else -> Strings.EMPTY
         }
     }
 
-    private fun hasVariable(text: String): Boolean {
-        return text.contains("[") && text.contains("]")
-    }
+    private fun hasVariable(text: String) = text.contains("[") && text.contains("]")
 
-    override fun toString(): String {
-        return name
-    }
+    override fun toString() = name
 
     companion object {
         private val log = LogFactory.getLog(MetaDataToken::class.java)
