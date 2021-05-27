@@ -1,0 +1,150 @@
+openapi: 3.0.3
+info:
+  title: Classificator
+  description: API for classifying plain text or documents
+  version: 1.0.0
+  contact:
+    name: Simon Thiel
+    url: https://github.com/cuupa
+  license:
+    name: MIT
+  x-audience:
+    - external-public
+servers:
+  - url: 'http://localhost:{port}/{basePath}'
+    description: Local development server
+    variables:
+      port:
+        default: '8080'
+      basePath:
+        default: 'api/rest/'
+paths:
+  /status:
+    get:
+      tags:
+        - non-functional
+        - health-check
+      summary: Retrieves the application status
+      responses:
+        '200':
+          description: The status of the application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /classifyText:
+    post:
+      tags:
+        - functional
+      summary: Classifies the posted plain text
+      requestBody:
+        description: Plaintext to classify
+        required: true
+        content:
+          text/pain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: The result of the classification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationResult'
+
+        '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+  /classify:
+    post:
+      tags:
+        - functional
+      summary: Classifies the posted document
+      requestBody:
+        description: The document as a byte array
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The result of the classification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationResult'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    Status:
+      type: object
+      properties:
+        status:
+          type: string
+          example: running
+        knowledgebase_version:
+          type: string
+          example: 1.0.3
+
+    ClassificationResult:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ClassificationMetadata'
+        semanticresult:
+          $ref: '#/components/schemas/SemanticResult'
+
+    ClassificationMetadata:
+      type: object
+      properties:
+        processing_date:
+          type: string
+          format: date-time
+        knowledgebase_version:
+          type: string
+          example: 1.0.3
+
+    SemanticResult:
+      type: object
+      properties:
+        topicName:
+          type: string
+        sender:
+          type: string
+        metadata:
+          $ref: '#components/schemas/Metadata'
+
+    Metadata:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string

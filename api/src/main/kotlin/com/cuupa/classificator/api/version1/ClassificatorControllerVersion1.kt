@@ -1,5 +1,6 @@
 package com.cuupa.classificator.api
 
+import com.cuupa.classificator.api.version1.response.ResponseVersion1
 import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.engine.Classificator
 import com.google.gson.GsonBuilder
@@ -15,20 +16,18 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
-class ClassificatorController(private val classificator: Classificator) {
+@RequestMapping(value = ["/api/rest/1.0"])
+class ClassificatorControllerVersion1(private val classificator: Classificator) {
 
-    private val log: Log = LogFactory.getLog(ClassificatorController::class.java)
+    private val log: Log = LogFactory.getLog(ClassificatorControllerVersion1::class.java)
 
     private val headers = HttpHeaders().apply { set("script-src", "self"); contentType = MediaType.APPLICATION_JSON }
 
-    @GetMapping(value = ["/api/rest/1.0/ping"])
-    fun ping(): ResponseEntity<String> = ResponseEntity.ok().headers(headers).body("")
+    @GetMapping(value = ["/status"])
+    fun status(): ResponseEntity<String> = ResponseEntity.ok().headers(headers).body(gson.toJson(ResponseVersion1("/status")))
 
     @Operation(summary = "Classifies plain text")
     @ApiResponses(
@@ -44,7 +43,11 @@ class ClassificatorController(private val classificator: Classificator) {
             ApiResponse(responseCode = "500", description = "Internal Server Error")
         ]
     )
-    @PostMapping(value = ["/api/rest/1.0/classifyText"], produces = [MediaType.APPLICATION_JSON_VALUE] ,consumes = [MediaType.TEXT_PLAIN_VALUE])
+    @PostMapping(
+        value = ["/classifyText"],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+        consumes = [MediaType.TEXT_PLAIN_VALUE]
+    )
     fun classify(@RequestBody text: String?): ResponseEntity<String> {
         try {
             val result = classificator.classify(text)
@@ -69,7 +72,11 @@ class ClassificatorController(private val classificator: Classificator) {
             ApiResponse(responseCode = "500", description = "Internal Server Error")
         ]
     )
-    @PostMapping(value = ["/api/rest/1.0/classify"], produces = [MediaType.TEXT_PLAIN_VALUE], consumes = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    @PostMapping(
+        value = ["/classify"],
+        produces = [MediaType.TEXT_PLAIN_VALUE],
+        consumes = [MediaType.APPLICATION_OCTET_STREAM_VALUE]
+    )
     fun classify(@RequestBody content: ByteArray?): ResponseEntity<String> {
         try {
             val result = classificator.classify(content)
