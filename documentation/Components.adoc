@@ -83,7 +83,7 @@ Rundfunk Beitragsservice = {
 }
 ----
 
-Example of a sender:
+Example of an IBAN:
 
 [source,text]
 ----

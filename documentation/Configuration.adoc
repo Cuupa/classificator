@@ -1,5 +1,7 @@
 == Configuration
 
+:icons: font
+
 This is the default configuration of the application +
 It sets the server port to 8080 and the knowledgebase-directory to `build/knowledgebase`
 
@@ -19,10 +21,10 @@ classificator:
 
 === Server port
 The default port of this application is `8080`
-So if you want to access the webUI on your local machine navigate to `https://localhost:8080`. If you want to change that port, see <<_via_command_line_arguments, Changing via command line arguments>>
+So if you want to access the webUI on your local machine navigate to `https://localhost:8080`.If you want to change that port, see <<_via_command_line_arguments, Changing via command line arguments>>
 
 === Knowledgebase
-This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
+This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file.You can specify which
 knowledgebase to use, by changing it via the command line arguments (How that works will be covered by me
 a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]).
 

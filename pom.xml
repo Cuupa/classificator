@@ -29,7 +29,7 @@
     </modules>
 
     <properties>
-        <start-class>com.cuupa.classificator.app.SpringBootClassificatorApplication</start-class>
+        <start-class>com.cuupa.classificator.app.ClassificatorApplication</start-class>
         <app.filename>app</app.filename>
 
         <spring-boot.version>2.5.0</spring-boot.version>
