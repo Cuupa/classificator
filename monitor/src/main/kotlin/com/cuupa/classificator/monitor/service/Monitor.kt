@@ -164,7 +164,7 @@ class Monitor(private val eventStorage: EventStorage, private val enabled: Boole
         return { event -> event.senders.forEach { calculateDistributionForEntry(resultMap, it) } }
     }
 
-    private fun getTopics(results: List<SemanticResult>) = results.map { it.topicName }
+    private fun getTopics(results: List<SemanticResult>) = results.map { it.topic }
 
     private fun getMetadata(results: List<SemanticResult>) = results.flatMap { result ->
         result.metadata.map { it.name + ":" + it.value }

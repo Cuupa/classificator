@@ -36,7 +36,7 @@ rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></tex
                     </thead>
                     <tbody>
                     <tr th:each="result : ${guiProcess.result}">
-                        <td width="30%"><span th:text="${result.topicName}">Topic</span></td>
+                        <td width="30%"><span th:text="${result.topic}">Topic</span></td>
                         <td width="30%"><span th:text="${result.sender}">Sender</span></td>
                         <td width="70%">
 

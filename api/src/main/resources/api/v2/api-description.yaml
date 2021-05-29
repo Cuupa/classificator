@@ -17,13 +17,13 @@ servers:
       port:
         default: '8080'
       basePath:
-        default: 'api/rest/'
+        default: 'api/rest/v2'
 paths:
   /status:
     get:
       tags:
-        - non-functional
         - health-check
+        - v2
       summary: Retrieves the application status
       responses:
         '200':
@@ -39,44 +39,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /classifyText:
-    post:
-      tags:
-        - functional
-      summary: Classifies the posted plain text
-      requestBody:
-        description: Plaintext to classify
-        required: true
-        content:
-          text/pain:
-            schema:
-              type: string
-      responses:
-        '200':
-          description: The result of the classification
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClassificationResult'
-
-        '500':
-            description: Internal server error
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
   /classify:
     post:
       tags:
         - functional
+        - v2
       summary: Classifies the posted document
       requestBody:
-        description: The document as a byte array
+        description: The classification request
         required: true
         content:
-          application/octet-stream:
+          application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/ClassificationRequest'
       responses:
         '200':
           description: The result of the classification
@@ -91,9 +66,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '501':
+          description: Not implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
+    ClassificationRequest:
+      type: object
+      properties:
+        content_type:
+          type: string
+          description: The content type of the payload
+          example: text/plain
+        content:
+          type: string
+          description: The plain text or the base64 representation of the payload
 
     Error:
       type: object
@@ -116,35 +107,48 @@ components:
     ClassificationResult:
       type: object
       properties:
-        metadata:
+        info:
           $ref: '#/components/schemas/ClassificationMetadata'
-        semanticresult:
-          $ref: '#/components/schemas/SemanticResult'
+        content_type:
+          type: string
+          example: text/plain
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SemanticResult'
 
     ClassificationMetadata:
       type: object
       properties:
-        processing_date:
+        processed_at:
           type: string
           format: date-time
+        processing_time:
+          type: string
+          example: 20ms
         knowledgebase_version:
           type: string
           example: 1.0.3
 
+
     SemanticResult:
       type: object
       properties:
-        topicName:
+        topic:
           type: string
         sender:
           type: string
         metadata:
-          $ref: '#components/schemas/Metadata'
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
 
     Metadata:
       type: object
       properties:
         name:
           type: string
+          example: language
         value:
           type: string
+          example: de

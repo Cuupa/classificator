@@ -10,60 +10,16 @@
         <version>DEV</version>
     </parent>
 
-    <artifactId>app</artifactId>
-    <version>DEV</version>
-    <packaging>jar</packaging>
+    <artifactId>api-implementation</artifactId>
 
     <properties>
-        <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
+        <maven.skip.sourcejavadoc>false</maven.skip.sourcejavadoc>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.cuupa</groupId>
             <artifactId>api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cuupa</groupId>
-            <artifactId>api-implementation</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cuupa</groupId>
-            <artifactId>configuration</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cuupa</groupId>
-            <artifactId>domain</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cuupa</groupId>
-            <artifactId>engine</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cuupa</groupId>
-            <artifactId>monitor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cuupa</groupId>
-            <artifactId>ui</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -94,15 +50,13 @@
             </plugin>
 
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${spring-boot.repackage.skip}</skip>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>test-jar</goal>
                         </goals>
                     </execution>
                 </executions>

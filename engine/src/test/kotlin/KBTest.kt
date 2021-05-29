@@ -27,20 +27,20 @@ class KBTest {
     fun parseBill() {
         val resultsBill = knowledgeManager!!.getResults(textBill)
         assertTrue(resultsBill.isNotEmpty())
-        assertEquals("BILL", resultsBill[0].topicName)
+        assertEquals("BILL", resultsBill[0].topic)
     }
 
     @Test
     fun parseWarning() {
         val resultsWarning = knowledgeManager!!.getResults(textWarning)
         assertEquals(1, resultsWarning.size.toLong())
-        assertEquals("WARNING", resultsWarning[0].topicName)
+        assertEquals("WARNING", resultsWarning[0].topic)
     }
 
     @Test
     fun parseSicknote() {
         val resultsWarning = knowledgeManager!!.getResults(textSicknote)
         assertEquals(1, resultsWarning.size.toLong())
-        assertEquals("SICKNOTE", resultsWarning[0].topicName)
+        assertEquals("SICKNOTE", resultsWarning[0].topic)
     }
 }

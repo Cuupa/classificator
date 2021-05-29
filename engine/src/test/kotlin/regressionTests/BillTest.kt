@@ -36,10 +36,10 @@ class BillTest : LocalRegressionTest() {
             IntStream.range(0, files.size).forEach { index ->
                 val result = knowledgeManager!!.getResults(contents[index])
                 assertEquals(1, result.size)
-                if ("BILL" == result.first().topicName) {
+                if ("BILL" == result.first().topic) {
                     bill += 1
                 } else {
-                    list.add("${files[index].absolutePath} classified as ${result.first().topicName}")
+                    list.add("${files[index].absolutePath} classified as ${result.first().topic}")
                 }
             }
         }

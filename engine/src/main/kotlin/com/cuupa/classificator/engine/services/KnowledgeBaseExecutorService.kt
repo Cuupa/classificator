@@ -1,14 +1,13 @@
 package com.cuupa.classificator.engine.services
 
+import com.cuupa.classificator.domain.Metadata
 import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.domain.Sender
-import com.cuupa.classificator.domain.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.logging.LogFactory
-import com.cuupa.classificator.domain.Metadata
 
 class KnowledgeBaseExecutorService(
     private val topicService: TopicService,
@@ -17,7 +16,7 @@ class KnowledgeBaseExecutorService(
 ) {
 
     fun submit(text: String?): List<SemanticResult> {
-        if(text.isNullOrBlank()){
+        if (text.isNullOrBlank()) {
             return listOf(SemanticResult())
         }
 
@@ -59,7 +58,7 @@ class KnowledgeBaseExecutorService(
                 it.metadata = distinctMetadata
             }
             if (semanticResults.isEmpty()) {
-                semanticResults.add(SemanticResult(sender = sender, metadata = distinctMetadata))
+                semanticResults.add(SemanticResult(sender = sender, metadata = distinctMetadata, originalText = text))
             }
         }
         LOG.info(semanticResults)

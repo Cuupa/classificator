@@ -41,7 +41,7 @@ class IntegrationTests {
 
     @Test
     fun shouldHaveTopic() {
-        assertEquals("TERMINATION", result.first().topicName)
+        assertEquals("TERMINATION", result.first().topic)
     }
 
     @Test
