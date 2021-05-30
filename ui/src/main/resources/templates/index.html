@@ -8,6 +8,22 @@
 
 <body>
 
+<nav class="navbar fixed-top navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#">Features</a>
+            <a class="nav-item nav-link" href="#">Pricing</a>
+            <a class="nav-item nav-link disabled" href="#">Disabled</a>
+        </div>
+    </div>
+</nav>
+
 <form action="#" th:action="@{guiProcess}" th:object="${guiProcess}"
       method="post">
     <table class="table table-striped">
@@ -22,7 +38,7 @@
             <td width="50%">
                 <label>
 <textarea class="form-control input-lg" autofocus="autofocus" cols="100%"
-rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea>
+          rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea>
                 </label>
             </td>
             <td width="50%" align="center">

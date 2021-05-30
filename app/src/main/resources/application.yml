@@ -14,6 +14,10 @@ logging.level:
 classificator:
   kbfiles: ${knowlegde_base}
 
+  admin:
+    username: admin
+    password: admin
+
   monitor:
     username:
     password:

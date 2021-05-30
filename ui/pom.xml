@@ -20,6 +20,11 @@
 
         <dependency>
             <groupId>com.cuupa</groupId>
+            <artifactId>api-implementation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cuupa</groupId>
             <artifactId>monitor</artifactId>
             <exclusions>
                 <exclusion>

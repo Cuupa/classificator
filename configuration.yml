@@ -3,6 +3,10 @@ classificator:
   knowledge_base: build/knowledgebase
   api_key_required: true
 
+  admin:
+    username: "Jane"
+    password: "Doe"
+
   monitor:
     username: "John"
     password: "Doe"

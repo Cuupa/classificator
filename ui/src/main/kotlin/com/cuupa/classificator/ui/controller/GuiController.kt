@@ -31,4 +31,7 @@ class GuiController(private val classificator: ClassificatorImplementation, priv
         model.addAttribute("guiProcess", guiProcess)
         return "index"
     }
+
+    @RequestMapping(value = ["/login"], method = [RequestMethod.GET])
+    fun login() = "login"
 }

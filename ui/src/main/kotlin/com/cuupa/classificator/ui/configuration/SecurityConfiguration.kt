@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.User
 import javax.annotation.PostConstruct
 
 @Configuration
@@ -20,29 +21,37 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     private var configuration: Config? = null
 
     @Value("\${classificator.monitor.username}")
-    private var username: String? = null
+    private var monitorUsername: String? = null
 
     @Value("\${classificator.monitor.password}")
-    private var password: String? = null
+    private var monitorPassword: String? = null
+
+    @Value("\${classificator.admin.username}")
+    private var adminUsername: String? = null
+
+    @Value("\${classificator.admin.password}")
+    private var adminPassword: String? = null
+
 
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
             .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/fonts/**").permitAll()
-                .antMatchers("/js/**").permitAll()
-                .antMatchers("/api/**").permitAll()
-                .antMatchers("/guiProcess").permitAll()
-                .antMatchers("/monitor", "/download").hasAnyRole("USER")
-                .anyRequest().authenticated()
+            .antMatchers("/").permitAll()
+            .antMatchers("/css/**").permitAll()
+            .antMatchers("/fonts/**").permitAll()
+            .antMatchers("/js/**").permitAll()
+            .antMatchers("/api/**").permitAll()
+            .antMatchers("/guiProcess").permitAll()
+            .antMatchers("/monitor", "/download").hasAnyRole("USER", "ADMIN")
+            .antMatchers("/admin").hasAnyRole("ADMIN")
+            .anyRequest().authenticated()
             .and()
             .formLogin()
-                .loginPage("/login")
-                .failureHandler(authenticationFailureHandler())
-                .defaultSuccessUrl("/monitor")
-                .failureUrl("/login?error")
-                .permitAll()
+            .loginPage("/login")
+            .failureHandler(authenticationFailureHandler())
+            .defaultSuccessUrl("/monitor")
+            .failureUrl("/login?error")
+            .permitAll()
             .and()
             .logout()
             .permitAll()
@@ -60,24 +69,52 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
-        auth.inMemoryAuthentication()
-            .withUser(getUsername()).password("{noop}${getPassword()}").roles("USER")
+        val monitorUser = User.builder()
+            .username(getMonitorUsername())
+            .password("{noop}${getMonitorPassword()}")
+            .roles("USER")
+            .build()
+
+        val adminUser = User.builder()
+            .username(getAdminUsername())
+            .password("{noop}${getAdminPassword()}")
+            .roles("ADMIN")
+            .build()
+
+        auth.inMemoryAuthentication().withUser(monitorUser).withUser(adminUser)
     }
 
-    private fun getUsername(): String{
-        return if (username.isNullOrEmpty()) {
+    private fun getMonitorUsername(): String {
+        return if (monitorUsername.isNullOrEmpty()) {
             configuration?.classificator?.monitorConfig?.username ?: ""
         } else {
-            username ?: ""
+            monitorUsername ?: ""
         }
     }
 
 
-    private fun getPassword(): String{
-        return if (password.isNullOrEmpty()) {
+    private fun getMonitorPassword(): String {
+        return if (monitorPassword.isNullOrEmpty()) {
             configuration?.classificator?.monitorConfig?.password ?: ""
         } else {
-            password ?: ""
+            monitorPassword ?: ""
+        }
+    }
+
+    private fun getAdminUsername(): String {
+        return if (adminUsername.isNullOrEmpty()) {
+            configuration?.classificator?.adminConfig?.username ?: ""
+        } else {
+            adminUsername ?: ""
+        }
+    }
+
+
+    private fun getAdminPassword(): String {
+        return if (adminPassword.isNullOrEmpty()) {
+            configuration?.classificator?.adminConfig?.password ?: ""
+        } else {
+            adminPassword ?: ""
         }
     }
 
