@@ -2,6 +2,7 @@ package com.cuupa.classificator
 
 import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.engine.Classificator
+import com.cuupa.classificator.engine.ClassificatorImplementation
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

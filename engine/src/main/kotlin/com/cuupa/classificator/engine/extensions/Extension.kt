@@ -1,10 +1,8 @@
 package com.cuupa.classificator.engine.extensions
 
-import org.apache.commons.logging.LogFactory
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.apache.pdfbox.text.TextPosition
-import java.io.IOException
 
 /**
  * @author Simon Thiel (https://github.com/cuupa) (24.05.2021)
@@ -13,16 +11,12 @@ object Extension {
 
     fun PDDocument.getText(): List<String> {
         val pages = mutableListOf<String>()
-        try {
-            for (page in 1..numberOfPages) {
-                val stripper = PDFTextStripper().apply {
-                    startPage = page
-                    endPage = page
-                }
-                pages.add(stripper.getText(this))
+        for (page in 1..numberOfPages) {
+            val stripper = PDFTextStripper().apply {
+                startPage = page
+                endPage = page
             }
-        } catch (e: IOException) {
-            log.error(e)
+            pages.add(stripper.getText(this))
         }
         return pages
     }
@@ -39,5 +33,11 @@ object Extension {
         return substringAfter(leftDelimiter).substringBefore(rightDelimiter)
     }
 
-    private val log = LogFactory.getLog(Extension::class.java)
+    fun String.tryToInt(): Int {
+        return try {
+            this.toInt()
+        } catch (e: Exception) {
+            0
+        }
+    }
 }

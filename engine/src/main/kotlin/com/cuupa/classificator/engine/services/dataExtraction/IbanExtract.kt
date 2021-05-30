@@ -10,7 +10,7 @@ class IbanExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.IGNOR
         val sb = StringBuilder()
         for (i in charArray.indices) {
             if (i > 0 && i % 4 == 0) {
-                sb.append(" ")
+                sb.append(StringConstants.blank)
             }
             sb.append(charArray[i])
         }

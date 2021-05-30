@@ -1,17 +1,18 @@
 package com.cuupa.classificator.engine.services.dataExtraction
 
 import com.cuupa.classificator.engine.RegexConstants
+import com.cuupa.classificator.engine.StringConstants
 import com.cuupa.classificator.engine.services.Months
 
 class DateExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.IGNORE_CASE)) {
 
     // TODO: normalize months in non numeric values
     override fun normalize(value: String): String {
-        return if (value.contains(".")) {
+        return if (value.contains(StringConstants.dot)) {
             val dateFields = value.split(RegexConstants.dotPattern)
             return when {
                 dateFields.size == 3 -> normalizeDate(dateFields)
-                dateFields.size == 2 && value.contains(" ") -> parseAndNormalizeDate(dateFields)
+                dateFields.size == 2 && value.contains(StringConstants.blank) -> parseAndNormalizeDate(dateFields)
                 else -> value
             }
         } else {

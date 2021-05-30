@@ -10,10 +10,12 @@ class TimespanExtract(regex: String) : Extract(Regex(regex.trim(), RegexOption.I
         textAfterToken: String
     ): List<Pair<String, String>> {
         val dates = mutableListOf<String>()
+
         val value = regex.findAll(text).map {
             val normalized = normalize(it.value)
             Pair(textBeforeToken + normalized + textAfterToken, normalized)
         }.toList()
+
         val finalValue = mutableListOf<Pair<String, String>>()
         value.forEach { content ->
             dates.forEach { date ->

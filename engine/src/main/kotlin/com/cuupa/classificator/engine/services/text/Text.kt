@@ -34,16 +34,13 @@ open class Text internal constructor(var text: String) {
             .trim()
     }
 
-    fun length(): Int {
-        return stringArray.size
-    }
+    fun length() = stringArray.size
 
     operator fun get(index: Int): String {
         return stringArray[index]
     }
 
-    val isEmpty: Boolean
-        get() = stringArray.isEmpty()
+    fun isEmpty() = stringArray.isEmpty()
 
     override fun equals(other: Any?): Boolean {
         return when {

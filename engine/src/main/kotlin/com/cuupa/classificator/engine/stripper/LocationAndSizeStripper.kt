@@ -6,6 +6,7 @@ import org.apache.pdfbox.text.PDFTextStripper
 import org.apache.pdfbox.text.TextPosition
 
 class LocationAndSizeStripper : PDFTextStripper() {
+
     @Volatile
     private var textAlreadyParsed = false
     private val list: MutableList<TextAndPosition> = mutableListOf()

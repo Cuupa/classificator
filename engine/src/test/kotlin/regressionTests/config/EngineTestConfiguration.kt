@@ -1,6 +1,6 @@
 package regressionTests.config
 
-import com.cuupa.classificator.engine.Classificator
+import com.cuupa.classificator.engine.ClassificatorImplementation
 import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
 import com.cuupa.classificator.engine.services.MetadataService
@@ -30,8 +30,8 @@ open class EngineTestConfiguration {
     var knowledgbaseDir: String = ""
 
     @Bean
-    open fun classificator(): Classificator {
-        return Classificator(knowledgeManager(), analyser(), monitor!!)
+    open fun classificator(): ClassificatorImplementation {
+        return ClassificatorImplementation(knowledgeManager(), analyser(), monitor!!)
     }
 
     @Bean

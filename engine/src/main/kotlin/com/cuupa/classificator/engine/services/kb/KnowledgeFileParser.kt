@@ -62,10 +62,8 @@ object KnowledgeFileParser {
     }
 
     fun parseTopicFile(kbFile: String): Topic {
-        val split = kbFile.split(RegexConstants.equalPattern)
-        val topicName = split[0].trim()
-        return (fillToken(kbFile, Topic()) as Topic)
-            .apply { name = topicName }
+        val topicName = kbFile.split(RegexConstants.equalPattern)[0].trim()
+        return (fillToken(kbFile, Topic()) as Topic).apply { name = topicName }
     }
 
     private fun findExtractName(charArray: CharArray, index: Int): String {

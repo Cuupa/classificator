@@ -17,21 +17,21 @@ servers:
       port:
         default: '8080'
       basePath:
-        default: 'api/rest/v2'
+        default: 'api/rest/1.0'
 paths:
-  /status:
+  /ping:
     get:
       tags:
         - health-check
-        - v2
+        - v1
       summary: Retrieves the application status
       responses:
         '200':
           description: The status of the application
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Status'
+              type: string
+              example: ""
         default:
           description: Unexpected error
           content:
@@ -39,19 +39,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /classification:
+  /classifyText:
     post:
       tags:
         - functional
-        - v2
-      summary: Classifies the posted document
+        - v1
+      summary: Classifies the submitted plain text
+      description: Classifies the submitted text
+
       requestBody:
-        description: The classification request
+        description: Plaintext to classify
         required: true
         content:
-          application/json:
+          text/pain:
             schema:
-              $ref: '#/components/schemas/ClassificationRequest'
+              type: string
+              description: ""
+              example:
+      responses:
+        '200':
+          description: The result of the classification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationResult'
+
+        '405':
+          description: Method not allowed
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /classify:
+    post:
+      tags:
+        - functional
+        - v1
+      summary: Classifies the posted document
+      requestBody:
+        description: The document as a byte array
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: object
       responses:
         '200':
           description: The result of the classification
@@ -66,26 +100,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '501':
-          description: Not implemented
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+
 
 components:
   schemas:
-    ClassificationRequest:
-      type: object
-      properties:
-        content_type:
-          type: string
-          description: The content type of the payload
-          example: text/plain
-        content:
-          type: string
-          description: The plain text or the base64 representation of the payload. If base64 is detected and the providing content-type does not match the content, classification will be redone with a newly determined content-type
-
     Error:
       type: object
       properties:
@@ -109,7 +127,7 @@ components:
       properties:
         info:
           $ref: '#/components/schemas/ClassificationMetadata'
-        content_type:
+        content-type:
           type: string
           example: text/plain
         results:
@@ -120,7 +138,7 @@ components:
     ClassificationMetadata:
       type: object
       properties:
-        processed_at:
+        processing_date:
           type: string
           format: date-time
         processing_time:
@@ -134,7 +152,7 @@ components:
     SemanticResult:
       type: object
       properties:
-        topic:
+        topicName:
           type: string
         sender:
           type: string

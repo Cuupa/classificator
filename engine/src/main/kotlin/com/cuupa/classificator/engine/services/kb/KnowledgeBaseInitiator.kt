@@ -1,5 +1,6 @@
 package com.cuupa.classificator.engine.services.kb
 
+import com.cuupa.classificator.engine.extensions.Extension.tryToInt
 import org.apache.commons.logging.LogFactory
 import java.io.File
 
@@ -65,10 +66,4 @@ class KnowledgeBaseInitiator(private val knowledgebaseDir: String) {
     }
 }
 
-private fun String.tryToInt(): Int {
-    return try {
-        this.toInt()
-    } catch (e: Exception) {
-        0
-    }
-}
+

@@ -1,6 +1,5 @@
 package com.cuupa.classificator.engine.services.dataExtraction
 
-
 abstract class Extract(val regex: Regex) {
 
     abstract fun normalize(value: String): String

@@ -1,6 +1,7 @@
 package com.cuupa.classificator
 
 import com.cuupa.classificator.engine.Classificator
+import com.cuupa.classificator.engine.ClassificatorImplementation
 import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
 import com.cuupa.classificator.engine.services.MetadataService
@@ -29,7 +30,7 @@ open class EngineTestConfiguration {
 
     @Bean
     open fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor): Classificator {
-        return Classificator(knowledgeManager, analyser, monitor)
+        return ClassificatorImplementation(knowledgeManager, analyser, monitor)
     }
 
     @Bean
