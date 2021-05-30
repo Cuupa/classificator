@@ -1,4 +1,4 @@
-package com.cuupa.classificator.api.v2.api
+package com.cuupa.classificator.api.v2
 
 import javax.annotation.Generated
 

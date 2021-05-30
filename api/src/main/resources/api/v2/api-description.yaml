@@ -78,6 +78,9 @@ components:
     ClassificationRequest:
       type: object
       properties:
+        api_key:
+          type: string
+          description: The API key to distinguish the incomming requests in case of public hosting. Can be turned off in the configuraion.yaml in case it is not needed
         content_type:
           type: string
           description: The content type of the payload
@@ -129,7 +132,6 @@ components:
         knowledgebase_version:
           type: string
           example: 1.0.3
-
 
     SemanticResult:
       type: object

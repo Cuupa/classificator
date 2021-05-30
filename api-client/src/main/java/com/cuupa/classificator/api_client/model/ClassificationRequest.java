@@ -12,11 +12,29 @@ import java.util.Objects;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-29T11:42:02.031Z[GMT]")
 public class ClassificationRequest {
+
+    @JsonProperty("api_key")
+    private String apiKey = null;
+
     @JsonProperty("content_type")
     private String contentType = null;
 
     @JsonProperty("content")
     private String content = null;
+
+    public ClassificationRequest apiKey(String apiKey) {
+        this.apiKey = apiKey;
+        return this;
+    }
+
+    @Schema(example = "text/plain", description = "The api key")
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
 
     public ClassificationRequest contentType(String contentType) {
         this.contentType = contentType;
@@ -55,8 +73,9 @@ public class ClassificationRequest {
             return false;
         }
         ClassificationRequest classificationRequest = (ClassificationRequest) o;
-        return Objects.equals(this.contentType, classificationRequest.contentType) &&
-                Objects.equals(this.content, classificationRequest.content);
+        return Objects.equals(this.contentType, classificationRequest.contentType)
+                && Objects.equals(this.content, classificationRequest.content)
+                && Objects.equals(this.apiKey, classificationRequest.apiKey);
     }
 
     @Override
@@ -68,7 +87,7 @@ public class ClassificationRequest {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class ClassificationRequest {\n");
-
+        sb.append("    api_key: ").append("****************").append("\n");
         sb.append("    contentType: ").append(toIndentedString(contentType)).append("\n");
         sb.append("    content: ").append(toIndentedString(content)).append("\n");
         sb.append("}");

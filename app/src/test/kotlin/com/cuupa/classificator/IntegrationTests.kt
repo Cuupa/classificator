@@ -23,13 +23,6 @@ class IntegrationTests {
     @Autowired
     private val classificator: Classificator? = null
 
-    private var result = listOf<SemanticResult>()
-
-    @BeforeAll
-    fun getResult() {
-        result = classificator?.classify(smokeText) ?: listOf()
-    }
-
     @Test
     fun shouldContextLoad() {
 
@@ -37,34 +30,40 @@ class IntegrationTests {
 
     @Test
     fun shouldHaveOneResult() {
+        val result = classificator?.classify(smokeText) ?: listOf()
         assertEquals(1, result.size)
     }
 
     @Test
     fun shouldHaveTopic() {
+        val result = classificator?.classify(smokeText) ?: listOf()
         assertEquals("TERMINATION", result.first().topic)
     }
 
     @Test
     fun shouldHaveBirthdate() {
+        val result = classificator?.classify(smokeText) ?: listOf()
         val dateOfBirth = result.first().metadata.find { it.name == "date_of_birth" }
         assertEquals("01.01.1999", dateOfBirth?.value)
     }
 
     //@Test
     fun shouldHaveIban() {
+        val result = classificator?.classify(smokeText) ?: listOf()
         val iban = result.first().metadata.find { it.name == "IBAN" }
         assertEquals("DE19 1234 1234 1234 1234 12", iban?.value)
     }
 
     @Test
     fun shouldHavePolicyNumber() {
+        val result = classificator?.classify(smokeText) ?: listOf()
         val iban = result.first().metadata.find { it.name == "POLICY_NUMBER" }
         assertEquals("32103847298", iban?.value)
     }
 
     @Test
     fun shouldHavePhoneNumber() {
+        val result = classificator?.classify(smokeText) ?: listOf()
         val phoneNumber = result.first().metadata.find { it.name == "phone_Number" }
         assertEquals("+49301234567", phoneNumber?.value)
     }

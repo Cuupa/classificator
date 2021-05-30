@@ -36,7 +36,7 @@ The monitor is enabled by default and uses the database `monitor.db`
     password: "Doe"
     enabled: true
     logText: true
-    database-name: "monitor.db"
+    database_name: "monitor.db"
 
 ----
 
@@ -44,10 +44,10 @@ The monitor is enabled by default and uses the database `monitor.db`
 These entries set the username and password for accessing the statistics under `/monitor`
 
 ==== Database name
-The database name is defined via `database-name`. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to
+The database name is defined via `database_name`. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to
 [source,yaml]
 ----
-database-name: "C:\Users\John Doe\monitor.db"
+database_name: "C:\Users\John Doe\monitor.db"
 ----
 ==== Enabled and logText
 If `enabled` is set to `true`, all events will be logged. To turn it off, set it to `false`.

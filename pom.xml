@@ -53,6 +53,11 @@
 
         <openapi.version>1.5.7</openapi.version>
 
+        <mockito-core.version>3.3.3</mockito-core.version>
+        <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
+        <mockito-junit-jupter.version>2.23.0</mockito-junit-jupter.version>
+        <swagger-annotations.version>1.5.24</swagger-annotations.version>
+
         <documentation-to-build>README</documentation-to-build>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
@@ -150,13 +155,13 @@
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
-                <version>3.0.2</version>
+                <version>${findbugs-jsr305.verion}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>1.5.24</version>
+                <version>${swagger-annotations.version}</version>
             </dependency>
 
             <dependency>
@@ -219,6 +224,20 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-test</artifactId>
                 <version>${kotlin.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito-core.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito-junit-jupter.version}</version>
                 <scope>test</scope>
             </dependency>
 

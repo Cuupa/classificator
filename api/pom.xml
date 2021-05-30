@@ -32,6 +32,11 @@
                 </exclusion>
 
                 <exclusion>
+                    <groupId>org.apache.tika</groupId>
+                    <artifactId>tika-core</artifactId>
+                </exclusion>
+
+                <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-compress</artifactId>
                 </exclusion>
@@ -44,6 +49,16 @@
                 <exclusion>
                     <groupId>com.cuupa</groupId>
                     <artifactId>monitor</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -76,11 +91,6 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-kotlin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
         </dependency>
 
         <dependency>

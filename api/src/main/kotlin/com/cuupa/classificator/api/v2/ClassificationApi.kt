@@ -3,7 +3,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.cuupa.classificator.api.v2.api
+package com.cuupa.classificator.api.v2
 
 import com.cuupa.classificator.api_client.model.ClassificationRequest
 import com.cuupa.classificator.api_client.model.ClassificationResult

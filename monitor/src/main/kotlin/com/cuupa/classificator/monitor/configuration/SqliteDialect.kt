@@ -1,4 +1,4 @@
-package com.cuupa.classificator.monitor.persistence.sqlite
+package com.cuupa.classificator.monitor.configuration
 
 import org.hibernate.dialect.Dialect
 import org.hibernate.dialect.function.NoArgSQLFunction

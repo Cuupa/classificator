@@ -7,4 +7,4 @@ classificator:
     password: "Doe"
     enabled: true
     logText: true
-    database-name: "monitor.db"
+    database_name: "monitor.db"

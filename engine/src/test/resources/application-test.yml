@@ -12,4 +12,4 @@ classificator:
   monitor:
     enabled: true
     logText: true
-    database-name: "monitor.db"
+    database_name: "monitor.db"

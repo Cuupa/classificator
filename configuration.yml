@@ -1,10 +1,11 @@
 ---
 classificator:
   knowledge_base: build/knowledgebase
+  api_key_required: true
 
   monitor:
     username: "John"
     password: "Doe"
     enabled: true
     logText: true
-    database-name: "monitor.db"
+    database_name: "monitor.db"

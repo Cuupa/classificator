@@ -1,11 +1,12 @@
 package com.cuupa.classificator.api_implementation.v2
 
-import com.cuupa.classificator.api.v2.api.ClassificationApi
+import com.cuupa.classificator.api.v2.ClassificationApi
 import com.cuupa.classificator.api_client.model.ClassificationMetadata
 import com.cuupa.classificator.api_client.model.ClassificationRequest
 import com.cuupa.classificator.api_client.model.ClassificationResult
 import com.cuupa.classificator.api_client.model.SemanticResult
 import com.cuupa.classificator.api_implementation.CustomOffsetDateTimeSerializer
+import com.cuupa.classificator.api_implementation.api_key.ApiKeyValidator
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.google.gson.GsonBuilder
@@ -36,7 +37,8 @@ import javax.validation.Valid
 open class ClassificationApiController @Autowired constructor(
     private val classificator: Classificator,
     private val knowledgeBase: KnowledgeBase,
-    private val request: HttpServletRequest
+    private val request: HttpServletRequest,
+    private val apiKeyValidator: ApiKeyValidator
 ) : ClassificationApi {
 
     override fun classifyPost(
@@ -48,8 +50,19 @@ open class ClassificationApiController @Autowired constructor(
         ) @RequestBody body: @Valid ClassificationRequest?
     ): ResponseEntity<String> {
         val accept = request.getHeader("Accept") ?: ""
-        return if (accept.contains("application/json")) {
-            try {
+
+        if (accept.contains("application/json")) {
+            return try {
+
+                if (!apiKeyValidator.apiKeyValid(body?.apiKey)) {
+                    log.error("Tried to use '/api/rest/v2/classification' with invalid api key ${body?.apiKey}")
+                    val error = com.cuupa.classificator.api_client.model.Error().apply {
+                        code = "403"
+                        message = "Forbidden"
+                    }
+                    return ResponseEntity(gson.toJson(error), HttpStatus.FORBIDDEN)
+                }
+
                 val start = LocalDateTime.now()
                 val (contentType, classificationResult) = classificator.classify(body?.contentType, body?.content)
                 val stop = LocalDateTime.now()
@@ -63,12 +76,13 @@ open class ClassificationApiController @Autowired constructor(
                 }
                 ResponseEntity(gson.toJson(error), HttpStatus.INTERNAL_SERVER_ERROR)
             }
+
         } else {
             val error = com.cuupa.classificator.api_client.model.Error().apply {
                 code = "501"
                 message = "Not Implemented for content type $accept"
             }
-            ResponseEntity(gson.toJson(error), HttpStatus.NOT_IMPLEMENTED)
+            return ResponseEntity(gson.toJson(error), HttpStatus.NOT_IMPLEMENTED)
         }
     }
 

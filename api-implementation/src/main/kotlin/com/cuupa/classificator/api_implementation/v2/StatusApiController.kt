@@ -1,6 +1,6 @@
 package com.cuupa.classificator.api_implementation.v2
 
-import com.cuupa.classificator.api.v2.api.StatusApi
+import com.cuupa.classificator.api.v2.StatusApi
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.google.gson.GsonBuilder
 import org.slf4j.LoggerFactory

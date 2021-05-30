@@ -22,7 +22,7 @@ open class ExternalConfigurationTest {
         }
     }
 
-    @Bean
+    @Bean("testConfig")
     open fun configurationPrimary(jackson: ObjectMapper): Config {
         return ConfigLoader(jackson, File("src/test/resources/configuration.yml")).getConfig()
     }
