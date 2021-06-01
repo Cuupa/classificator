@@ -31,7 +31,7 @@ class ClassificatorImplementation(
     override fun classify(contentType: String?, content: String?): Pair<String, List<SemanticResult>> {
         val start = LocalDateTime.now()
 
-        val isBase64 = content?.let { base64Regex.matches(it) } ?: false
+        val isBase64 = content?.let { it.endsWith("=").and(base64Regex.matches(it)) } ?: false
         val finalContent = if (isBase64) getContent(content) else content
 
         var result: Pair<String, List<SemanticResult>> = Pair("application/octet-stream", listOf())

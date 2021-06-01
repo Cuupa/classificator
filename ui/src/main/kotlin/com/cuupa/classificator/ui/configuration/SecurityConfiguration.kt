@@ -92,7 +92,6 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
         }
     }
 
-
     private fun getMonitorPassword(): String {
         return if (monitorPassword.isNullOrEmpty()) {
             configuration?.classificator?.monitorConfig?.password ?: ""
@@ -108,7 +107,6 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             adminUsername ?: ""
         }
     }
-
 
     private fun getAdminPassword(): String {
         return if (adminPassword.isNullOrEmpty()) {

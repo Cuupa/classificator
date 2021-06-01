@@ -1,5 +1,6 @@
 server_port: 8080
 knowlegde_base:
+configuration:
 
 server.port: ${server_port}
 
@@ -12,6 +13,8 @@ logging.level:
   com.cuupa.classificator: debug
 
 classificator:
+  application_name: "Classificator"
+
   kbfiles: ${knowlegde_base}
 
   admin:

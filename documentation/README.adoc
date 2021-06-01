@@ -2,7 +2,6 @@
 :author:
 Simon Thiel (Cuupa)
 :toc:
-
 :icons: font
 
 == Installation

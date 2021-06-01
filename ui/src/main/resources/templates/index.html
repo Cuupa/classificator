@@ -1,28 +1,14 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Testing</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
 </head>
 
-<body>
+<body style="overflow: hidden">
 
-<nav class="navbar fixed-top navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Features</a>
-            <a class="nav-item nav-link" href="#">Pricing</a>
-            <a class="nav-item nav-link disabled" href="#">Disabled</a>
-        </div>
-    </div>
-</nav>
+<div th:insert="fragments/header"></div>
 
 <form action="#" th:action="@{guiProcess}" th:object="${guiProcess}"
       method="post">
@@ -65,9 +51,11 @@
                                 </thead>
                                 <tbody>
 
-                                <tr th:each="metaData : ${result.metaData}">
-                                    <td width="50%"><span th:text="${metaData.name}">Name</span></td>
-                                    <td width="50%"><span th:text="${metaData.value}">Value</span></td>
+                                <!--/*@thymesVar id="metadata" type="com.cuupa.classificator.domain.Metadata"*/-->
+                                <tr th:each="metadata : ${result.metadata}">
+                                    <td width="50%">
+                                        <span th:text="${metadata.name}">Name</span></td>
+                                    <td width="50%"><span th:text="${metadata.value}">Value</span></td>
                                 </tr>
                                 </tbody>
                             </table>
