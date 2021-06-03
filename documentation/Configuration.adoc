@@ -1,5 +1,7 @@
 == Configuration
 
+:icons: font
+
 This is the default configuration of the application +
 It sets the server port to 8080 and the knowledgebase-directory to `build/knowledgebase`
 
@@ -8,6 +10,11 @@ It sets the server port to 8080 and the knowledgebase-directory to `build/knowle
 ---
 classificator:
   knowledge_base: build/knowledgebase
+  api_key_required: true
+
+  admin:
+    username: "Jane"
+    password: "Doe"
 
   monitor:
     username: "John"
@@ -19,7 +26,7 @@ classificator:
 
 === Server port
 The default port of this application is `8080`
-So if you want to access the webUI on your local machine navigate to `https://localhost:8080`. If you want to change that port, see <<_via_command_line_arguments, Changing via command line arguments>>
+So if you want to access the webUI on your local machine navigate to `https://localhost:8080`.If you want to change that port, see <<_via_command_line_arguments, Changing via command line arguments>>
 
 === Knowledgebase
 This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
@@ -90,7 +97,7 @@ CAUTION: The server port can only be changed by using the command line arguments
 
 [source,shell]
 ----
-java -jar app.jar --server_port=8080 --knowledge_base=knowlegebase/kb-1.0.0.db --classificator.monitor.logText=false
+java -jar app.jar '--server_port=8080' '--knowledge_base=knowlegebase/kb-1.0.0.db' '--classificator.monitor.logText=false' '--configuration=/opt/classificator/configuration.yml'
 ----
 
 NOTE: The first part simply runs the jar by the name "app.jar" +
@@ -117,3 +124,9 @@ NOTE: or absolute paths like
 --knowledge_base="C:\Users\John Doe\knowlegebase\kb-1.0.0.db"
 ----
 CAUTION: If your parameter contains a whitespace (eg a `blank`) you need to quote the value
+
+[source, shell]
+----
+--configuration=/opt/classificator/configuration.yml
+----
+NOTE: Sets the path to the configuration file

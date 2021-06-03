@@ -1,43 +1,42 @@
 == Components
 :toc:
 
+:icons: font
+
 === Engine
 
-The engine is the core component of this application.It classifies the text and extracts the metadata
+The engine is the core component of this application. It classifies the text and extracts the metadata
 
 ==== Using the GUI
 
+The GUI is intended to be for regression-testing and to access the monitor and to create API-Keys.
+
 You can use the gui exposed at `http://address-of-your-server:port`
 
-You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button.The result will be presented in the right-hand area
+You can type in or paste the text to the left-hand textarea, which the engine shall analyze and hit the "Submit"-Button.The result will be presented in the right-hand area.
 
 image::images/classification_ui.png[]
 
 ==== Using the REST-API
 
-The engine exposes several methods for analyzing the input text.The most simple one receives the text as a string and returns a `List<SemantikResult>`
+The engine exposes a simple endpoint to get the application state and an endpoint for the acutal classifiying.
 
-The endpoint-path is:
+The endpoints are
 
 [source,kotlin]
 ----
-"/api/rest/1.0/classifyText"
+"/api/rest/v2/status"
+----
+
+and
+
+[source,kotlin]
+----
+"/api/rest/v2/classification"
 ----
 
 If you want to analyze anything except plain text the method accepts any byte array and uses a combination of `PDFBox` and `Apache Tika` to extract its contents for you.
 
-[source,kotlin]
-----
-"/api/rest/1.0/classify"
-----
-
-TIP: There's also a method for pinging the application.
-This method simply returns a HTTP/200
-
-[source,kotlin]
-----
-"/api/rest/1.0/ping"
-----
 
 ==== How it works
 
@@ -132,14 +131,14 @@ private fun normalizeText(text: String): String {
     }
 ----
 
-CAUTION: Text which is parsed to extract the metadata will not be normalized
+CAUTION: Text which is parsed to extract the metadata will not be normalized.
 
 ===== Finding Topics
 
 This step is the most simple one. +
 First of all the text is normalized like described above.
 Then, it'll be passed through each token for that topic like `NOT` and `OneOf`.
-The token tries to find its value like "awesome" in the text using the `Levenshtein-distance`.
+The token tries to match its value like "awesome" with the provided text using the `Levenshtein-distance`.
 The Levenshtein-distance computes the difference between the text and the tokenvalue itself.
 
 NOTE: "awesome" and "awesome" results in a distance of 0, where "awesome" and "awsome" has a distance of 1, whereas the number represents the number of changes for one string to become equal to the other string

@@ -17,6 +17,7 @@ CAUTION: The configuration file must be placed in the same location as the jar f
 This program requires an installed java runtime version 11 or higher
 
 === Windows/Unix
+CAUTION: Need to rework this
 
 Since it is a simple .jar file, which can run on any device featuring link:https://www.java.com/de/download/manual.jsp[Java], you can run it by simply doubleclicking.
 
@@ -56,8 +57,8 @@ image:images/docker_ports.png[ports]
 . Go to the environment tab and paste this as command to run: +
 [source,shell]
 ----
-java -jar /opt/classificator/app.jar '--server.port=8081' '--knowlegde_base=/opt/classificator/knowledgebase' '--configuration=/opt/classificator/configuration.yml'
+java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase' '--configuration=/opt/classificator/configuration.yml'
 ----
 
-Finally, run this container. You can access the webui by going to `http://your-nas-ip:your-port` For
+Finally, run this container. You can access the webui by going to `http://your-nas-ip:your-external-port` For
 example `http://192.168.0.3:8081`

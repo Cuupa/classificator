@@ -8,8 +8,6 @@ You need the following files provided by the release `(example values)`
 * The knowlegdebase file `(kb-1.0.2.db)`
 * The configuration file `(configuration.yml)`
 
-CAUTION: The configuration file must be placed in the same location as the jar file
-
 === Requirements
 
 This program requires an installed java runtime version 11 or higher
@@ -67,7 +65,7 @@ image:images/docker_ports.png[ports]
 . Go to the environment tab and paste this as command to run: +
 [source,shell]
 ----
-java -jar /opt/classificator/app.jar '--server.port=8081' '--knowlegde_base=/opt/classificator/knowledgebase'
+java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase'
 ----
 
 Finally, run this container. You can access the webui by going to `http://your-nas-ip:your-port` For
