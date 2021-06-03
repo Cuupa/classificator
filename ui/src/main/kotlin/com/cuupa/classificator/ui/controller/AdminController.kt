@@ -25,9 +25,8 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
             AdminProcess()
         }.apply { apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate } }
 
-        val modelAndView = ModelAndView("admin")
         model.addAttribute("adminProcess", adminProcess)
-        return modelAndView
+        return ModelAndView("admin")
     }
 
     @GetMapping(value = ["/admin/revoke{id}"])
@@ -48,37 +47,42 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
     @PostMapping(value = ["/admin/create"])
     fun create(
         @ModelAttribute adminProcess: AdminProcess, model: Model
-    ): String {
+    ): ModelAndView {
         try {
             if (adminProcess.assosiate.isBlank()) {
                 handleError(adminProcess, model)
-                return "/admin"
+                return ModelAndView("admin")
             }
+
             val exists = apiKeyRepository.findAll().find { it.assosiate == adminProcess.assosiate } != null
             if (exists) {
                 handleError(adminProcess, model)
-                return "/admin"
+                return ModelAndView("admin")
             }
 
-            val uuid = UUID.randomUUID().toString()
+            val uuid = UUID.randomUUID().toString().also { adminProcess.generatedApiKey = it }
             apiKeyRepository.save(ApiKeyEntity().apply {
                 apiKey = uuid
                 assosiate = adminProcess.assosiate
             })
-            adminProcess.generatedApiKey = uuid
+
             adminProcess.apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate }
         } catch (e: Exception) {
             log.error(e)
             handleError(adminProcess, model)
         }
         model.addAttribute("adminProcess", adminProcess)
-        return "/admin"
+        return ModelAndView("admin")
     }
 
     private fun handleError(adminProcess: AdminProcess, model: Model) {
+        log.error("99. Handle error")
         adminProcess.error = true
+        log.error("999. Set error = true")
         adminProcess.apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate }
+        log.error("999. Stored API keys in gui object")
         model.addAttribute("adminProcess", adminProcess)
+        log.error("9999. Stored GUI object in model")
     }
 
     companion object {
