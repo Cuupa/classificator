@@ -23,8 +23,7 @@
         <tr>
             <td width="50%">
                 <label>
-<textarea class="form-control input-lg" autofocus="autofocus" cols="100%"
-          rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea>
+                <textarea class="form-control input-lg" autofocus="autofocus" cols="100%" rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea>
                 </label>
             </td>
             <td width="50%" align="center">
@@ -38,9 +37,9 @@
                     </thead>
                     <tbody>
                     <tr th:each="result : ${guiProcess.result}">
-                        <td width="30%"><span th:text="${result.topic}">Topic</span></td>
-                        <td width="30%"><span th:text="${result.sender}">Sender</span></td>
-                        <td width="70%">
+                        <td style="width: 20%;"><span th:text="${result.topic}">Topic</span></td>
+                        <td style="width: 20%;"><span th:text="${result.sender}">Sender</span></td>
+                        <td style="width: 60%;">
 
                             <table>
                                 <thead class="thead-dark">
