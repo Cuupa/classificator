@@ -31,20 +31,25 @@ class ClassificatorImplementation(
     override fun classify(contentType: String?, content: String?): Pair<String, List<SemanticResult>> {
         val start = LocalDateTime.now()
 
-        val isBase64 = content?.let { it.endsWith("=").and(base64Regex.matches(it)) } ?: false
-        val finalContent = if (isBase64) getContent(content) else content
+        val finalContent = if (contentType != "text/plain") {
+            val isBase64 = content?.let { it.endsWith("=").and(base64Regex.matches(it)) } ?: false
+            if (isBase64) getContent(content) else content
+        } else {
+            content
+        }
 
-        var result: Pair<String, List<SemanticResult>> = Pair("application/octet-stream", listOf())
-        try {
-            result = classify(contentType, finalContent)
+        val result = try {
+            classify(contentType, finalContent)
         } catch (e: Exception) {
             log.error("Invalid content-type or content")
             val detectedContentType = detectContentType(finalContent)
             when {
-                isSupportedContentType(detectedContentType) -> result = classify(detectedContentType, finalContent)
-                else -> log.error("Content-Type $detectedContentType is not supported")
+                isSupportedContentType(detectedContentType) -> classify(detectedContentType, finalContent)
+                else -> {
+                    log.error("Content-Type $detectedContentType is not supported")
+                    Pair("application/octet-stream", listOf())
+                }
             }
-
         }
         val done = LocalDateTime.now()
         scope.launch {
