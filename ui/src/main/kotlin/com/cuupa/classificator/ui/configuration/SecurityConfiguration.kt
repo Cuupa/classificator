@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetails
 import javax.annotation.PostConstruct
 
 @Configuration
@@ -69,21 +70,41 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
-        val monitorUser = User.builder()
-            .username(getMonitorUsername())
-            .password("{noop}${getMonitorPassword()}")
-            .roles("USER")
-            .build()
 
-        val adminUser = User.builder()
-            .username(getAdminUsername())
-            .password("{noop}${getAdminPassword()}")
-            .roles("ADMIN")
-            .build()
+        listOf<UserDetails>()
 
-        auth.inMemoryAuthentication().withUser(monitorUser).withUser(adminUser)
+        val users = if (getMonitorUsername() == getAdminUsername()) {
+            if (getMonitorPassword() != getAdminPassword()) {
+                throw IllegalArgumentException("The user for accessing the monitor and the admin gui seems to be the same, but with different passwords.")
+            }
+            listOf(
+                User.builder()
+                    .username(getAdminUsername())
+                    .password("{noop}${getAdminPassword()}")
+                    .roles("ADMIN")
+                    .build()
+            )
+        } else {
+            listOf(
+                User.builder()
+                    .username(getMonitorUsername())
+                    .password("{noop}${getMonitorPassword()}")
+                    .roles("USER")
+                    .build(),
+
+                User.builder()
+                    .username(getAdminUsername())
+                    .password("{noop}${getAdminPassword()}")
+                    .roles("ADMIN")
+                    .build()
+            )
+        }
+        val authentication = auth.inMemoryAuthentication()
+        users.forEach { authentication.withUser(it) }
     }
 
+
+    // TODO: Whats the primary value? The value in the application.yml or in the user configuration?
     private fun getMonitorUsername(): String {
         return if (monitorUsername.isNullOrEmpty()) {
             configuration?.classificator?.monitorConfig?.username ?: ""

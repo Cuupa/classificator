@@ -1,6 +1,7 @@
 ---
 classificator:
   knowledge_base: build/knowledgebase
+
   api_key_required: true
 
   admin:

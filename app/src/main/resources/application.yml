@@ -18,8 +18,8 @@ classificator:
   kbfiles: ${knowlegde_base}
 
   admin:
-    username: admin
-    password: admin
+    username:
+    password:
 
   monitor:
     username:

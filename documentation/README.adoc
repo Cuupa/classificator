@@ -6,6 +6,8 @@ Simon Thiel (Cuupa)
 
 == Installation
 
+:icons: font
+
 === Required files
 
 You need the following files provided by the release `(example values)`
@@ -14,11 +16,14 @@ You need the following files provided by the release `(example values)`
 * The knowlegdebase file `(kb-1.0.2.db)`
 * The configuration file `(configuration.yml)`
 
+CAUTION: The configuration file must be placed in the same location as the jar file
+
 === Requirements
 
 This program requires an installed java runtime version 11 or higher
 
 === Windows/Unix
+CAUTION: Need to rework this
 
 Since it is a simple .jar file, which can run on any device featuring link:https://www.java.com/de/download/manual.jsp[Java], you can run it by simply doubleclicking.
 
@@ -35,8 +40,9 @@ MAINTAINER Cuupa
 
 WORKDIR /opt/app/classificator
 
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/app-1.1.0_Release.jar /.app.jar
-ADD https://github.com/Cuupa/classificator/releases/download/1.1.0/kb-1.0.2.db /.knowledgebase/kb-1.0.2.db
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.1/app-1.1.1_Release.jar /.app.jar
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.1/kb-1.0.1.db /.knowledgebase/kb-1.0.2.db
+ADD https://github.com/Cuupa/classificator/releases/download/1.1.1/configuration.yml /.configuration.yml
 
 COPY knowlegebase/*.db ./knowledgebase/
 COPY *.jar ./app.jar
@@ -50,31 +56,31 @@ Please change the port of the application and change it accordingly.
 
 ==== Synology NAS
 . Create yourself a folder, where you upload the files to +
-image:images/docker-classificator.png[folder]
+image:images/installation/synologydocker-classificator.png[folder]
 
 . Download the openJDK container +
-image:images/open_jdk_download.png[openjdk]
+image:images/installation/synologyopen_jdk_download.png[openjdk]
 
 . Create a new container from this image +
-image:images/docker_new_container_1.png[new container_1]
+image:images/installation/synologydocker_new_container_1.png[new container_1]
 
 . Give this container a name to your likings and click on the 'Advanced Settings' button +
-image:images/docker_new_container_2.png[new_container_2]
+image:images/installation/synologydocker_new_container_2.png[new_container_2]
 
 . Mount your folders and files to the docker container. It is also a good idea to change this to "read only" mode, as
 this program does not change these files +
-image:images/docker_volume_mounts.png[volume mounts]
+image:images/installation/synologydocker_volume_mounts.png[volume mounts]
 
 . Change the ports to your liking +
-image:images/docker_ports.png[ports]
+image:images/installation/synologydocker_ports.png[ports]
 
 . Go to the environment tab and paste this as command to run: +
 [source,shell]
 ----
-java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase'
+java -jar /opt/classificator/app.jar '--server.port=8080' '--knowlegde_base=/opt/classificator/knowledgebase' '--configuration=/opt/classificator/configuration.yml'
 ----
 
-Finally, run this container. You can access the webui by going to `http://your-nas-ip:your-port` For
+Finally, run this container. You can access the webui by going to `http://your-nas-ip:your-external-port` For
 example `http://192.168.0.3:8081`
 
 == Configuration
@@ -89,6 +95,7 @@ It sets the server port to 8080 and the knowledgebase-directory to `build/knowle
 ---
 classificator:
   knowledge_base: build/knowledgebase
+
   api_key_required: true
 
   admin:
@@ -119,6 +126,20 @@ For example if you have `kb-1.0.0.db` and `kb-1.0.1.db` it'll load the `kb-1.0.1
 knowlegde_base: build/knowledgebase
 
 ----
+
+=== API key
+The `api_key_required` is used to determine, if the potential user is allowed to use the `/classification` endpoint. If this value is set to `false`, everybody is allowed to classify their documents.
+
+If this entry is set to `true`, the users *must* provide their respective API key within the REST-request.
+
+To generate an API key, the administrator have to generate one via the admin UI
+
+image:images/admin/api-key/generate.png[generate API key]
+
+WARNING: Copy the API-Key to somewhere else. Once it's displayed, there is no way to display it again in the UI
+
+
+For a full documentation how to provide the API key, see https://github.com/Cuupa/classificator/tree/master/api/resources/v2/api-description.yaml[api-description.yaml]
 
 === Monitor
 The monitor is enabled by default and uses the database `monitor.db`

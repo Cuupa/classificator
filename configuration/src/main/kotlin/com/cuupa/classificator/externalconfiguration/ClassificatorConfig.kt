@@ -17,8 +17,8 @@ class ClassificatorConfig {
 
     fun isApiKeyRequired() = apiKeyRequired ?: false
 
-    @JsonProperty
-    var adminConfig: AdminConfig?= null
+    @JsonProperty("admin")
+    var adminConfig: AdminConfig? = null
 
     @JsonProperty("monitor")
     var monitorConfig: MonitorConfig? = null

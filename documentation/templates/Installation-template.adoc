@@ -36,23 +36,23 @@ Please change the port of the application and change it accordingly.
 
 ==== Synology NAS
 . Create yourself a folder, where you upload the files to +
-image:images/docker-classificator.png[folder]
+image:images/installation/synologydocker-classificator.png[folder]
 
 . Download the openJDK container +
-image:images/open_jdk_download.png[openjdk]
+image:images/installation/synologyopen_jdk_download.png[openjdk]
 
 . Create a new container from this image +
-image:images/docker_new_container_1.png[new container_1]
+image:images/installation/synologydocker_new_container_1.png[new container_1]
 
 . Give this container a name to your likings and click on the 'Advanced Settings' button +
-image:images/docker_new_container_2.png[new_container_2]
+image:images/installation/synologydocker_new_container_2.png[new_container_2]
 
 . Mount your folders and files to the docker container. It is also a good idea to change this to "read only" mode, as
 this program does not change these files +
-image:images/docker_volume_mounts.png[volume mounts]
+image:images/installation/synologydocker_volume_mounts.png[volume mounts]
 
 . Change the ports to your liking +
-image:images/docker_ports.png[ports]
+image:images/installation/synologydocker_ports.png[ports]
 
 . Go to the environment tab and paste this as command to run: +
 [source,shell]
