@@ -173,7 +173,7 @@ class MetaDataToken {
                 isRegexExtract(name, pair) -> RegexExtract(pair.second)
                 isPhoneNumberExtract(name, pair) -> PhoneNumberExtract(pair.second)
                 isTimespanExtract(name, pair) -> TimespanExtract(pair.second)
-                else -> throw RuntimeException("There is no extract for $name specified")
+                else -> { continue }
             }
         }
         throw RuntimeException("There is no extract for $name specified")

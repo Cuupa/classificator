@@ -71,6 +71,10 @@ class IntegrationTests {
         val result2 = classificator?.classify(smokeTextExpandedMetadata) ?: listOf()
         val phoneNumber2 = result2.first().metadata.find { it.name == "phone_Number" }
         assertEquals("+49301234567", phoneNumber2?.value)
+
+        val result3 = classificator?.classify(smokeTextExpandedPhoneNumber) ?: listOf()
+        val phoneNumber3 = result3.first().metadata.find { it.name == "phone_Number" }
+        assertEquals("03331/1234-56", phoneNumber3?.value)
     }
 
     companion object {
@@ -84,6 +88,12 @@ class IntegrationTests {
             hiermit kündige ich, Max Mustermann, geboren am 01.01.1999, meinen Vertrag zur Vertrangsnummer 32103847298 zum 31.12.3030.
             Bitte überweisen Sie den verbleibenden Betrag auf mein Konto mit der IBAN DE19 1234 1234 1234 1234 12.
             Bei Rückfragen stehe ich unter der Tel: +4930 1234567 zur Verfügung
+        """.trimIndent()
+
+        val smokeTextExpandedPhoneNumber = """Sehr geehrte Damen und Herren,
+            hiermit kündige ich, Max Mustermann, geboren am 01.01.1999, meinen Vertrag zur Vertrangsnummer 32103847298 zum 31.12.3030.
+            Bitte überweisen Sie den verbleibenden Betrag auf mein Konto mit der IBAN DE19 1234 1234 1234 1234 12.
+            Bei Rückfragen stehe ich unter der Tel: 0 33 31 /12 34 - 56 zur Verfügung
         """.trimIndent()
     }
 }

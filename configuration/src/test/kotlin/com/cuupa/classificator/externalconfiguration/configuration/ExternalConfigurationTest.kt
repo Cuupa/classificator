@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Primary
 import java.io.File
 
 @Configuration
-@Primary
 open class ExternalConfigurationTest {
 
     @Bean
