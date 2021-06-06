@@ -556,28 +556,28 @@ ENTRYPOINT [&quot;java&quot;, &quot;-jar&quot;, &quot;./app.jar&quot;, &quot;--s
 <ol class="arabic">
 <li>
 <p>Create yourself a folder, where you upload the files to<br>
-<span class="image"><img src="images/docker-classificator.png" alt="folder"></span></p>
+<span class="image"><img src="images/installation/synology/docker-classificator.png" alt="folder"></span></p>
 </li>
 <li>
 <p>Download the openJDK container<br>
-<span class="image"><img src="images/open_jdk_download.png" alt="openjdk"></span></p>
+<span class="image"><img src="images/installation/synology/open_jdk_download.png" alt="openjdk"></span></p>
 </li>
 <li>
 <p>Create a new container from this image<br>
-<span class="image"><img src="images/docker_new_container_1.png" alt="new container_1"></span></p>
+<span class="image"><img src="images/installation/synology/docker_new_container_1.png" alt="new container_1"></span></p>
 </li>
 <li>
 <p>Give this container a name to your likings and click on the 'Advanced Settings' button<br>
-<span class="image"><img src="images/docker_new_container_2.png" alt="new_container_2"></span></p>
+<span class="image"><img src="images/installation/synology/docker_new_container_2.png" alt="new_container_2"></span></p>
 </li>
 <li>
 <p>Mount your folders and files to the docker container. It is also a good idea to change this to "read only" mode, as
 this program does not change these files<br>
-<span class="image"><img src="images/docker_volume_mounts.png" alt="volume mounts"></span></p>
+<span class="image"><img src="images/installation/synology/docker_volume_mounts.png" alt="volume mounts"></span></p>
 </li>
 <li>
 <p>Change the ports to your liking<br>
-<span class="image"><img src="images/docker_ports.png" alt="ports"></span></p>
+<span class="image"><img src="images/installation/synology/docker_ports.png" alt="ports"></span></p>
 </li>
 <li>
 <p>Go to the environment tab and paste this as command to run:<br></p>
@@ -615,7 +615,7 @@ It sets the server port to 8080 and the knowledgebase-directory to <code>build/k
     <span style="color:#606">password</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Doe</span><span style="color:#710">&quot;</span></span>
     <span style="color:#606">enabled</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
     <span style="color:#606">logText</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
-    <span style="color:#606">database-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
+    <span style="color:#606">database_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -663,7 +663,7 @@ For example if you have <code>kb-1.0.0.db</code> and <code>kb-1.0.1.db</code> it
     <span style="color:#606">password</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Doe</span><span style="color:#710">&quot;</span></span>
     <span style="color:#606">enabled</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
     <span style="color:#606">logText</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
-    <span style="color:#606">database-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
+    <span style="color:#606">database_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
 </div>
 </div>
 <div class="sect3">
@@ -675,11 +675,11 @@ For example if you have <code>kb-1.0.0.db</code> and <code>kb-1.0.1.db</code> it
 <div class="sect3">
 <h4 id="_database_name">Database name</h4>
 <div class="paragraph">
-<p>The database name is defined via <code>database-name</code>. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to</p>
+<p>The database name is defined via <code>database_name</code>. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">database-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">C:\Users\John Doe\monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">database_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">C:\Users\John Doe\monitor.db</span><span style="color:#710">&quot;</span></span></code></pre>
 </div>
 </div>
 </div>

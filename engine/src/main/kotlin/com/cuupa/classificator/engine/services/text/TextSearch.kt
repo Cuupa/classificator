@@ -10,7 +10,7 @@ class TextSearch(plainText: String?) {
 
     fun contains(text: String?, tolerance: Int): Boolean {
         val searchText = SearchText(text ?: "")
-        if (searchText.isEmpty || plainText.isEmpty) {
+        if (searchText.isEmpty() || plainText.isEmpty()) {
             return false
         }
         return when (searchText.text) {
@@ -26,7 +26,7 @@ class TextSearch(plainText: String?) {
     fun countOccurence(text: String?): Int {
         val searchText = SearchText(text ?: "")
         return when {
-            searchText.isEmpty || plainText.isEmpty -> 0
+            searchText.isEmpty() || plainText.isEmpty() -> 0
             else -> count(plainText, searchText, 1)
         }
     }

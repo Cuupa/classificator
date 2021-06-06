@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 
 /**
@@ -37,6 +38,12 @@ class ConfigTest {
     @Test
     fun shouldNotBeNullKnowledgebase() {
         assertNotNull(unitToTest?.classificator?.knowledgeBase)
+    }
+
+
+    @Test
+    fun shouldBeTrueApiKeyRequired() {
+        assertTrue(unitToTest?.classificator?.isApiKeyRequired() ?: false)
     }
 
     @Test

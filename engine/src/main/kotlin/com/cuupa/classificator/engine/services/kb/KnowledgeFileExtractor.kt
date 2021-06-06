@@ -27,6 +27,7 @@ object KnowledgeFileExtractor {
                 val metadataList = mutableListOf<MetaDataToken>()
                 val regexList = mutableListOf<Pair<String, String>>()
                 var entry: SevenZArchiveEntry?
+
                 while (sevenZFile.nextEntry.also { entry = it } != null) {
                     if (isToParse(entry)) {
                         continue
@@ -42,8 +43,7 @@ object KnowledgeFileExtractor {
                                     getString(entry, sevenZFile)
                                 )
                             )
-                            isDatabaseMetaInfo(filename) -> kbMetadata =
-                                parseDatabaseMetadata(getString(entry, sevenZFile))
+                            isDatabaseMetaInfo(filename) -> kbMetadata = parseDatabaseMetadata(getString(entry, sevenZFile))
                             else -> {
                             } // Nothing
                         }
@@ -57,8 +57,7 @@ object KnowledgeFileExtractor {
         }
     }
 
-    private fun isToParse(entry: SevenZArchiveEntry?) =
-        entry == null || entry.isDirectory
+    private fun isToParse(entry: SevenZArchiveEntry?) = entry == null || entry.isDirectory
 
     private fun getRegexName(filename: String) = filename.substringAfter("regex/")
 

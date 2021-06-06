@@ -1,0 +1,156 @@
+openapi: 3.0.3
+info:
+  title: Classificator
+  description: API for classifying plain text or documents
+  version: 1.0.0
+  contact:
+    name: Simon Thiel
+    url: https://github.com/cuupa
+  license:
+    name: MIT
+  x-audience:
+    - external-public
+servers:
+  - url: 'http://localhost:{port}/{basePath}'
+    description: Local development server
+    variables:
+      port:
+        default: '8080'
+      basePath:
+        default: 'api/rest/v2'
+paths:
+  /status:
+    get:
+      tags:
+        - health-check
+        - v2
+      summary: Retrieves the application status
+      responses:
+        '200':
+          description: The status of the application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /classification:
+    post:
+      tags:
+        - functional
+        - v2
+      summary: Classifies the posted document
+      requestBody:
+        description: The classification request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassificationRequest'
+      responses:
+        '200':
+          description: The result of the classification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationResult'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '501':
+          description: Not implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    ClassificationRequest:
+      type: object
+      properties:
+        api_key:
+          type: string
+          description: The API key to distinguish the incomming requests in case of public hosting. Can be turned off in the configuraion.yaml in case it is not needed
+        content_type:
+          type: string
+          description: The content type of the payload
+          example: text/plain
+        content:
+          type: string
+          description: The plain text or the base64 representation of the payload. If base64 is detected and the providing content-type does not match the content, classification will be redone with a newly determined content-type
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    Status:
+      type: object
+      properties:
+        status:
+          type: string
+          example: running
+        knowledgebase_version:
+          type: string
+          example: 1.0.3
+
+    ClassificationResult:
+      type: object
+      properties:
+        info:
+          $ref: '#/components/schemas/ClassificationMetadata'
+        content_type:
+          type: string
+          example: text/plain
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SemanticResult'
+
+    ClassificationMetadata:
+      type: object
+      properties:
+        processed_at:
+          type: string
+          format: date-time
+        processing_time:
+          type: string
+          example: 20ms
+        knowledgebase_version:
+          type: string
+          example: 1.0.3
+
+    SemanticResult:
+      type: object
+      properties:
+        topic:
+          type: string
+        sender:
+          type: string
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+
+    Metadata:
+      type: object
+      properties:
+        name:
+          type: string
+          example: language
+        value:
+          type: string
+          example: de

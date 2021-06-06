@@ -23,6 +23,8 @@
         <module>monitor</module>
         <module>engine</module>
         <module>api</module>
+        <module>api-implementation</module>
+        <module>api-client</module>
         <module>configuration</module>
         <module>domain</module>
         <module>ui</module>
@@ -46,9 +48,15 @@
         <commons-lang3.version>3.11</commons-lang3.version>
         <sevenzip.version>1.9</sevenzip.version>
         <pdfbox.version>2.0.23</pdfbox.version>
+        <tika.version>1.25</tika.version>
         <jackson-yaml.version>2.12.3</jackson-yaml.version>
 
         <openapi.version>1.5.7</openapi.version>
+
+        <mockito-core.version>3.3.3</mockito-core.version>
+        <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
+        <mockito-junit-jupter.version>2.23.0</mockito-junit-jupter.version>
+        <swagger-annotations.version>1.5.24</swagger-annotations.version>
 
         <documentation-to-build>README</documentation-to-build>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
@@ -145,6 +153,18 @@
             </dependency>
 
             <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${findbugs-jsr305.verion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.tukaani</groupId>
                 <artifactId>xz</artifactId>
                 <version>${sevenzip.version}</version>
@@ -155,6 +175,12 @@
                 <groupId>org.apache.pdfbox</groupId>
                 <artifactId>pdfbox</artifactId>
                 <version>${pdfbox.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${tika.version}</version>
             </dependency>
 
             <dependency>
@@ -202,6 +228,20 @@
             </dependency>
 
             <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito-core.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito-junit-jupter.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.cuupa</groupId>
                 <artifactId>app</artifactId>
                 <version>${project.version}</version>
@@ -210,6 +250,18 @@
             <dependency>
                 <groupId>com.cuupa</groupId>
                 <artifactId>api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.cuupa</groupId>
+                <artifactId>api-implementation</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.cuupa</groupId>
+                <artifactId>api-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -380,30 +432,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-files-on-build</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/build</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/target</directory>
-                                    <!--<include>*.[MIME-TYPE]</include>-->
-                                    <include>*.jar</include>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

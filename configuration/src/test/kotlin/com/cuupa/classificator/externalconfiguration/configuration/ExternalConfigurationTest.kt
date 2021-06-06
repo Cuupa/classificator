@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Primary
 import java.io.File
 
 @Configuration
-@Primary
 open class ExternalConfigurationTest {
 
     @Bean
@@ -22,7 +21,7 @@ open class ExternalConfigurationTest {
         }
     }
 
-    @Bean
+    @Bean("testConfig")
     open fun configurationPrimary(jackson: ObjectMapper): Config {
         return ConfigLoader(jackson, File("src/test/resources/configuration.yml")).getConfig()
     }

@@ -22,3 +22,14 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+/api/target/
+/api/build/
+/app/target
+/api-client/target
+/api-implementation/target
+/configuration/target
+/domain/target
+/engine/target
+/monitor/target
+/ui/target
+/gen/

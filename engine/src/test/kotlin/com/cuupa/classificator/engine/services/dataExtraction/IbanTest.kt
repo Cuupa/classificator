@@ -12,7 +12,6 @@ class IbanTest : ExtractTest() {
     fun testValidIbans() {
         IBANTestData.validIbans.forEach {
             val values = unitToTest.regex.find(it)?.groupValues
-            print(values)
             assertNotNull(values, it)
         }
     }

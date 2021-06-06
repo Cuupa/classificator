@@ -26,6 +26,16 @@
 
         <dependency>
             <groupId>com.cuupa</groupId>
+            <artifactId>api-implementation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cuupa</groupId>
+            <artifactId>api-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cuupa</groupId>
             <artifactId>configuration</artifactId>
         </dependency>
 
@@ -60,6 +70,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -87,6 +102,32 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-files-on-build</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/../build</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/target</directory>
+                                    <!--<include>*.[MIME-TYPE]</include>-->
+                                    <include>*.jar</include>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>

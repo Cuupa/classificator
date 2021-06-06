@@ -1,6 +1,6 @@
 package com.cuupa.classificator.ui.controller
 
-import com.cuupa.classificator.engine.Classificator
+import com.cuupa.classificator.engine.ClassificatorImplementation
 import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.ui.GuiProcess
 import org.springframework.stereotype.Controller
@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 
 @Controller
-class GuiController(private val classificator: Classificator, private val manager: KnowledgeManager) {
+class GuiController(private val classificator: ClassificatorImplementation, private val manager: KnowledgeManager) {
 
-    @RequestMapping(value = ["/", "/index"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/"], method = [RequestMethod.GET])
     fun index(model: Model): String {
-        model.addAttribute("guiProcess", GuiProcess(null, null))
+        if(!model.containsAttribute("guiProcess")) {
+            model.addAttribute("guiProcess", GuiProcess(null, null))
+        }
         return "index"
     }
 
@@ -31,4 +33,7 @@ class GuiController(private val classificator: Classificator, private val manage
         model.addAttribute("guiProcess", guiProcess)
         return "index"
     }
+
+    @RequestMapping(value = ["/login"], method = [RequestMethod.GET])
+    fun login() = "login"
 }

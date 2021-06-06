@@ -1,5 +1,6 @@
 server_port: 8080
 knowlegde_base:
+configuration:
 
 server.port: ${server_port}
 
@@ -9,14 +10,23 @@ springdoc:
 
 logging.level:
   root: ERROR
-  com.cuupa.classificator: WARN
+  com.cuupa.classificator: debug
 
 classificator:
+  application_name: "Classificator"
+
   kbfiles: ${knowlegde_base}
+
+  admin:
+    username:
+    password:
 
   monitor:
     username:
     password:
     enabled:
     logText:
-    database-name:
+    database_name:
+
+  api_repository:
+    database_name: "api_repository.db"

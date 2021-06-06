@@ -15,7 +15,7 @@ The default port of this application is `8080`
 So if you want to access the webUI on your local machine navigate to `https://localhost:8080`.If you want to change that port, see <<_via_command_line_arguments, Changing via command line arguments>>
 
 === Knowledgebase
-This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file.You can specify which
+This entry means, that there has to be a folder named `build/knowlegebase` beside your jar file. You can specify which
 knowledgebase to use, by changing it via the command line arguments (How that works will be covered by me
 a https://github.com/Cuupa/classificator#Changing-the-configuration[few lines down below]).
 
@@ -27,6 +27,20 @@ knowlegde_base: build/knowledgebase
 
 ----
 
+=== API key
+The `api_key_required` is used to determine, if the potential user is allowed to use the `/classification` endpoint. If this value is set to `false`, everybody is allowed to classify their documents.
+
+If this entry is set to `true`, the users *must* provide their respective API key within the REST-request.
+
+To generate an API key, the administrator have to generate one via the admin UI
+
+image:images/admin/api-key/generate.png[generate API key]
+
+WARNING: Copy the API-Key to somewhere else. Once it's displayed, there is no way to display it again in the UI
+
+
+For a full documentation how to provide the API key, see https://github.com/Cuupa/classificator/tree/master/api/resources/v2/api-description.yaml[api-description.yaml]
+
 === Monitor
 The monitor is enabled by default and uses the database `monitor.db`
 [source,yaml]
@@ -36,7 +50,7 @@ The monitor is enabled by default and uses the database `monitor.db`
     password: "Doe"
     enabled: true
     logText: true
-    database-name: "monitor.db"
+    database_name: "monitor.db"
 
 ----
 
@@ -44,10 +58,10 @@ The monitor is enabled by default and uses the database `monitor.db`
 These entries set the username and password for accessing the statistics under `/monitor`
 
 ==== Database name
-The database name is defined via `database-name`. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to
+The database name is defined via `database_name`. You can change it to your likings. It uses relative paths by default. If you want to use absolute paths, change it to
 [source,yaml]
 ----
-database-name: "C:\Users\John Doe\monitor.db"
+database_name: "C:\Users\John Doe\monitor.db"
 ----
 ==== Enabled and logText
 If `enabled` is set to `true`, all events will be logged. To turn it off, set it to `false`.
@@ -83,7 +97,7 @@ CAUTION: The server port can only be changed by using the command line arguments
 
 [source,shell]
 ----
-java -jar app.jar --server_port=8080 --knowledge_base=knowlegebase/kb-1.0.0.db --classificator.monitor.logText=false
+java -jar app.jar '--server_port=8080' '--knowledge_base=knowlegebase/kb-1.0.0.db' '--classificator.monitor.logText=false' '--configuration=/opt/classificator/configuration.yml'
 ----
 
 NOTE: The first part simply runs the jar by the name "app.jar" +
@@ -110,3 +124,9 @@ NOTE: or absolute paths like
 --knowledge_base="C:\Users\John Doe\knowlegebase\kb-1.0.0.db"
 ----
 CAUTION: If your parameter contains a whitespace (eg a `blank`) you need to quote the value
+
+[source, shell]
+----
+--configuration=/opt/classificator/configuration.yml
+----
+NOTE: Sets the path to the configuration file
