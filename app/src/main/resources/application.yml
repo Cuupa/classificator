@@ -29,4 +29,4 @@ classificator:
     database_name:
 
   api_repository:
-    database_name: "api_repository.db"
+    database_name: "data/api_repository.db"

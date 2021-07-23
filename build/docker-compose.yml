@@ -1,0 +1,14 @@
+version: '3'
+services:
+  classificator:
+    container_name: classificator
+    image: openjdk
+    working_dir: /opt/app/classificator
+    ports:
+      - 8080:8080
+    volumes:
+      - data:/opt/app/classificator/data
+
+volumes:
+  data:
+    driver: local

@@ -17,6 +17,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.sql.DataSource
@@ -89,10 +91,24 @@ open class MonitorConfiguration {
 
     private fun getDatabaseName(): String {
         return if (databaseName.isNullOrEmpty()) {
-            configuration?.classificator?.monitorConfig?.databaseName ?: ""
+            val databasename = configuration?.classificator?.monitorConfig?.databaseName ?: ""
+            createDirIfNotExists(databasename)
         } else {
             databaseName ?: ""
         }
+    }
+
+    private fun createDirIfNotExists(databasename: String): String {
+        try {
+            val path = Paths.get(databasename)
+            if (!Files.exists(path.parent)) {
+                Files.createDirectory(path.parent)
+                log.info("Directory ${path.parent} for $databasename successfully created")
+            }
+        } catch (e: Exception) {
+            log.error(e.message)
+        }
+        return databasename
     }
 
     private fun isEnabled(): Boolean {

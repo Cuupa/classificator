@@ -1,0 +1,12 @@
+FROM openjdk:15-jdk
+MAINTAINER Cuupa
+
+WORKDIR /opt/app/classificator
+
+ADD app-DEV.jar app.jar
+ADD knowledgebase/kb-DEV.db knowledgebase/kb-DEV.db
+ADD configuration.yml configuration.yml
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=8080", "--knowlegde_base=/opt/app/classificator/knowlegebase/kb-DEV.db"]
