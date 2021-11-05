@@ -40,6 +40,11 @@
 
         <dependency>
             <groupId>com.cuupa</groupId>
+            <artifactId>trainer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cuupa</groupId>
             <artifactId>configuration</artifactId>
             <exclusions>
                 <exclusion>

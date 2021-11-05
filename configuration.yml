@@ -14,3 +14,6 @@ classificator:
     enabled: true
     logText: true
     database_name: "monitor.db"
+
+  trainer:
+    database_name: "trainer.db"

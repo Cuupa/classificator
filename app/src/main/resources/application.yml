@@ -28,5 +28,8 @@ classificator:
     logText:
     database_name:
 
+  trainer:
+    database_name:
+
   api_repository:
     database_name: "api_repository.db"

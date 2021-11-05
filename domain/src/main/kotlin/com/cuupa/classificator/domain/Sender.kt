@@ -5,8 +5,7 @@ package com.cuupa.classificator.domain
  */
 class Sender : SemanticResultData() {
 
-    private val tokenList = mutableListOf<Token>()
-    var name: String = ""
+    val tokenList = mutableListOf<Token>()
     private var numberOfOccurrences = 0
 
     override fun addToken(token: Token) {

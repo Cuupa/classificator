@@ -6,6 +6,4 @@ import org.springframework.context.annotation.Import
 
 @Configuration
 @Import(value = [EngineTestConfiguration::class, MonitorConfiguration::class])
-open class ApplicationTestConfiguration {
-
-}
+open class ApplicationTestConfiguration

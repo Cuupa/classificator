@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetails
 import javax.annotation.PostConstruct
 
 @Configuration
@@ -45,12 +44,12 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             .antMatchers("/guiProcess").permitAll()
             .antMatchers("/monitor", "/download").hasAnyRole("USER", "ADMIN")
             .antMatchers("/admin").hasAnyRole("ADMIN")
+            .antMatchers("/trainer/**").hasAnyRole("ADMIN")
             .anyRequest().authenticated()
             .and()
             .formLogin()
             .loginPage("/login")
             .failureHandler(authenticationFailureHandler())
-            .defaultSuccessUrl("/monitor")
             .failureUrl("/login?error")
             .permitAll()
             .and()
@@ -70,8 +69,6 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
-
-        listOf<UserDetails>()
 
         val users = if (getMonitorUsername() == getAdminUsername()) {
             if (getMonitorPassword() != getAdminPassword()) {

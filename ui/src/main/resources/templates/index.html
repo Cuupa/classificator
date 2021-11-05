@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Testing</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 
 <body style="overflow: hidden">
@@ -23,7 +24,9 @@
         <tr>
             <td width="50%">
                 <label>
-                <textarea class="form-control input-lg" autofocus="autofocus" cols="100%" rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea>
+                    <textarea autofocus="autofocus" class="form-control input-lg" cols="100%"
+                              placeholder="Text to process"
+                              rows="30" th:field="${guiProcess.inputText}"></textarea>
                 </label>
             </td>
             <td width="50%" align="center">

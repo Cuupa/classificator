@@ -31,20 +31,21 @@ class ClassificatorImplementation(
     override fun classify(contentType: String?, content: String?): Pair<String, List<SemanticResult>> {
         val start = LocalDateTime.now()
 
-        val finalContent = if (contentType != "text/plain") {
-            val isBase64 = content?.let { it.endsWith("=").and(base64Regex.matches(it)) } ?: false
-            if (isBase64) getContent(content) else content
-        } else {
-            content
-        }
+        val isBase64 = content?.let { it.endsWith("=").and(base64Regex.matches(it)) } ?: false
+        val contentString: String? = null
+        val contentBytes: ByteArray? = if (isBase64) getContent(content) else null
 
         val result = try {
-            classify(contentType, finalContent)
+            when (contentType) {
+                "application/pdf" -> Pair(contentType, classifyPdf(getContent(content) as ByteArray))
+                "text/plain" -> Pair(contentType, classifyText(content as String))
+                else -> classifyOther(getContent(content))
+            }
         } catch (e: Exception) {
             log.error("Invalid content-type or content")
-            val detectedContentType = detectContentType(finalContent)
+            val detectedContentType = detectContentType(content)
             when {
-                isSupportedContentType(detectedContentType) -> classify(detectedContentType, finalContent)
+                isSupportedContentType(detectedContentType) -> classifyOther(getContent(content))
                 else -> {
                     log.error("Content-Type $detectedContentType is not supported")
                     Pair("application/octet-stream", listOf())
@@ -65,17 +66,6 @@ class ClassificatorImplementation(
     }
 
     private fun isSupportedContentType(contentType: String) = supportedContentTypes.contains(contentType)
-
-    private fun classify(
-        contentType: String?,
-        finalContent: Serializable?,
-    ): Pair<String, List<SemanticResult>> {
-        return when (contentType) {
-            "application/pdf" -> Pair(contentType, classifyPdf(finalContent as ByteArray))
-            "text/plain" -> Pair(contentType, classifyText(finalContent as String))
-            else -> classifyOther(finalContent as ByteArray)
-        }
-    }
 
     private fun classifyOther(content: ByteArray): Pair<String, List<SemanticResult>> {
         val text = tika.parseToString(ByteArrayInputStream(content))

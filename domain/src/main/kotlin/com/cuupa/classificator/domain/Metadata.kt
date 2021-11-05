@@ -1,7 +1,13 @@
 package com.cuupa.classificator.domain
 
-data class Metadata(val name: String, val value: String) : SemanticResultData() {
+class Metadata : SemanticResultData() {
+
+    lateinit var value: String
+
+    var tokenList = mutableListOf<Token>()
+    var regexContent: List<Pair<String, String>> = listOf()
+
     override fun addToken(token: Token) {
-        //noting to do here
+        tokenList.add(token)
     }
 }

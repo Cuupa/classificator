@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trainer</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+<div th:insert="fragments/header"></div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th>Text</th>
+        <th>Result</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="width: 50%">
+            <label>
+                <textarea autofocus="autofocus" class="form-control input-lg" cols="100%"
+                          disabled id="textarea" placeholder="Text to process" rows="30"
+                          th:field="${trainerClassifyProcess.selected.plainText}"></textarea>
+            </label>
+        </td>
+
+        <td style="width: 50%; align-content: center">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>
+                        <span th:text="Topic"></span>
+                        <span class="badge bg-danger"
+                              th:onclick="clear('topic');"
+                              th:text="'clear'">clear</span>
+                    </th>
+                    <th>Sender
+                        <span class="badge bg-danger"
+                              th:attr="onclick=|clear('sender')|"
+                              th:text="'clear'"></span>
+                    </th>
+                    <th>Metadata
+                        <span class="badge bg-danger"
+                              th:attr="onclick=|clear('metadata')|"
+                              th:text="'clear'"></span>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody id="semantic_result">
+                <tr th:each="result, iter : ${trainerClassifyProcess.selectedResult.second}">
+                    <td style="width: 20%;">
+                        <span class="badge bg-secondary"
+                              th:text="${result.topic}">Topic</span>
+                    </td>
+
+                    <td style="width: 20%;">
+                        <span class="badge bg-secondary" id="sender_result" th:text="${result.sender}">Sender</span>
+                    </td>
+
+                    <td style="width: 60%;">
+                        <table>
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr th:each="metadata : ${result.metadata}">
+                                <td style="width: 50%">
+                                    <span class="badge bg-secondary" id="metadata_name_result"
+                                          th:text="${metadata.name}">Name</span>
+                                </td>
+                                <td style="width: 50%">
+                                    <span class="badge bg-secondary" id="metadata_value_result"
+                                          th:text="${metadata.value}">Value</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;">
+                        <div class="btn-group">
+                            <button aria-expanded="false" class="btn btn-primary dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    type="button">
+                                Add Topic
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li th:each="topic : ${trainerClassifyProcess.topics}">
+                                    <div class="dropdown-item" th:attr="onclick=|add('${topic.name}', 'topic')|"
+                                         th:text="${topic.name}">Action
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+
+                    <td style="width: 20%;">
+                        <div class="btn-group">
+                            <button aria-expanded="false" class="btn btn-primary dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    type="button">
+                                Add Sender
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li th:each="sender : ${trainerClassifyProcess.sender}">
+                                    <div class="dropdown-item" th:attr="onclick=|add('${sender.name}', 'sender')|"
+                                         th:text="${sender.name}">Action
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+
+                    <td style="width: 20%;">
+                        <div class="btn-group">
+                            <button aria-expanded="false" class="btn btn-primary dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    type="button">
+                                Add Metadata
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li th:each="metadata : ${trainerClassifyProcess.metadata}">
+                                    <div class="dropdown-item" th:attr="onclick=|add('${metadata.name}', 'metadata')|"
+                                         th:text="${metadata.name}">Action
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script type="application/javascript">
+
+    function clear(type) {
+        if (type != null) {
+            let index = getIndex(type)
+            $('#semantic_result')
+                .find("tr")
+                .not(":last")
+                .find("td:eq(" + index + ")")
+                .get(index).innerHTML = "<td style=\"width: 20%;\"></td>"
+        }
+    }
+
+    function add(value, type) {
+        if (value != null) {
+            let table = document.getElementById("semantic_result");
+            let index = getIndex(type)
+            let hasSpace = checkRow(table, type)
+            if (!hasSpace) {
+                let row_number = table.rows.length - 1
+                let row = table.insertRow(row_number);
+                let cells = [row.insertCell(), row.insertCell(), row.insertCell()]
+                cells[index].innerHTML = "<span id=\"topic_result_" + row_number + "\" text=\"" + value + "\" class=\"badge bg-secondary\">" + value + "</span>"
+            }
+        }
+    }
+
+    function checkRow(element, type) {
+        let columns = element.getElementsByTagName("td")
+        let index = getIndex(type)
+        return columns[index].innerText === ""
+    }
+
+    function getIndex(type) {
+        switch (type) {
+            case "topic":
+                return 0
+            case "sender":
+                return 1
+            case "metadata":
+                return 2
+            default:
+                return -1
+        }
+    }
+
+</script>
+</body>
+</html>

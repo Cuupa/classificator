@@ -56,6 +56,11 @@
 
         <dependency>
             <groupId>com.cuupa</groupId>
+            <artifactId>trainer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cuupa</groupId>
             <artifactId>ui</artifactId>
         </dependency>
 

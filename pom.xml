@@ -21,6 +21,7 @@
     <modules>
         <module>app</module>
         <module>monitor</module>
+        <module>trainer</module>
         <module>engine</module>
         <module>api</module>
         <module>api-implementation</module>
@@ -64,6 +65,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.skip.sourcejavadoc>true</maven.skip.sourcejavadoc>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <dependencyManagement>
@@ -286,6 +288,12 @@
             <dependency>
                 <groupId>com.cuupa</groupId>
                 <artifactId>monitor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.cuupa</groupId>
+                <artifactId>trainer</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
