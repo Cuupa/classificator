@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Trainer</title>
+    <link rel="stylesheet" th:href="@{/css/dropzone.min.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <script th:src="@{/js/dropzone.min.js}"></script>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 
@@ -16,10 +18,33 @@
     <div class="row justify-content-center align-items-center" style="margin-top: 30px;">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
+            <div th:if="${success}">
+                <div class="alert alert-primary" th:text="${message}"></div>
+            </div>
+
             <form action="/trainer/add/" enctype="multipart/form-data" th:method="POST">
-                <label class="form-label" for="uploadForm">Choose ZIP-archive, plaintext or PDF to upload</label>
-                <input class="form-control" id="uploadForm" th:name="file" th:type="file">
-                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upload"/>
+                <div class="row align-items-center">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <label class="form-label" for="uploadForm">Choose ZIP-archive, plaintext or PDF to
+                            upload</label>
+                        <input class="form-control" id="uploadForm" th:name="file" th:type="file">
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <label class="form-label" for="batchName">Enter a batch name</label>
+                        <input class="form-control" id="batchName"
+                               th:value="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"
+                               th:name="batchName" th:type="text">
+                    </div>
+                </div>
+
+                <div class="row align-items-center" style="margin-top: 20px">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upload"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <span>Test</span>
+                    </div>
+                </div>
             </form>
 
         </div>

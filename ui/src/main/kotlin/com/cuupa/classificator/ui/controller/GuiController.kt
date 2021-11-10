@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 
+/**
+ * @author Simon Thiel (https://github.com/cuupa)
+ */
 @Controller
 class GuiController(private val classificator: ClassificatorImplementation, private val manager: KnowledgeManager) {
 

@@ -17,6 +17,9 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * @author Simon Thiel (https://github.com/cuupa)
+ */
 @Controller
 class MonitorController(private val monitor: Monitor, private val gson: Gson) {
 

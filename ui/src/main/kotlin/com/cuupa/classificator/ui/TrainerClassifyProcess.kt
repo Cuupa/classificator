@@ -4,7 +4,7 @@ import com.cuupa.classificator.domain.Metadata
 import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.domain.Sender
 import com.cuupa.classificator.domain.Topic
-import com.cuupa.classificator.trainer.service.Document
+import com.cuupa.classificator.trainer.services.Document
 
 data class TrainerClassifyProcess(
     var ids: List<String> = listOf(),

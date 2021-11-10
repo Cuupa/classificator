@@ -3,15 +3,13 @@ package com.cuupa.classificator
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.ClassificatorImplementation
 import com.cuupa.classificator.engine.KnowledgeManager
-import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
-import com.cuupa.classificator.engine.services.MetadataService
-import com.cuupa.classificator.engine.services.SenderService
-import com.cuupa.classificator.engine.services.TopicService
+import com.cuupa.classificator.engine.services.*
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.externalconfiguration.Config
 import com.cuupa.classificator.monitor.service.Monitor
+import org.apache.tika.Tika
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -29,8 +27,23 @@ open class EngineTestConfiguration {
     private var knowledgbaseDir: String = ""
 
     @Bean
-    open fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor): Classificator {
-        return ClassificatorImplementation(knowledgeManager, analyser, monitor)
+    open fun classificator(
+        knowledgeManager: KnowledgeManager,
+        analyser: PdfAnalyser,
+        monitor: Monitor,
+        textExtractor: TextExtractor
+    ): Classificator {
+        return ClassificatorImplementation(knowledgeManager, analyser, monitor, textExtractor)
+    }
+
+    @Bean
+    open fun textExtractor(tika: Tika): TextExtractor {
+        return TextExtractor(tika)
+    }
+
+    @Bean
+    open fun tika(): Tika {
+        return Tika()
     }
 
     @Bean

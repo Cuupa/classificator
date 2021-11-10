@@ -5,7 +5,7 @@ import com.cuupa.classificator.trainer.persistence.DocumentStorage
 import com.cuupa.classificator.trainer.persistence.sqlite.DocumentRepository
 import com.cuupa.classificator.trainer.persistence.sqlite.DocumentService
 import com.cuupa.classificator.trainer.persistence.sqlite.SqliteDocumentStorage
-import com.cuupa.classificator.trainer.service.Trainer
+import com.cuupa.classificator.trainer.services.Trainer
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier

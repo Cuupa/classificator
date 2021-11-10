@@ -16,7 +16,7 @@ import java.io.File
 open class ExternalConfiguration {
 
     @Value("\${configuration}")
-    private var configurationPath: String?= null
+    private var configurationPath: String? = null
 
     @Bean
     open fun jackson(): ObjectMapper {
@@ -29,7 +29,7 @@ open class ExternalConfiguration {
     @Bean
     @Primary
     open fun configuration(jackson: ObjectMapper): Config {
-        val configPath = if(configurationPath.isNullOrBlank()){
+        val configPath = if (configurationPath.isNullOrBlank()) {
             "configuration.yml"
         } else {
             configurationPath

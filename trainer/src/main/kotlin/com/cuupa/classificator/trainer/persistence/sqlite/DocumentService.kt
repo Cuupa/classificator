@@ -1,49 +1,42 @@
 package com.cuupa.classificator.trainer.persistence.sqlite
 
-import com.cuupa.classificator.trainer.service.Document
-import java.util.*
+import com.cuupa.classificator.trainer.services.Document
+import javax.transaction.Transactional
 
-class DocumentService(private val documentRepository: DocumentRepository) {
+open class DocumentService(private val documentRepository: DocumentRepository) {
 
-    fun list(): List<Document> {
-        return try {
-            documentRepository.findAll().map { mapToDomainObject(it) }
-        } catch (e: Exception) {
-            listOf()
-        }
+    fun list(): List<Document> = documentRepository.findAll().map { it.mapToDomainObject() }
+    fun save(document: Document) = documentRepository.save(document.mapToEntity())
+    fun getOpenDocuments() = documentRepository.findByDoneFalse().map { it.mapToDomainObject() }
+    fun getBatchNames() = documentRepository.findDistinctBatchName().map { if (it.isNullOrEmpty()) "Unnamed" else it }
+    fun find(id: String?) = documentRepository.findById(id).orElse(DocumentEntity()).mapToDomainObject()
+    fun getBatch(id: String?) = documentRepository.findAllByBatchNameEquals(id)?.map { it.mapToDomainObject() }
+    fun complete(document: Document) = documentRepository.save(document.mapToEntity().apply { done = true })
+
+    @Transactional
+    open fun removeBatch(id: String?) = documentRepository.deleteAllByBatchNameEquals(id)
+}
+
+private fun DocumentEntity.mapToDomainObject(): Document {
+    return Document(
+        id = this.id,
+        batchName = this.batchName,
+        content = this.content,
+        contentType = this.contentType,
+        plainText = this.plainText,
+        timestamp = timestamp
+    )
+}
+
+private fun Document.mapToEntity(): DocumentEntity {
+    return DocumentEntity().apply {
+        content = this@mapToEntity.content
+        contentType = this@mapToEntity.contentType
+        batchName = this@mapToEntity.batchName
+        plainText = this@mapToEntity.plainText
+        metadata = this@mapToEntity.metadata.joinToString(separator = ";")
+        topics = this@mapToEntity.topics.joinToString(separator = ";")
+        senders = this@mapToEntity.senders.joinToString(separator = ";")
+        timestamp = this@mapToEntity.timestamp
     }
-
-    fun save(document: Document) {
-        documentRepository.save(mapToEntity(document))
-    }
-
-    fun getOpenDocuments(): List<Document> {
-        return try {
-            documentRepository.findAll().filter { !it.isDone }.map { mapToDomainObject(it) }
-        } catch (e: Exception) {
-            list()
-        }
-    }
-
-    private fun mapToEntity(document: Document): DocumentEntity {
-        return DocumentEntity().apply {
-            content = document.content
-            contentType = document.contentType
-            plainText = document.plainText
-            metadata = document.metadata.joinToString(separator = ";")
-            results = document.results.joinToString(separator = ";")
-            senders = document.senders.joinToString(separator = ";")
-        }
-    }
-
-    private fun mapToDomainObject(it: DocumentEntity): Document {
-        return Document(
-            id = it.id,
-            content = it.content,
-            contentType = it.contentType,
-            plainText = it.plainText
-        )
-    }
-
-    fun find(id: String) = mapToDomainObject(documentRepository.findById(UUID.fromString(id)).orElse(DocumentEntity()))
 }

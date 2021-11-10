@@ -1,4 +1,4 @@
-package com.cuupa.classificator.trainer.service
+package com.cuupa.classificator.trainer.services
 
 import com.cuupa.classificator.trainer.persistence.DocumentStorage
 import java.io.ByteArrayInputStream
@@ -7,14 +7,18 @@ import java.util.zip.ZipInputStream
 
 class Trainer(private val documentStorage: DocumentStorage) {
 
-    fun persist(contentType: String, bytes: ByteArray) {
-        val content = when (contentType) {
-            "application/zip" -> extractContent(bytes)
-            "application/pdf" -> listOf(bytes)
-            "text/plain" -> listOf(bytes)
-            else -> listOf()
-        }.map { Document(content = bytes, contentType = contentType) }
-        documentStorage.write(content)
+    fun persist(contentType: String, bytes: ByteArray, plainText: String?, batchName: String?, timestamp: Long) {
+
+        val document = listOf(
+            Document(
+                content = bytes,
+                contentType = contentType,
+                plainText = plainText,
+                batchName = batchName,
+                timestamp = timestamp
+            )
+        )
+        documentStorage.write(document)
     }
 
     private fun extractContent(bytes: ByteArray): List<ByteArray> {
@@ -50,6 +54,12 @@ class Trainer(private val documentStorage: DocumentStorage) {
     }
 
     fun getOpenDocuments() = documentStorage.getOpenDocuments()
-    fun getDocument(id: String) = documentStorage.find(id)
+    fun getDocument(id: String?) = documentStorage.find(id)
+    fun getBatchNames() = documentStorage.getBatchNames()
+    fun getBatch(id: String?) = documentStorage.getBatch(id)
+    fun complete(document: Document) {
+        documentStorage.complete(document)
+    }
+    fun removeBatch(id: String?) = documentStorage.removeBatch(id)
 }
 

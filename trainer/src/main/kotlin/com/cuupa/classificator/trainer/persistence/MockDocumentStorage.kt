@@ -1,7 +1,6 @@
 package com.cuupa.classificator.trainer.persistence
 
-import com.cuupa.classificator.trainer.service.Document
-import java.util.*
+import com.cuupa.classificator.trainer.services.Document
 
 class MockDocumentStorage : DocumentStorage() {
 
@@ -15,11 +14,23 @@ class MockDocumentStorage : DocumentStorage() {
         TODO("Not yet implemented")
     }
 
-    override fun finishDocument(id: UUID, topics: List<String>) {
+    override fun find(id: String?): Document {
         TODO("Not yet implemented")
     }
 
-    override fun find(id: String): Document {
+    override fun getBatchNames(): List<String> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getBatch(id: String?): List<Document> {
+        TODO("Not yet implemented")
+    }
+
+    override fun complete(document: Document) {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeBatch(id: String?): Any {
         TODO("Not yet implemented")
     }
 }

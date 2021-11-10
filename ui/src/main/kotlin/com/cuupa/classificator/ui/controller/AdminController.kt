@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 class AdminController(private val apiKeyRepository: ApiKeyRepository) {
 
-    @RequestMapping(value = ["/admin"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/api-keys"], method = [RequestMethod.GET])
     fun admin(model: Model): ModelAndView {
         val adminProcess: AdminProcess = if (model.containsAttribute("adminProcess")) {
             model.getAttribute("adminProcess") as AdminProcess

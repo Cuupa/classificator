@@ -1,7 +1,6 @@
 package com.cuupa.classificator.trainer.persistence.sqlite
 
 import org.hibernate.annotations.GenericGenerator
-import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -17,7 +16,9 @@ class DocumentEntity {
         strategy = "org.hibernate.id.UUIDGenerator",
     )
     @Column(name = "id", updatable = false, nullable = false)
-    var id: UUID? = null
+    var id: String? = null
+
+    var batchName: String? = null
 
     var content: ByteArray? = null
 
@@ -25,11 +26,13 @@ class DocumentEntity {
 
     var plainText: String? = null
 
-    lateinit var results: String
+    lateinit var topics: String
 
     lateinit var senders: String
 
     lateinit var metadata: String
 
-    var isDone: Boolean = false
+    var done: Boolean = false
+
+    var timestamp: Long = -1L
 }
