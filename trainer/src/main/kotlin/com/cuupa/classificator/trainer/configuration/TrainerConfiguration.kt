@@ -3,9 +3,11 @@ package com.cuupa.classificator.trainer.configuration
 import com.cuupa.classificator.externalconfiguration.Config
 import com.cuupa.classificator.trainer.persistence.DocumentStorage
 import com.cuupa.classificator.trainer.persistence.sqlite.DocumentRepository
-import com.cuupa.classificator.trainer.persistence.sqlite.DocumentService
 import com.cuupa.classificator.trainer.persistence.sqlite.SqliteDocumentStorage
+import com.cuupa.classificator.trainer.services.DocumentService
 import com.cuupa.classificator.trainer.services.Trainer
+import com.cuupa.classificator.trainer.services.statistics.Precision
+import com.cuupa.classificator.trainer.services.statistics.Recall
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -36,18 +38,28 @@ open class TrainerConfiguration {
     private var databaseName: String? = null
 
     @Bean
-    open fun trainer(eventStorage: DocumentStorage): Trainer {
-        return Trainer(eventStorage)
+    open fun trainer(service: DocumentService): Trainer {
+        return Trainer(service)
     }
 
     @Bean
-    open fun documentStorage(eventService: DocumentService): DocumentStorage {
-        return SqliteDocumentStorage(eventService)
+    open fun documentStorage(repository: DocumentRepository): DocumentStorage {
+        return SqliteDocumentStorage(repository)
     }
 
     @Bean
-    open fun documentService(eventRepository: DocumentRepository): DocumentService {
-        return DocumentService(eventRepository)
+    open fun documentService(storage: DocumentStorage, precision: Precision, recall: Recall): DocumentService {
+        return DocumentService(storage, precision, recall)
+    }
+
+    @Bean
+    open fun recall(): Recall {
+        return Recall()
+    }
+
+    @Bean
+    open fun precision(): Precision {
+        return Precision()
     }
 
     @Bean("trainer_datasource")

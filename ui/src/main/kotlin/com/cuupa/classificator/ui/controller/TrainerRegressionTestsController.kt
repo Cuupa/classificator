@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.text.DecimalFormat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -34,12 +35,37 @@ class TrainerRegressionTestsController(
     textExtractor: TextExtractor
 ) : TrainerController(classificator, manager, trainer, textExtractor) {
 
-    @GetMapping(value = ["/trainer/"])
-    fun trainer(model: Model): String {
-        if (!model.containsAttribute("trainerProcess")) {
-            model.addAttribute("trainerProcess", TrainerProcess())
+    @GetMapping(value = ["/trainer"])
+    fun trainer(): ModelAndView {
+        val topics = manager.getTopics()
+        val precisionTopics = trainer.getPrecision(topics)
+        val recallTopics = trainer.getRecall(topics)
+        val fScoreTopics = trainer.getFScore(precisionTopics, recallTopics)
+
+        val sender = manager.getSender()
+        val precisionSender = trainer.getPrecision(sender)
+        val recallSender = trainer.getRecall(sender)
+        val fScoreSender = trainer.getFScore(precisionSender, recallSender)
+
+        val metadata = manager.getMetadata()
+        val precisionMetadata = trainer.getPrecision(metadata.toMetadata())
+        val recallMetadata = trainer.getRecall(metadata.toMetadata())
+        val fScoreMetadata = trainer.getFScore(precisionMetadata, recallMetadata)
+
+        val modelAndView = ModelAndView("trainer").apply {
+            addObject("precisionTopics", decimalFormat.format(precisionTopics))
+            addObject("recallTopics", decimalFormat.format(recallTopics))
+            addObject("fScoreTopics", decimalFormat.format(fScoreTopics))
+
+            addObject("precisionSender", decimalFormat.format(precisionSender))
+            addObject("recallSender", decimalFormat.format(recallSender))
+            addObject("fScoreSender", decimalFormat.format(fScoreSender))
+
+            addObject("precisionMetadata", decimalFormat.format(precisionMetadata))
+            addObject("recallMetadata", decimalFormat.format(recallMetadata))
+            addObject("fScoreMetadata", decimalFormat.format(fScoreMetadata))
         }
-        return "redirect:/trainer/classify"
+        return modelAndView
     }
 
     @GetMapping(value = ["/trainer/add"])
@@ -152,12 +178,12 @@ class TrainerRegressionTestsController(
 
         val document = trainer.getDocument(documentId)
         trainer.complete(document.apply {
-            this.topics = configuredTopics
-            this.senders = configuredSender
-            this.metadata = configuredMetadata
+            this.expectedTopics = configuredTopics
+            this.expectedSenders = configuredSender
+            this.expectedMetadata = configuredMetadata
         })
 
-        val batch = trainer.getBatch(document.batchName!!)
+        val batch = trainer.getBatch(document.batchName)
         val currentIndex = batch.map { it.id }.indexOf(documentId)
 
         if (batch.isLast(currentIndex)) {
@@ -225,6 +251,7 @@ class TrainerRegressionTestsController(
 
     companion object {
         val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
+        val decimalFormat = DecimalFormat("0.00")
     }
 }
 

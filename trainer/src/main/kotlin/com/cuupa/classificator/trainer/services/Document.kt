@@ -3,16 +3,20 @@ package com.cuupa.classificator.trainer.services
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder
 
 data class Document(
-    var id: String? = null,
-    var batchName: String? = null,
-    var content: ByteArray? = null,
-    var contentType: String? = null,
-    var plainText: String? = null,
-    var topics: List<String> = listOf(),
-    var senders: List<String> = listOf(),
-    var metadata: List<String> = listOf(),
+    var id: String = "",
+    var batchName: String = "",
+    var content: ByteArray = ByteArray(0),
+    var contentType: String = "",
+    var plainText: String = "",
+    var expectedTopics: List<String> = listOf(),
+    var expectedSenders: List<String> = listOf(),
+    var expectedMetadata: List<String> = listOf(),
+    var actualTopics: List<String> = listOf(),
+    var actualSenders: List<String> = listOf(),
+    var actualMetadata: List<String> = listOf(),
     var timestamp: Long = -1L,
 ) {
+
 
     override fun toString(): String {
         return ReflectionToStringBuilder.reflectionToString(this)
@@ -24,24 +28,35 @@ data class Document(
 
         other as Document
 
-        if (content != null) {
-            if (other.content == null) return false
-            if (!content.contentEquals(other.content)) return false
-        } else if (other.content != null) return false
+        if (id != other.id) return false
+        if (batchName != other.batchName) return false
+        if (!content.contentEquals(other.content)) return false
         if (contentType != other.contentType) return false
-        if (topics != other.topics) return false
-        if (senders != other.senders) return false
-        if (metadata != other.metadata) return false
+        if (plainText != other.plainText) return false
+        if (expectedTopics != other.expectedTopics) return false
+        if (expectedSenders != other.expectedSenders) return false
+        if (expectedMetadata != other.expectedMetadata) return false
+        if (actualTopics != other.actualTopics) return false
+        if (actualSenders != other.actualSenders) return false
+        if (actualMetadata != other.actualMetadata) return false
+        if (timestamp != other.timestamp) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = content?.contentHashCode() ?: 0
-        result = 31 * result + (contentType?.hashCode() ?: 0)
-        result = 31 * result + topics.hashCode()
-        result = 31 * result + senders.hashCode()
-        result = 31 * result + metadata.hashCode()
+        var result = id.hashCode()
+        result = 31 * result + batchName.hashCode()
+        result = 31 * result + content.contentHashCode()
+        result = 31 * result + contentType.hashCode()
+        result = 31 * result + plainText.hashCode()
+        result = 31 * result + expectedTopics.hashCode()
+        result = 31 * result + expectedSenders.hashCode()
+        result = 31 * result + expectedMetadata.hashCode()
+        result = 31 * result + actualTopics.hashCode()
+        result = 31 * result + actualSenders.hashCode()
+        result = 31 * result + actualMetadata.hashCode()
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }

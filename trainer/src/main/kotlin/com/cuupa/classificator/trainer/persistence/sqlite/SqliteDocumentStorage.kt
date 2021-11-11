@@ -1,19 +1,36 @@
 package com.cuupa.classificator.trainer.persistence.sqlite
 
 import com.cuupa.classificator.trainer.persistence.DocumentStorage
-import com.cuupa.classificator.trainer.services.Document
+import javax.transaction.Transactional
 
-internal class SqliteDocumentStorage(private val documentService: DocumentService) : DocumentStorage() {
+open class SqliteDocumentStorage(private val documentRepository: DocumentRepository) : DocumentStorage() {
 
-    override fun write(document: List<Document>) = document.forEach { documentService.save(it) }
-    override fun getOpenDocuments() = documentService.getOpenDocuments()
+    @Transactional
+    override fun save(document: List<DocumentEntity>) = document.forEach { documentRepository.save(it) }
 
-    override fun find(id: String?) = documentService.find(id)
-    override fun getBatchNames() = documentService.getBatchNames()
-    override fun getBatch(id: String?) = documentService.getBatch(id)
-    override fun complete(document: Document) {
-        documentService.complete(document)
+    @Transactional
+    override fun save(document: DocumentEntity) {
+        documentRepository.save(document)
     }
 
-    override fun removeBatch(id: String?) = documentService.removeBatch(id)
+    override fun getOpenDocuments() = documentRepository.findByDoneFalse()
+
+    override fun find(id: String?) = documentRepository.findById(id).orElse(DocumentEntity())
+    override fun findAll() = documentRepository.findAll()
+    override fun getBatchNames() = documentRepository.findDistinctBatchName()
+    override fun getBatch(id: String?) = documentRepository.findAllByBatchNameEquals(id)
+
+    @Transactional
+    override fun complete(document: DocumentEntity) {
+        documentRepository.save(document.apply { done = true })
+    }
+
+    @Transactional
+    override fun removeBatch(id: String?) = documentRepository.deleteAllByBatchNameEquals(id)
+    override fun getDistinctExpectedTopics() = documentRepository.findDistinctExpectedTopics()
+    override fun getDistinctActualTopics() = documentRepository.findDistinctActualTopics()
+    override fun getDistinctExpectedSender() = documentRepository.findDistinctExpectedSender()
+    override fun getDistinctActualSender() = documentRepository.findDistinctActualSender()
+    override fun getDistinctExpectedMetadata() = documentRepository.findDistinctExpectedMetadata()
+    override fun getDistinctActualMetadata() = documentRepository.findDistinctActualMetadata()
 }

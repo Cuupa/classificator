@@ -11,65 +11,64 @@
 
 <div th:insert="fragments/header"></div>
 
-<form action="#" method="post" th:action="@{trainerProcess}"
-      th:object="${trainerProcess}">
-    <table class="table table-striped">
-        <thead class="thead-dark">
-        <tr>
-            <th>Text</th>
-            <th>Result</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td width="50%">
-                <label>
-                    <textarea autofocus="autofocus" class="form-control input-lg" cols="100%"
-                              placeholder="Text to process" rows="30" th:field="${trainerProcess.inputText}"></textarea>
-                </label>
-            </td>
-            <td align="center" width="50%">
-                <table class="table table-striped">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>Topic</th>
-                        <th>Sender</th>
-                        <th>Metadata</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="result : ${trainerProcess.result}">
-                        <td style="width: 20%;"><span th:text="${result.topic}">Topic</span></td>
-                        <td style="width: 20%;"><span th:text="${result.sender}">Sender</span></td>
-                        <td style="width: 60%;">
+<div class="container">
+    <div id="topics">
+        <span th:text="Topics"></span>
+        <div>
+            <span th:text="'Precision: '"></span>
+            <span th:text="${precisionTopics}"></span>
+        </div>
 
-                            <table>
-                                <thead class="thead-dark">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+        <div>
+            <span th:text="'Recall: '"></span>
+            <span th:text="${recallTopics}"></span>
+        </div>
 
-                                <!--/*@thymesVar id="metadata" type="com.cuupa.classificator.domain.Metadata"*/-->
-                                <tr th:each="metadata : ${result.metadata}">
-                                    <td width="50%">
-                                        <span th:text="${metadata.name}">Name</span></td>
-                                    <td width="50%"><span th:text="${metadata.value}">Value</span></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td><input class="btn btn-lg btn-primary btn-block" type="submit" value="Process"/></td>
-        </tr>
-        </tbody>
-    </table>
-</form>
+        <div>
+            <span th:text="'F-Score: '"></span>
+            <span th:text="${fScoreTopics}"></span>
+        </div>
+    </div>
+
+    <br/>
+
+    <div id="sender">
+        <span th:text="Sender"></span>
+        <div>
+            <span th:text="'Precision: '"></span>
+            <span th:text="${precisionSender}"></span>
+        </div>
+
+        <div>
+            <span th:text="'Recall: '"></span>
+            <span th:text="${recallSender}"></span>
+        </div>
+
+        <div>
+            <span th:text="'F-Score: '"></span>
+            <span th:text="${fScoreSender}"></span>
+        </div>
+    </div>
+
+    <br/>
+
+    <div id="Metadata">
+        <span th:text="Metadata"></span>
+        <div>
+            <span th:text="'Precision: '"></span>
+            <span th:text="${precisionMetadata}"></span>
+        </div>
+
+        <div>
+            <span th:text="'Recall: '"></span>
+            <span th:text="${recallMetadata}"></span>
+        </div>
+
+        <div>
+            <span th:text="'F-Score: '"></span>
+            <span th:text="${fScoreMetadata}"></span>
+        </div>
+    </div>
+</div>
 </body>
 </html>

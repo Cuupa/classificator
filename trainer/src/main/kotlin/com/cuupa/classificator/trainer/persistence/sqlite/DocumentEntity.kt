@@ -16,21 +16,27 @@ class DocumentEntity {
         strategy = "org.hibernate.id.UUIDGenerator",
     )
     @Column(name = "id", updatable = false, nullable = false)
-    var id: String? = null
+    var id: String = ""
 
-    var batchName: String? = null
+    var batchName: String = ""
 
-    var content: ByteArray? = null
+    var content: ByteArray = ByteArray(0)
 
-    var contentType: String? = null
+    var contentType: String = ""
 
-    var plainText: String? = null
+    var plainText: String = ""
 
-    lateinit var topics: String
+    var expectedTopics: String = ""
 
-    lateinit var senders: String
+    var expectedSender: String = ""
 
-    lateinit var metadata: String
+    var expectedMetadata: String = ""
+
+    var actualTopics: String = ""
+
+    var actualSender: String = ""
+
+    var actualMetadata: String = ""
 
     var done: Boolean = false
 
