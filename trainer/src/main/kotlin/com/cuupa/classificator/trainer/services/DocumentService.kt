@@ -56,6 +56,7 @@ private fun DocumentEntity.mapToDomainObject(): Document {
 
 private fun Document.mapToEntity(): DocumentEntity {
     return DocumentEntity().apply {
+        id = this@mapToEntity.id
         content = this@mapToEntity.content
         contentType = this@mapToEntity.contentType
         batchName = this@mapToEntity.batchName

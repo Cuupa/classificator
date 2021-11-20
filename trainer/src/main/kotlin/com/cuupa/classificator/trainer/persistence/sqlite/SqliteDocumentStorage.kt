@@ -1,14 +1,14 @@
 package com.cuupa.classificator.trainer.persistence.sqlite
 
 import com.cuupa.classificator.trainer.persistence.DocumentStorage
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 open class SqliteDocumentStorage(private val documentRepository: DocumentRepository) : DocumentStorage() {
 
-    @Transactional
+    @Transactional(value = "trainer_transactionManager")
     override fun save(document: List<DocumentEntity>) = document.forEach { documentRepository.save(it) }
 
-    @Transactional
+    @Transactional(value = "trainer_transactionManager")
     override fun save(document: DocumentEntity) {
         documentRepository.save(document)
     }
@@ -20,12 +20,11 @@ open class SqliteDocumentStorage(private val documentRepository: DocumentReposit
     override fun getBatchNames() = documentRepository.findDistinctBatchName()
     override fun getBatch(id: String?) = documentRepository.findAllByBatchNameEquals(id)
 
-    @Transactional
+    @Transactional(value = "trainer_transactionManager")
     override fun complete(document: DocumentEntity) {
         documentRepository.save(document.apply { done = true })
     }
 
-    @Transactional
     override fun removeBatch(id: String?) = documentRepository.deleteAllByBatchNameEquals(id)
     override fun getDistinctExpectedTopics() = documentRepository.findDistinctExpectedTopics()
     override fun getDistinctActualTopics() = documentRepository.findDistinctActualTopics()

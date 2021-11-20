@@ -36,19 +36,19 @@
                     <tr>
                         <th>
                             <span th:text="Topic"></span>
-                            <span class="badge bg-danger"
+                            <span role="button" class="badge bg-danger"
                                   th:onclick="clear('topic');"
                                   th:text="'clear'">clear</span>
                         </th>
                         <th>Sender
-                            <span class="badge bg-danger"
+                            <span role="button" class="badge bg-danger"
                                   th:attr="onclick=|clear('sender')|"
-                                  th:text="'clear'"></span>
+                                  th:text="'clear'">clear</span>
                         </th>
                         <th>Metadata
-                            <span class="badge bg-danger"
+                            <span role="button" class="badge bg-danger"
                                   th:attr="onclick=|clear('metadata')|"
-                                  th:text="'clear'"></span>
+                                  th:text="'clear'">Sender</span>
                         </th>
                     </tr>
                     </thead>

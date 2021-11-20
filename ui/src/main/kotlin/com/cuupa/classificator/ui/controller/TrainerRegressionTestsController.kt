@@ -121,7 +121,7 @@ class TrainerRegressionTestsController(
 
     @GetMapping(value = ["/trainer/classify/batch/{batchId}/{documentId}"])
     fun classifyBatch(@PathVariable batchId: String?, @PathVariable documentId: String?): ModelAndView {
-        val modelAndView = ModelAndView().apply { viewName = "trainer_classify_batch" }
+        val modelAndView = ModelAndView("trainer_classify_batch")
         if (batchId.isNullOrEmpty()) {
             modelAndView.addObject("message", "No ID provided")
             return modelAndView

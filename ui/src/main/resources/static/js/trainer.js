@@ -1,7 +1,9 @@
 
 function clear(type) {
+    console.log(type)
     if (type != null) {
         let index = getIndex(type)
+        console.log(index)
         $('#semantic_result')
             .find("tr")
             .not(":last")

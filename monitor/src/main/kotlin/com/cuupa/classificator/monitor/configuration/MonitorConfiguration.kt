@@ -25,7 +25,7 @@ import javax.sql.DataSource
 @EnableJpaRepositories(
     basePackages = ["com.cuupa.classificator.monitor.persistence"],
     entityManagerFactoryRef = "monitor_entityManagerFactory",
-    transactionManagerRef = "monitor_transaktionManager"
+    transactionManagerRef = "monitor_transactionManager"
 )
 open class MonitorConfiguration {
 
@@ -73,7 +73,7 @@ open class MonitorConfiguration {
         }
     }
 
-    @Bean("monitor_transaktionManager")
+    @Bean("monitor_transactionManager")
     open fun dbTransactionManager(@Qualifier("monitor_entityManagerFactory") entityManager: LocalSessionFactoryBean): PlatformTransactionManager {
         return JpaTransactionManager().apply {
             entityManagerFactory = entityManager.getObject()

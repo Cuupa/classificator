@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Trainer</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}" type="text/css"/>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 
@@ -12,63 +13,69 @@
 <div th:insert="fragments/header"></div>
 
 <div class="container">
-    <div id="topics">
-        <span th:text="Topics"></span>
-        <div>
-            <span th:text="'Precision: '"></span>
-            <span th:text="${precisionTopics}"></span>
+    <div class="row">
+        <div id="topics" class="col-xs-6 col-sm-4">
+            <fieldset>
+                <legend>Topics</legend>
+                <div>
+                    <span th:text="'Precision: '"></span>
+                    <span th:text="${precisionTopics}"></span>
+                </div>
+
+                <div>
+                    <span th:text="'Recall: '"></span>
+                    <span th:text="${recallTopics}"></span>
+                </div>
+
+                <div>
+                    <span th:text="'F-Score: '"></span>
+                    <span th:text="${fScoreTopics}"></span>
+                </div>
+            </fieldset>
         </div>
 
-        <div>
-            <span th:text="'Recall: '"></span>
-            <span th:text="${recallTopics}"></span>
+        <div id="sender" class="col-xs-6 col-sm-4">
+            <fieldset>
+                <legend>Sender</legend>
+                <div>
+                    <span th:text="'Precision: '"></span>
+                    <span th:text="${precisionSender}"></span>
+                </div>
+
+                <div>
+                    <span th:text="'Recall: '"></span>
+                    <span th:text="${recallSender}"></span>
+                </div>
+
+                <div>
+                    <span th:text="'F-Score: '"></span>
+                    <span th:text="${fScoreSender}"></span>
+                </div>
+            </fieldset>
         </div>
 
-        <div>
-            <span th:text="'F-Score: '"></span>
-            <span th:text="${fScoreTopics}"></span>
-        </div>
-    </div>
+        <div id="Metadata" class="col-xs-6 col-sm-4">
+            <fieldset>
+                <legend>Metadata</legend>
+                <div>
+                    <span th:text="'Precision: '"></span>
+                    <span th:text="${precisionMetadata}"></span>
+                </div>
 
-    <br/>
+                <div>
+                    <span th:text="'Recall: '"></span>
+                    <span th:text="${recallMetadata}"></span>
+                </div>
 
-    <div id="sender">
-        <span th:text="Sender"></span>
-        <div>
-            <span th:text="'Precision: '"></span>
-            <span th:text="${precisionSender}"></span>
-        </div>
-
-        <div>
-            <span th:text="'Recall: '"></span>
-            <span th:text="${recallSender}"></span>
-        </div>
-
-        <div>
-            <span th:text="'F-Score: '"></span>
-            <span th:text="${fScoreSender}"></span>
-        </div>
-    </div>
-
-    <br/>
-
-    <div id="Metadata">
-        <span th:text="Metadata"></span>
-        <div>
-            <span th:text="'Precision: '"></span>
-            <span th:text="${precisionMetadata}"></span>
-        </div>
-
-        <div>
-            <span th:text="'Recall: '"></span>
-            <span th:text="${recallMetadata}"></span>
-        </div>
-
-        <div>
-            <span th:text="'F-Score: '"></span>
-            <span th:text="${fScoreMetadata}"></span>
+                <div>
+                    <span th:text="'F-Score: '"></span>
+                    <span th:text="${fScoreMetadata}"></span>
+                </div>
+            </fieldset>
         </div>
     </div>
 </div>
+
+<!--<div th:insert="fragments/footer" style="position: fixed; bottom: 0; width: 100%"></div>-->
 </body>
 </html>
