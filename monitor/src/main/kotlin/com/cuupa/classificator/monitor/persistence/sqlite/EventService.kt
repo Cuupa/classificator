@@ -12,6 +12,7 @@ class EventService(private val eventRepository: EventRepository) {
         }
     }
 
+    @Synchronized
     fun save(event: Event) {
         eventRepository.save(mapToEntity(event))
     }
