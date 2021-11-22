@@ -1,6 +1,7 @@
 package com.cuupa.classificator
 
 import com.cuupa.classificator.engine.Classificator
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,59 +23,94 @@ class IntegrationTests {
 
     @Test
     fun shouldContextLoad() {
-
     }
 
     @Test
     fun shouldHaveOneResult() {
-        val result = classificator?.classify(smokeText) ?: listOf()
-        assertEquals(1, result.size)
+        try {
+            val result = classificator?.classify(smokeText) ?: listOf()
+            assertEquals(1, result.size)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
     }
 
     @Test
     fun shouldHaveTopic() {
-        val result = classificator?.classify(smokeText) ?: listOf()
-        assertEquals("TERMINATION", result.first().topic)
+        try {
+            val result = classificator?.classify(smokeText) ?: listOf()
+            assertEquals("TERMINATION", result.first().topic)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
     }
 
     @Test
     fun shouldHaveBirthdate() {
-        val result = classificator?.classify(smokeText) ?: listOf()
-        val dateOfBirth = result.first().metadata.find { it.name == "date_of_birth" }
-        assertEquals("01.01.1999", dateOfBirth?.value)
+        try {
+            val result = classificator?.classify(smokeText) ?: listOf()
+            val dateOfBirth = result.first().metadata.find { it.name == "date_of_birth" }
+            assertEquals("01.01.1999", dateOfBirth?.value)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
     }
 
     @Test
     fun shouldHaveIban() {
-        val result = classificator?.classify(smokeText) ?: listOf()
-        val iban = result.first().metadata.find { it.name == "IBAN" }
-        assertEquals("DE19 1234 1234 1234 1234 12", iban?.value)
-
-        val result2 = classificator?.classify(smokeTextExpandedMetadata) ?: listOf()
-        val iban2 = result2.first().metadata.find { it.name == "IBAN" }
-        assertEquals("DE19 1234 1234 1234 1234 12", iban2?.value)
+        try {
+            val result = classificator?.classify(smokeText) ?: listOf()
+            val iban = result.first().metadata.find { it.name == "IBAN" }
+            assertEquals("DE19 1234 1234 1234 1234 12", iban?.value)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
+        try {
+            val result2 = classificator?.classify(smokeTextExpandedMetadata) ?: listOf()
+            val iban2 = result2.first().metadata.find { it.name == "IBAN" }
+            assertEquals("DE19 1234 1234 1234 1234 12", iban2?.value)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
     }
+
 
     @Test
     fun shouldHavePolicyNumber() {
-        val result = classificator?.classify(smokeText) ?: listOf()
-        val iban = result.first().metadata.find { it.name == "POLICY_NUMBER" }
-        assertEquals("32103847298", iban?.value)
+        try {
+            val result = classificator?.classify(smokeText) ?: listOf()
+            val iban = result.first().metadata.find { it.name == "POLICY_NUMBER" }
+            assertEquals("32103847298", iban?.value)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
     }
 
     @Test
     fun shouldHavePhoneNumber() {
-        val result = classificator?.classify(smokeText) ?: listOf()
-        val phoneNumber = result.first().metadata.find { it.name == "phone_Number" }
-        assertEquals("+49301234567", phoneNumber?.value)
+        try {
+            val result = classificator?.classify(smokeText) ?: listOf()
+            val phoneNumber = result.first().metadata.find { it.name == "phone_Number" }
+            assertEquals("+49301234567", phoneNumber?.value)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
 
-        val result2 = classificator?.classify(smokeTextExpandedMetadata) ?: listOf()
-        val phoneNumber2 = result2.first().metadata.find { it.name == "phone_Number" }
-        assertEquals("+49301234567", phoneNumber2?.value)
+        try {
+            val result2 = classificator?.classify(smokeTextExpandedMetadata) ?: listOf()
+            val phoneNumber2 = result2.first().metadata.find { it.name == "phone_Number" }
+            assertEquals("+49301234567", phoneNumber2?.value)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
 
-        val result3 = classificator?.classify(smokeTextExpandedPhoneNumber) ?: listOf()
-        val phoneNumber3 = result3.first().metadata.find { it.name == "phone_Number" }
-        assertEquals("03331/1234-56", phoneNumber3?.value)
+        try {
+            val result3 = classificator?.classify(smokeTextExpandedPhoneNumber) ?: listOf()
+            val phoneNumber3 = result3.first().metadata.find { it.name == "phone_Number" }
+            assertEquals("03331/1234-56", phoneNumber3?.value)
+        } catch (e: Exception) {
+            fail(e.message)
+        }
     }
 
     companion object {
