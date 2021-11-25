@@ -1,22 +1,18 @@
-
-function clear(type) {
-    console.log(type)
+function clearItem(type) {
     if (type != null) {
         let index = getIndex(type)
-        console.log(index)
         $('#semantic_result')
             .find("tr")
             .not(":last")
             .find("td:eq(" + index + ")")
-            .get(index).innerHTML = "<td style=\"width: 20%;\"></td>"
+            .get(0).innerHTML = "<td style=\"width: 20%;\"></td>"
     }
 }
 
 function insertRow(table) {
     let row_number = table.rows.length - 1
     let row = table.insertRow(row_number);
-    let cells = [row.insertCell(), row.insertCell(), row.insertCell()]
-    return cells;
+    return [row.insertCell(), row.insertCell(), row.insertCell()]
 }
 
 function getSpanForSemanticResult(value) {
