@@ -1,0 +1,17 @@
+= Roadmap
+:author:
+Simon Thiel (Cuupa)
+
+== Next
+
+* Trainer
+** Regressiontests
+** UI for editing the knowledgebase
+** Statistics
+
+== Later
+
+* Language detection
+* Multi-Language support
+* Levensthein-Dammerau distance
+* Lemmatizing
