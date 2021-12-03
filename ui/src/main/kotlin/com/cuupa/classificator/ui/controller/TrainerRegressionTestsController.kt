@@ -52,7 +52,7 @@ class TrainerRegressionTestsController(
         val recallMetadata = trainer.getRecall(metadata.toMetadata())
         val fScoreMetadata = trainer.getFScore(precisionMetadata, recallMetadata)
 
-        val modelAndView = ModelAndView("trainer").apply {
+        val modelAndView = ModelAndView("trainer/trainer").apply {
             addObject("precisionTopics", decimalFormat.format(precisionTopics))
             addObject("recallTopics", decimalFormat.format(recallTopics))
             addObject("fScoreTopics", decimalFormat.format(fScoreTopics))
@@ -73,7 +73,7 @@ class TrainerRegressionTestsController(
         if (!model.containsAttribute("trainerProcess")) {
             model.addAttribute("trainerProcess", TrainerProcess())
         }
-        return "trainer_add"
+        return "trainer/regression/trainer_add"
     }
 
     @PostMapping(value = ["/trainer/add"])
@@ -83,7 +83,7 @@ class TrainerRegressionTestsController(
         redirectAttributes: RedirectAttributes
     ): ModelAndView {
 
-        val model = ModelAndView().apply { viewName = "trainer_add" }
+        val model = ModelAndView().apply { viewName = "trainer/regression/trainer_add" }
 
         val success = try {
 
@@ -121,7 +121,7 @@ class TrainerRegressionTestsController(
 
     @GetMapping(value = ["/trainer/classify/batch/{batchId}/{documentId}"])
     fun classifyBatch(@PathVariable batchId: String?, @PathVariable documentId: String?): ModelAndView {
-        val modelAndView = ModelAndView("trainer_classify_batch")
+        val modelAndView = ModelAndView("trainer/regression/trainer_classify_batch")
         if (batchId.isNullOrEmpty()) {
             modelAndView.addObject("message", "No ID provided")
             return modelAndView
@@ -144,7 +144,7 @@ class TrainerRegressionTestsController(
 
     @GetMapping(value = ["/trainer/batch/delete/{id}"])
     fun deleteBatch(@PathVariable id: String?): ModelAndView {
-        val muv = ModelAndView("trainer_classify")
+        val muv = ModelAndView("trainer/regression/trainer_classify")
 
         if (id.isNullOrEmpty()) {
             muv.addObject("success", false)
@@ -198,12 +198,12 @@ class TrainerRegressionTestsController(
     fun classifyOpen() = ModelAndView().apply {
         addObject("batchNames", trainer.getBatchNames())
         addObject("batchContent", listOf<Document>())
-        viewName = "trainer_classify"
+        viewName = "trainer/regression/trainer_classify"
     }
 
     @GetMapping(value = ["/trainer/classify/open/{id}"])
     fun batchDetails(@PathVariable id: String?): ModelAndView {
-        val modelAndView = ModelAndView().apply { viewName = "trainer_classify" }
+        val modelAndView = ModelAndView().apply { viewName = "trainer/regression/trainer_classify" }
         if (id.isNullOrEmpty()) {
             modelAndView.addObject("success", false)
             modelAndView.addObject("message", "No batch ID provided")
@@ -218,13 +218,52 @@ class TrainerRegressionTestsController(
     }
 
     @GetMapping(value = ["/trainer/classify/{id}"])
-    fun classifyOpen(model: Model, @PathVariable id: String): String {
+    fun classifyOpen(@PathVariable id: String): ModelAndView {
         val process = getModel(id, manager.getTopics(), manager.getSender(), manager.getMetadata().toMetadata())
         val encode = String(Base64.getEncoder().encode(process.selected.content))
         val result = classificator.classify(contentType = process.selected.contentType, content = encode)
         process.selectedResult = result
-        model.addAttribute("trainerClassifyProcess", process)
-        return "trainer_classify_batch"
+        return ModelAndView("trainer/regression/trainer_classify_batch").apply {
+            addObject("trainerClassifyProcess", process)
+        }
+    }
+
+    @GetMapping(value = ["/trainer/process"])
+    fun process() = ModelAndView("trainer/regression/trainer_process").apply {
+        addObject("batchNames", trainer.getBatchNames())
+        addObject("batchContent", listOf<Document>())
+    }
+
+    @GetMapping(value = ["/trainer/process/{id}"])
+    fun process(@PathVariable id: String?): ModelAndView {
+        val modelAndView = ModelAndView("trainer/regression/trainer_process")
+        if (id.isNullOrEmpty()) {
+            modelAndView.addObject("success", false)
+            modelAndView.addObject("message", "No batch ID provided")
+        } else {
+            modelAndView.addObject("batchNames", trainer.getBatchNames())
+            modelAndView.addObject("selectedBatchName", id)
+            val batch = trainer.getBatch(id)
+            modelAndView.addObject("batchContent", batch)
+            modelAndView.addObject("uploadTime", getUploadTime(batch))
+        }
+        return modelAndView
+    }
+
+    @GetMapping(value = ["/trainer/process/details/{id}"])
+    fun processDetails(@PathVariable id: String?): ModelAndView {
+        val modelAndView = ModelAndView("trainer/regression/trainer_process_details")
+        if (id.isNullOrEmpty()) {
+            modelAndView.addObject("success", false)
+            modelAndView.addObject("message", "No batch ID provided")
+        } else {
+            modelAndView.addObject("batchNames", trainer.getBatchNames())
+            modelAndView.addObject("selectedBatchName", id)
+            val batch = trainer.getBatch(id)
+            modelAndView.addObject("batchContent", batch)
+            modelAndView.addObject("uploadTime", getUploadTime(batch))
+        }
+        return modelAndView
     }
 
     private fun getModel(
@@ -234,7 +273,7 @@ class TrainerRegressionTestsController(
         metadata: List<Metadata>
     ): TrainerClassifyProcess {
         return TrainerClassifyProcess(
-            ids = trainer.getOpenDocuments().map { it.id.toString() },
+            ids = trainer.getOpenDocuments().map { it.id },
             selected = trainer.getDocument(id!!),
             topics = topics.distinctBy { it.name }.sortedBy { it.name },
             sender = sender.distinctBy { it.name }.sortedBy { it.name },

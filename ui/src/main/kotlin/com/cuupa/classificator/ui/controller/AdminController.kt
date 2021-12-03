@@ -26,10 +26,10 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
         }.apply { apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate } }
 
         model.addAttribute("adminProcess", adminProcess)
-        return ModelAndView("admin")
+        return ModelAndView("api_keys")
     }
 
-    @GetMapping(value = ["/admin/revoke{id}"])
+    @GetMapping(value = ["/api-keys/revoke{id}"])
     @ResponseBody
     fun revoke(
         @RequestParam(name = "id") id: String,
@@ -44,20 +44,20 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
         return ModelAndView("redirect:/admin")
     }
 
-    @PostMapping(value = ["/admin/create"])
+    @PostMapping(value = ["/api-keys/create"])
     fun create(
         @ModelAttribute adminProcess: AdminProcess, model: Model
     ): ModelAndView {
         try {
             if (adminProcess.assosiate.isBlank()) {
                 handleError(adminProcess, model)
-                return ModelAndView("admin")
+                return ModelAndView("api_keys")
             }
 
             val exists = apiKeyRepository.findAll().find { it.assosiate == adminProcess.assosiate } != null
             if (exists) {
                 handleError(adminProcess, model)
-                return ModelAndView("admin")
+                return ModelAndView("api_keys")
             }
 
             val uuid = UUID.randomUUID().toString().also { adminProcess.generatedApiKey = it }
@@ -72,7 +72,7 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
             handleError(adminProcess, model)
         }
         model.addAttribute("adminProcess", adminProcess)
-        return ModelAndView("admin")
+        return ModelAndView("api_keys")
     }
 
     private fun handleError(adminProcess: AdminProcess, model: Model) {

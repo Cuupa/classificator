@@ -39,7 +39,7 @@ class TextExtractorTest {
 
         assertNotNull(result)
         assertEquals(MediaType.APPLICATION_PDF_VALUE, result.contentType)
-        assertEquals("Hello World\n", result.content)
+        assertEquals("Hello World", result.content?.trim())
     }
 
     //@Test

@@ -1,5 +1,6 @@
 package com.cuupa.classificator
 
+import com.cuupa.classificator.configuration.ApplicationTestConfiguration
 import com.cuupa.classificator.engine.Classificator
 import org.apache.commons.logging.LogFactory
 import org.junit.jupiter.api.Test

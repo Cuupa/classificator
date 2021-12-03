@@ -1,10 +1,11 @@
 package com.cuupa.classificator
 
+import com.cuupa.classificator.configuration.ApplicationTestConfiguration
 import com.cuupa.classificator.engine.Classificator
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.fail
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -23,6 +24,7 @@ class IntegrationTests {
 
     @Test
     fun shouldContextLoad() {
+
     }
 
     @Test
@@ -74,7 +76,6 @@ class IntegrationTests {
         }
     }
 
-
     @Test
     fun shouldHavePolicyNumber() {
         try {
@@ -97,17 +98,17 @@ class IntegrationTests {
         }
 
         try {
-            val result2 = classificator?.classify(smokeTextExpandedMetadata) ?: listOf()
-            val phoneNumber2 = result2.first().metadata.find { it.name == "phone_Number" }
-            assertEquals("+49301234567", phoneNumber2?.value)
+            val result = classificator?.classify(smokeTextExpandedMetadata) ?: listOf()
+            val phoneNumber = result.first().metadata.find { it.name == "phone_Number" }
+            assertEquals("+49301234567", phoneNumber?.value)
         } catch (e: Exception) {
             fail(e.message)
         }
 
         try {
-            val result3 = classificator?.classify(smokeTextExpandedPhoneNumber) ?: listOf()
-            val phoneNumber3 = result3.first().metadata.find { it.name == "phone_Number" }
-            assertEquals("03331/1234-56", phoneNumber3?.value)
+            val result = classificator?.classify(smokeTextExpandedPhoneNumber) ?: listOf()
+            val phoneNumber = result.first().metadata.find { it.name == "phone_Number" }
+            assertEquals("03331/1234-56", phoneNumber?.value)
         } catch (e: Exception) {
             fail(e.message)
         }

@@ -31,12 +31,17 @@ open class EngineConfiguration {
     private var knowledgbaseDir: String = ""
 
     @Bean
-    open fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor, textExtractor: TextExtractor): Classificator {
+    open fun classificator(
+        knowledgeManager: KnowledgeManager,
+        analyser: PdfAnalyser,
+        monitor: Monitor,
+        textExtractor: TextExtractor
+    ): Classificator {
         return ClassificatorImplementation(knowledgeManager, analyser, monitor, textExtractor)
     }
 
     @Bean
-    open fun textExtrator(tika: Tika): TextExtractor {
+    open fun textExtractor(tika: Tika): TextExtractor {
         return TextExtractor(tika)
     }
 
@@ -100,10 +105,8 @@ open class EngineConfiguration {
     }
 
     private fun getKnowledgeBaseDir(): String {
-        return if (knowledgbaseDir.isEmpty()) {
+        return knowledgbaseDir.ifEmpty {
             configuration?.classificator?.knowledgeBase ?: ""
-        } else {
-            knowledgbaseDir
         }
     }
 

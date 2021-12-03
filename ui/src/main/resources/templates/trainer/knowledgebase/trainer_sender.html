@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Trainer</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/trainer.css}" type="text/css"/>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+
+<body>
+
+<div th:insert="fragments/header"></div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th th:text="'Sender (' + ${trainerProcess.sender.size()} + ')'">Sender</th>
+        <th>Definition</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="width: 50%">
+            <div class="list-group" th:each="sender : ${trainerProcess.sender}">
+                <a class="list-group-item list-group-item-action active"
+                   th:href="@{/trainer/sender/} + ${sender.name}"
+                   th:if="${trainerProcess.selected.getName()} == ${sender.name}">
+                    <span th:text="${sender.name}"></span>
+                </a>
+
+                <a class="list-group-item list-group-item-action"
+                   th:href="@{/trainer/sender/} + ${sender.name}"
+                   th:if="${trainerProcess.selected.getName()} != ${sender.name}">
+                    <span th:text="${sender.name}"></span>
+                </a>
+            </div>
+        </td>
+
+        <td style="width: 50%; align-content: center">
+            <div id="sender_definition">
+                <h2 th:text="${trainerProcess.selected.getName()}"></h2>
+
+                <div th:each="token, iter_all : ${trainerProcess.selected.getTokenList()}">
+                    <span th:text="${token.class.simpleName}"></span>
+                    <span th:text="'('"></span>
+
+                    <span th:each="values, iter : ${token.tokenValue}">
+                        <span class="badge bg-secondary text-wrap" th:text="${values}"></span>
+                        <span class="bg-primary badge" th:if="${!iter.last}" th:text="' OR '"></span>
+                        <span th:if="${iter.last}" th:text="')'"></span>
+                    </span>
+
+                    <br th:if="${!iter_all.last}"/>
+                    <div class="bg-primary badge" th:if="${!iter_all.last}" th:text="' AND '"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -26,7 +26,7 @@ class TrainerKnowledgebaseController(
             version = manager.getVersion(),
             topics = manager.getTopics().distinctBy { it.name }.sortedBy { it.name })
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_topics"
+        return "trainer/knowledgebase/trainer_topics"
     }
 
     @GetMapping(value = ["/trainer/topics/{id}"])
@@ -37,7 +37,7 @@ class TrainerKnowledgebaseController(
             topics = topics,
             selected = topics.first { it.name == id })
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_topics"
+        return "trainer/knowledgebase/trainer_topics"
     }
 
     @GetMapping(value = ["/trainer/sender"])
@@ -46,7 +46,7 @@ class TrainerKnowledgebaseController(
             version = manager.getVersion(),
             sender = manager.getSender().distinctBy { it.name }.sortedBy { it.name })
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_sender"
+        return "trainer/knowledgebase/trainer_sender"
     }
 
     @GetMapping(value = ["/trainer/sender/{id}"])
@@ -57,7 +57,7 @@ class TrainerKnowledgebaseController(
                 sender = sender,
                 selected = sender.first { it.name == id })
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_sender"
+        return "trainer/knowledgebase/trainer_sender"
     }
 
     @GetMapping(value = ["/trainer/metadata"])
@@ -70,7 +70,7 @@ class TrainerKnowledgebaseController(
             }
         }.distinctBy { it.name }.sortedBy { it.name })
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_metadata"
+        return "trainer/knowledgebase/trainer_metadata"
     }
 
     @GetMapping(value = ["/trainer/metadata/{id}"])
@@ -82,7 +82,7 @@ class TrainerKnowledgebaseController(
                 metadata = metadata,
                 selected = metadata.first { it.name == id })
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_metadata"
+        return "trainer/knowledgebase/trainer_metadata"
     }
 
     @GetMapping(value = ["/trainer/regex"])
@@ -95,7 +95,7 @@ class TrainerKnowledgebaseController(
                 }
             }.distinctBy { it.name }.sortedBy { it.name }, selected = Regex())
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_regex"
+        return "trainer/knowledgebase/trainer_regex"
     }
 
     @GetMapping(value = ["/trainer/regex/{id}"])
@@ -113,6 +113,10 @@ class TrainerKnowledgebaseController(
                 regex = regex,
                 selected = regex.first { it.name == id })
         model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer_regex"
+        return "$directory/trainer_regex"
+    }
+
+    companion object{
+        const val directory = "trainer/knowledgebase/"
     }
 }

@@ -4,7 +4,9 @@ import com.cuupa.classificator.engine.configuration.EngineConfiguration
 import com.cuupa.classificator.monitor.configuration.MonitorConfiguration
 import com.cuupa.classificator.trainer.configuration.TrainerConfiguration
 import com.cuupa.classificator.ui.configuration.SecurityConfiguration
+import com.google.gson.Gson
 import org.apache.commons.logging.LogFactory
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -17,6 +19,11 @@ import javax.annotation.PostConstruct
 @Import(value = [EngineConfiguration::class, SecurityConfiguration::class, MonitorConfiguration::class, TrainerConfiguration::class])
 @ComponentScan(basePackages = ["com.cuupa.classificator"])
 open class ApplicationConfiguration {
+
+    @Bean
+    open fun gson(): Gson{
+        return Gson()
+    }
 
     @PostConstruct
     fun configLoaded() {

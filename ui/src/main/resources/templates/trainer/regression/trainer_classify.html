@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trainer</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+<div th:insert="fragments/header"></div>
+
+<div th:if="${success != null and success and message != null}">
+    <div class="alert alert-primary" th:text="${message}"></div>
+</div>
+<div th:if="${success != null and !success and message != null}">
+    <div class="alert alert-danger" th:text="${message}"></div>
+</div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th th:text="'Batches (' + ${batchNames.size()} + ')'">Batches</th>
+        <th>Summary</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="width: 40%">
+            <div class="list-group" th:each="batchName : ${batchNames}">
+                <a class="list-group-item list-group-item-action active"
+                   th:href="@{/trainer/classify/open/} + ${batchName}"
+                   th:if="${batchName} == ${selectedBatchName}">
+                    <span th:text="${batchName}"></span>
+                </a>
+
+                <a class="list-group-item list-group-item-action"
+                   th:href="@{/trainer/classify/open/} + ${batchName}"
+                   th:if="${batchName} != ${selectedBatchName}">
+                    <span th:text="${batchName}"></span>
+                </a>
+            </div>
+        </td>
+
+        <td style="width: 30%; align-content: center">
+            <div th:if="${selectedBatchName != null}">
+                <span th:text="'Uploaded at: ' + ${uploadTime}"></span>
+                <br/>
+                <span th:text="'Number of documents: ' + ${batchContent.size()}"></span>
+            </div>
+
+            <div th:if="${selectedBatchName == null}">
+                <span th:text="'No batch selected'"></span>
+            </div>
+        </td>
+
+        <td style="width: 20%; align-content: center">
+            <div th:if="${selectedBatchName != null}">
+                <a th:href="@{/trainer/classify/batch/} + ${selectedBatchName}" class="btn btn-primary" role="button"
+                   th:text="Edit"></a>
+                <a th:href="@{/trainer/batch/delete/} + ${selectedBatchName}" class="btn btn-primary" role="button"
+                   th:text="'Delete Batch'"></a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
