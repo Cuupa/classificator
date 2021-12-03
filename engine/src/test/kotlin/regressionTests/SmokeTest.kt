@@ -1,12 +1,12 @@
-package regressionTests;
+package regressionTests
 
-import com.cuupa.classificator.engine.ClassificatorImplementation;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import com.cuupa.classificator.engine.ClassificatorImplementation
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import regressionTests.config.EngineTestConfiguration
 import kotlin.test.assertNotNull
 
@@ -22,7 +22,7 @@ class SmokeTest {
     private var unitToTest: ClassificatorImplementation? = null
 
     @Test
-    fun shouldContextStart(){
+    fun shouldContextStart() {
         assertNotNull(unitToTest)
     }
 

@@ -49,12 +49,12 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
         @ModelAttribute adminProcess: AdminProcess, model: Model
     ): ModelAndView {
         try {
-            if (adminProcess.assosiate.isBlank()) {
+            if (adminProcess.associate.isBlank()) {
                 handleError(adminProcess, model)
                 return ModelAndView("admin")
             }
 
-            val exists = apiKeyRepository.findAll().find { it.assosiate == adminProcess.assosiate } != null
+            val exists = apiKeyRepository.findAll().find { it.assosiate == adminProcess.associate } != null
             if (exists) {
                 handleError(adminProcess, model)
                 return ModelAndView("admin")
@@ -63,7 +63,7 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
             val uuid = UUID.randomUUID().toString().also { adminProcess.generatedApiKey = it }
             apiKeyRepository.save(ApiKeyEntity().apply {
                 apiKey = uuid
-                assosiate = adminProcess.assosiate
+                assosiate = adminProcess.associate
             })
 
             adminProcess.apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate }
@@ -76,13 +76,9 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
     }
 
     private fun handleError(adminProcess: AdminProcess, model: Model) {
-        log.error("99. Handle error")
         adminProcess.error = true
-        log.error("999. Set error = true")
         adminProcess.apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate }
-        log.error("999. Stored API keys in gui object")
         model.addAttribute("adminProcess", adminProcess)
-        log.error("9999. Stored GUI object in model")
     }
 
     companion object {

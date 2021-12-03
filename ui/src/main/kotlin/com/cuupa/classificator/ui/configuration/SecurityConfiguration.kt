@@ -5,7 +5,6 @@ import com.cuupa.classificator.ui.handler.MonitorAccessDeniedHandler
 import com.cuupa.classificator.ui.handler.MonitorAuthenticationFailureHandler
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -20,19 +19,6 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
     private var configuration: Config? = null
-
-    @Value("\${classificator.monitor.username}")
-    private var monitorUsername: String? = null
-
-    @Value("\${classificator.monitor.password}")
-    private var monitorPassword: String? = null
-
-    @Value("\${classificator.admin.username}")
-    private var adminUsername: String? = null
-
-    @Value("\${classificator.admin.password}")
-    private var adminPassword: String? = null
-
 
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
@@ -104,38 +90,13 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     }
 
 
-    // TODO: Whats the primary value? The value in the application.yml or in the user configuration?
-    private fun getMonitorUsername(): String {
-        return if (monitorUsername.isNullOrEmpty()) {
-            configuration?.classificator?.monitorConfig?.username ?: ""
-        } else {
-            monitorUsername ?: ""
-        }
-    }
+    private fun getMonitorUsername() = configuration?.classificator?.monitorConfig?.username ?: ""
 
-    private fun getMonitorPassword(): String {
-        return if (monitorPassword.isNullOrEmpty()) {
-            configuration?.classificator?.monitorConfig?.password ?: ""
-        } else {
-            monitorPassword ?: ""
-        }
-    }
+    private fun getMonitorPassword() = configuration?.classificator?.monitorConfig?.password ?: ""
 
-    private fun getAdminUsername(): String {
-        return if (adminUsername.isNullOrEmpty()) {
-            configuration?.classificator?.adminConfig?.username ?: ""
-        } else {
-            adminUsername ?: ""
-        }
-    }
+    private fun getAdminPassword() = configuration?.classificator?.adminConfig?.password ?: ""
 
-    private fun getAdminPassword(): String {
-        return if (adminPassword.isNullOrEmpty()) {
-            configuration?.classificator?.adminConfig?.password ?: ""
-        } else {
-            adminPassword ?: ""
-        }
-    }
+    private fun getAdminUsername() = configuration?.classificator?.adminConfig?.username ?: ""
 
     @PostConstruct
     fun configLoaded() {

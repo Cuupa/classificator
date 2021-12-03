@@ -10,13 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.commons.logging.LogFactory
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.tika.Tika
-import org.apache.tika.metadata.Metadata
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.Serializable
 import java.time.LocalDateTime
-import java.util.*
 
 class ClassificatorOld(
     private val manager: KnowledgeManager, private val analyser: PdfAnalyser,

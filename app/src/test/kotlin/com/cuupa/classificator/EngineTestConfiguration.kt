@@ -13,20 +13,16 @@ import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.externalconfiguration.Config
 import com.cuupa.classificator.monitor.service.Monitor
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
 @Configuration
-@Import(value = [ExternalConfigurationTest::class])
+@Import(value = [ExternalTestConfiguration::class])
 open class EngineTestConfiguration {
 
     @Autowired
     private var configuration: Config? = null
-
-    @Value("\${classificator.kbfiles}")
-    private var knowledgbaseDir: String = ""
 
     @Bean
     open fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor): Classificator {
@@ -78,11 +74,5 @@ open class EngineTestConfiguration {
         return PdfAnalyser()
     }
 
-    private fun getKnowledgeBaseDir(): String {
-        return if (knowledgbaseDir.isEmpty()) {
-            configuration?.classificator?.knowledgeBase ?: ""
-        } else {
-            knowledgbaseDir
-        }
-    }
+    private fun getKnowledgeBaseDir() = configuration?.classificator?.knowledgeBase ?: ""
 }
