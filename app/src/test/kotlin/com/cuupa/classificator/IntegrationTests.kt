@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.fail
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertEquals
 
@@ -17,15 +18,14 @@ import kotlin.test.assertEquals
 @SpringBootTest(classes = [ApplicationTestConfiguration::class])
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class IntegrationTests {
+@EnableWebSecurity
+open class IntegrationTests {
 
     @Autowired
     private val classificator: Classificator? = null
 
     @Test
-    fun shouldContextLoad() {
-
-    }
+    fun shouldContextLoad() {}
 
     @Test
     fun shouldHaveOneResult() {

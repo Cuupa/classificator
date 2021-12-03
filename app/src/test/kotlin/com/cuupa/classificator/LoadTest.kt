@@ -8,6 +8,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -18,7 +19,8 @@ import kotlin.test.assertNotNull
 @SpringBootTest(classes = [ApplicationTestConfiguration::class])
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class LoadTest {
+@EnableWebSecurity
+open class LoadTest {
 
     @Autowired
     private val classificator: Classificator? = null
