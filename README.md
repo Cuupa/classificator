@@ -26,9 +26,8 @@ When creating an issue or a pull request, please be as detailed as possible.
 "I want to participate, but I know nothing about programming 😔"
 - No problem. You can contribute by
   providing [topic definitions](https://github.com/Cuupa/classificator/tree/master/knowledgebase) or contribute by
-  providing feedback, make some suggestions eg. If you want to contribute to your topic, open a new issue providing your
-  suggested changes but also supply any text you have tested with. If you want to create or fine tune a topic, create a
-  pull request and I'll give it a shot.
+  providing feedback, make some suggestions e.g. If you want to contribute to your topic, open a new issue providing your
+  suggested changes but also supply any text you have tested with. If you want to create or fine tune a topic, create a pull request and I'll give it a shot.
 
 If you think this project is awesome, you can spend me a beer or a coffee.
 
@@ -38,16 +37,16 @@ If you think this project is awesome, you can spend me a beer or a coffee.
 
 ## How it works
 
-Currently it is just a keyword classification engine with some tweaks. It uses the levensthein algorithm to counter
+Currently, it is just a keyword classification engine with some tweaks. It uses the Levenshtein algorithm to counter
 spelling or OCR errors.
 
 It tries to match the topics, sender and metadata, provided in the 7zip archive in "knowledgebase/kb-{version
-number}.db". If no sender matches, it tries to determine the sender via REGEX, removing the ones with more then six
-words, counting the occurences in the text and taking the occurences times the length of the String.
+number}.db". If no sender matches, it tries to determine the sender via REGEX, removing the ones with more than six
+words, counting the occurrences in the text and taking the occurrences times the length of the String.
 
 There is a simple test GUI at http://addressofyour.server/
 
-Currently I'm working on lemmatizing and different languages.
+Currently, I'm working on lemmatizing and different languages.
 
 ## Documentation
 You can read the latest documentation [here](https://github.com/Cuupa/classificator/blob/master/documentation/README.adoc).

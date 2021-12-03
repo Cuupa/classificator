@@ -6,7 +6,7 @@ class AdminProcess {
 
     var generatedApiKey: String = ""
 
-    var assosiate: String = ""
+    var associate: String = ""
 
     var apiUsers: List<String> = listOf()
 }

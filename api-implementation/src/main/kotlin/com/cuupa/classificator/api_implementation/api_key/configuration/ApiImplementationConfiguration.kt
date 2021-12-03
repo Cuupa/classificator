@@ -23,7 +23,7 @@ import javax.sql.DataSource
 @EnableJpaRepositories(
     basePackages = ["com.cuupa.classificator.api_implementation"],
     entityManagerFactoryRef = "api_entityManagerFactory",
-    transactionManagerRef = "api_transaktionManager"
+    transactionManagerRef = "api_transactionManager"
 )
 open class ApiImplementationConfiguration {
 
@@ -52,7 +52,7 @@ open class ApiImplementationConfiguration {
         }
     }
 
-    @Bean("api_transaktionManager")
+    @Bean("api_transactionManager")
     open fun dbTransactionManager(@Qualifier("api_entityManagerFactory") entityManager: LocalSessionFactoryBean): PlatformTransactionManager {
         return JpaTransactionManager().apply {
             entityManagerFactory = entityManager.getObject()

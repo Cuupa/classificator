@@ -12,7 +12,7 @@ import java.io.File
 
 @Configuration
 @Primary
-open class ExternalConfigurationTest {
+open class ExternalTestConfiguration {
 
     @Bean
     open fun jackson(): ObjectMapper {
