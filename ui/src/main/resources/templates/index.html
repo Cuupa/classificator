@@ -22,14 +22,14 @@
         </thead>
         <tbody>
         <tr>
-            <td width="50%">
+            <td style="width: 50%">
                 <label>
                     <textarea autofocus="autofocus" class="form-control input-lg" cols="100%"
                               placeholder="Text to process"
                               rows="30" th:field="${guiProcess.inputText}"></textarea>
                 </label>
             </td>
-            <td width="50%" align="center">
+            <td align="center" style="width: 50%">
                 <table class="table table-striped">
                     <thead class="thead-dark">
                     <tr>
@@ -55,9 +55,9 @@
 
                                 <!--/*@thymesVar id="metadata" type="com.cuupa.classificator.domain.Metadata"*/-->
                                 <tr th:each="metadata : ${result.metadata}">
-                                    <td width="50%">
+                                    <td style="width: 50%">
                                         <span th:text="${metadata.name}">Name</span></td>
-                                    <td width="50%"><span th:text="${metadata.value}">Value</span></td>
+                                    <td style="width: 50%"><span th:text="${metadata.value}">Value</span></td>
                                 </tr>
                                 </tbody>
                             </table>

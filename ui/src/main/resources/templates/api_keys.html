@@ -25,7 +25,7 @@
         <div class="row align-items-center">
             <div class="col-xs-6 col-sm-6 col-md-6">
                 <input type="text" placeholder="E-Mail Address" required="required" autofocus="autofocus"
-                       class="form-control input-lg" th:field="${adminProcess.assosiate}">
+                       class="form-control input-lg" th:field="${adminProcess.associate}">
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6">
                 <input type="submit" class="btn btn-lg btn-primary" value="Create new API key"/>
@@ -34,17 +34,17 @@
     </form>
 </div>
 <br/>
-<table class="table table-striped" width="100%">
+<table class="table table-striped" style="width: 100%">
     <thead class="thead-dark">
     <tr>
-        <th width="75%">API Key assosiate</th>
-        <th width="25%">Revoke</th>
+        <th style="width: 75%">API Key associate</th>
+        <th style="width: 25%">Revoke</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="result : ${adminProcess.apiUsers}">
-        <td width="75%"><span th:text="${result}"></span></td>
-        <td width="25%"><a th:href="@{/admin/revoke(id=${result})}">Revoke</a></td>
+        <td style="width: 75%"><span th:text="${result}"></span></td>
+        <td style="width: 25%"><a th:href="@{/admin/revoke(id=${result})}">Revoke</a></td>
     </tr>
     </tbody>
 </table>

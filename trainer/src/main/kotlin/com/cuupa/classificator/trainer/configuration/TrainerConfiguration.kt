@@ -11,7 +11,6 @@ import com.cuupa.classificator.trainer.services.statistics.Recall
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -33,9 +32,6 @@ open class TrainerConfiguration {
 
     @Autowired
     private var configuration: Config? = null
-
-    @Value("\${classificator.trainer.database_name}")
-    private var databaseName: String? = null
 
     @Bean
     open fun trainer(service: DocumentService): Trainer {
@@ -93,13 +89,7 @@ open class TrainerConfiguration {
         }
     }
 
-    private fun getDatabaseName(): String {
-        return if (databaseName.isNullOrEmpty()) {
-            configuration?.classificator?.trainerConfig?.databaseName ?: ""
-        } else {
-            databaseName ?: ""
-        }
-    }
+    private fun getDatabaseName() = configuration?.classificator?.trainerConfig?.databaseName ?: ""
 
     @PostConstruct
     fun configLoaded() {

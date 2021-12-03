@@ -12,11 +12,9 @@ import com.cuupa.classificator.monitor.service.Monitor
 import org.apache.commons.logging.LogFactory
 import org.apache.tika.Tika
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import javax.annotation.PostConstruct
 
 @Configuration
 @Import(value = [ExternalTestConfiguration::class])
@@ -24,9 +22,6 @@ open class EngineTestConfiguration {
 
     @Autowired
     private var configuration: Config? = null
-
-    @Value("\${classificator.kbfiles}")
-    private var knowledgbaseDir: String = ""
 
     @Bean
     open fun classificator(
@@ -93,16 +88,7 @@ open class EngineTestConfiguration {
         return PdfAnalyser()
     }
 
-    private fun getKnowledgeBaseDir(): String {
-        return knowledgbaseDir.ifEmpty {
-            configuration?.classificator?.knowledgeBase ?: ""
-        }
-    }
-
-    @PostConstruct
-    fun configLoaded() {
-        log.info("Loaded ${EngineTestConfiguration::class.simpleName}")
-    }
+    private fun getKnowledgeBaseDir() = configuration?.classificator?.knowledgeBase ?: ""
 
     companion object {
         private val log = LogFactory.getLog(EngineTestConfiguration::class.java)

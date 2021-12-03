@@ -14,7 +14,7 @@ class ApiKeyValidator(private val config: Config, private val repository: ApiKey
         }
 
         if (apiKey.isNullOrBlank()) {
-            return false;
+            return false
         }
         return repository.findById(apiKey).isPresent
     }

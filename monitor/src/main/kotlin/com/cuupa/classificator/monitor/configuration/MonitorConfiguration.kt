@@ -9,7 +9,6 @@ import com.cuupa.classificator.monitor.service.Monitor
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,15 +30,6 @@ open class MonitorConfiguration {
 
     @Autowired
     private var configuration: Config? = null
-
-    @Value("\${classificator.monitor.database_name}")
-    private var databaseName: String? = null
-
-    @Value("\${classificator.monitor.enabled}")
-    private var enabled: Boolean? = null
-
-    @Value("\${classificator.monitor.logText}")
-    private var logText: Boolean? = null
 
     @Bean
     open fun monitor(eventStorage: EventStorage): Monitor {
@@ -87,29 +77,11 @@ open class MonitorConfiguration {
         }
     }
 
-    private fun getDatabaseName(): String {
-        return if (databaseName.isNullOrEmpty()) {
-            configuration?.classificator?.monitorConfig?.databaseName ?: ""
-        } else {
-            databaseName ?: ""
-        }
-    }
+    private fun getDatabaseName() = configuration?.classificator?.monitorConfig?.databaseName ?: ""
 
-    private fun isEnabled(): Boolean {
-        return if (enabled == null) {
-            configuration?.classificator?.monitorConfig?.enabled ?: false
-        } else {
-            enabled ?: false
-        }
-    }
+    private fun isEnabled() = configuration?.classificator?.monitorConfig?.enabled ?: false
 
-    private fun isLogText(): Boolean {
-        return if (logText == null) {
-            configuration?.classificator?.monitorConfig?.logText ?: false
-        } else {
-            logText ?: false
-        }
-    }
+    private fun isLogText() = configuration?.classificator?.monitorConfig?.logText ?: false
 
     @PostConstruct
     fun configLoaded() {

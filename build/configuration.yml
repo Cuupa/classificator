@@ -1,6 +1,6 @@
 ---
 classificator:
-  knowledge_base: knowledgebase
+  knowledge_base: build/knowledgebase
 
   api_key_required: true
 
@@ -14,3 +14,6 @@ classificator:
     enabled: true
     logText: true
     database_name: "monitor.db"
+
+  trainer:
+    database_name: "trainer.db"

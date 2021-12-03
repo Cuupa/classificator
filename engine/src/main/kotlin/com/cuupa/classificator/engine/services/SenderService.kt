@@ -53,7 +53,7 @@ class SenderService(private val senders: List<Sender>) {
     }
 
     /**
-     * If there are more then 5 spaces, we can assume we misinterpreted a sentence as a sender
+     * If there are more than 5 spaces, we can assume we misinterpreted a sentence as a sender
      */
     private fun lessOrEqualFiveSpacesInWord(): (Map.Entry<String, Int>) -> Boolean =
         { it.key.count { char -> ' ' == char } <= 5 }

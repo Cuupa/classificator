@@ -15,7 +15,6 @@ class ApiResponseMessage {
     var type: String? = null
     var message: String? = null
 
-    constructor() {}
     constructor(code: Int, message: String?) {
         this.code = code
         type = when (code) {

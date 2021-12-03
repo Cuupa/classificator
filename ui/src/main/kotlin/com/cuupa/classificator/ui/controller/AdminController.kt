@@ -5,7 +5,6 @@ import com.cuupa.classificator.api_implementation.api_key.repository.entity.ApiK
 import com.cuupa.classificator.ui.AdminProcess
 import org.apache.commons.logging.LogFactory
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import java.util.*
@@ -18,15 +17,9 @@ import javax.servlet.http.HttpServletResponse
 class AdminController(private val apiKeyRepository: ApiKeyRepository) {
 
     @RequestMapping(value = ["/api-keys"], method = [RequestMethod.GET])
-    fun admin(model: Model): ModelAndView {
-        val adminProcess: AdminProcess = if (model.containsAttribute("adminProcess")) {
-            model.getAttribute("adminProcess") as AdminProcess
-        } else {
-            AdminProcess()
-        }.apply { apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate } }
-
-        model.addAttribute("adminProcess", adminProcess)
-        return ModelAndView("api_keys")
+    fun admin(): ModelAndView {
+        val adminProcess = AdminProcess().apply { apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate } }
+        return ModelAndView("admin").apply { addObject("adminProcess", adminProcess) }
     }
 
     @GetMapping(value = ["/api-keys/revoke{id}"])
@@ -46,43 +39,39 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
 
     @PostMapping(value = ["/api-keys/create"])
     fun create(
-        @ModelAttribute adminProcess: AdminProcess, model: Model
+        @ModelAttribute adminProcess: AdminProcess
     ): ModelAndView {
+        val modelAndView = ModelAndView("api_keys")
         try {
-            if (adminProcess.assosiate.isBlank()) {
-                handleError(adminProcess, model)
-                return ModelAndView("api_keys")
+
+            if (adminProcess.associate.isBlank()) {
+                return handleError(adminProcess, modelAndView)
             }
 
-            val exists = apiKeyRepository.findAll().find { it.assosiate == adminProcess.assosiate } != null
+            val exists = apiKeyRepository.findAll().find { it.assosiate == adminProcess.associate } != null
             if (exists) {
-                handleError(adminProcess, model)
-                return ModelAndView("api_keys")
+                return handleError(adminProcess, modelAndView)
             }
 
             val uuid = UUID.randomUUID().toString().also { adminProcess.generatedApiKey = it }
             apiKeyRepository.save(ApiKeyEntity().apply {
                 apiKey = uuid
-                assosiate = adminProcess.assosiate
+                assosiate = adminProcess.associate
             })
 
             adminProcess.apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate }
         } catch (e: Exception) {
             log.error(e)
-            handleError(adminProcess, model)
+            return handleError(adminProcess, modelAndView)
         }
-        model.addAttribute("adminProcess", adminProcess)
-        return ModelAndView("api_keys")
+        return modelAndView.apply { addObject("adminProcess", adminProcess) }
     }
 
-    private fun handleError(adminProcess: AdminProcess, model: Model) {
-        log.error("99. Handle error")
+    private fun handleError(adminProcess: AdminProcess, modelAndView: ModelAndView): ModelAndView {
         adminProcess.error = true
-        log.error("999. Set error = true")
         adminProcess.apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate }
-        log.error("999. Stored API keys in gui object")
-        model.addAttribute("adminProcess", adminProcess)
-        log.error("9999. Stored GUI object in model")
+        modelAndView.addObject("adminProcess", adminProcess)
+        return modelAndView
     }
 
     companion object {

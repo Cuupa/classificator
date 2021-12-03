@@ -2,6 +2,7 @@ package com.cuupa.classificator
 
 import com.cuupa.classificator.configuration.ApplicationTestConfiguration
 import com.cuupa.classificator.engine.Classificator
+import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -72,8 +73,8 @@ open class LoadTest {
     }
 
     companion object {
-        val log = LogFactory.getLog(LoadTest::class.java)
-        val smokeText = """Sehr geehrte Damen und Herren,
+        private val log: Log = LogFactory.getLog(LoadTest::class.java)
+        private val smokeText = """Sehr geehrte Damen und Herren,
             hiermit kündige ich, Max Mustermann, geboren am 01.01.1999, meinen Vertrag zur Vertrangsnummer 32103847298 zum 31.12.3030.
             Bitte überweisen Sie den verbleibenden Betrag auf mein Konto mit der IBAN DE19123412341234123412.
             Bei Rückfragen stehe ich unter der Tel: +49301234567 zur Verfügung

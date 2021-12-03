@@ -1,8 +1,4 @@
-server_port: 8080
-knowlegde_base:
-configuration:
-
-server.port: ${server_port}
+server.port: 8080
 
 springdoc:
   api-docs.path: /api/api-docs
@@ -14,22 +10,6 @@ logging.level:
 
 classificator:
   application_name: "Classificator"
-
-  kbfiles: ${knowlegde_base}
-
-  admin:
-    username:
-    password:
-
-  monitor:
-    username:
-    password:
-    enabled:
-    logText:
-    database_name:
-
-  trainer:
-    database_name:
 
   api_repository:
     database_name: "api_repository.db"

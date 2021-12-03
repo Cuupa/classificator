@@ -4,8 +4,8 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import java.io.File
 import java.io.IOException
-import java.util.*
 import java.util.stream.Collectors
+import kotlin.math.roundToInt
 
 class TextAndPositionTest {
     private val testFile = File("")
@@ -30,7 +30,7 @@ class TextAndPositionTest {
 
     private fun splitHorizontly(cropBox: PDRectangle,
                                 textAndPositions: List<TextAndPosition>) {
-        val sizePerPart = Math.round(cropBox.height / 3)
+        val sizePerPart = (cropBox.height / 3).roundToInt()
         val middle = sizePerPart + sizePerPart
         val bottom = middle + sizePerPart
         val topText = getTextOfHeight(textAndPositions, 0, sizePerPart)
@@ -49,10 +49,10 @@ class TextAndPositionTest {
 
     private fun splitVerticaly(cropBox: PDRectangle,
                                textAndPositions: List<TextAndPosition>): List<List<TextAndPosition>> {
-        val leftSide = Math.round(cropBox.width / 2)
-        val rightSide = Math.round(cropBox.width - leftSide)
+        val leftSide = (cropBox.width / 2).roundToInt()
+        val rightSide = (cropBox.width - leftSide).roundToInt()
         val textLeftSide = getTextOfWidth(textAndPositions, 0, leftSide)
-        val textRightSide = getTextOfWidth(textAndPositions, rightSide, Math.round(cropBox.width))
+        val textRightSide = getTextOfWidth(textAndPositions, rightSide, cropBox.width.roundToInt())
         val value: MutableList<List<TextAndPosition>> = ArrayList()
         value.add(textLeftSide)
         value.add(textRightSide)
