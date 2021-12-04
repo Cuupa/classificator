@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import org.apache.commons.logging.LogFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -13,6 +14,9 @@ import java.io.File
 
 @Configuration
 open class ExternalConfiguration {
+
+    @Value("\${configuration}")
+    private var configurationPath: String? = null
 
     @Bean
     open fun jackson(): ObjectMapper {
@@ -25,7 +29,12 @@ open class ExternalConfiguration {
     @Bean
     @Primary
     open fun configuration(jackson: ObjectMapper): Config {
-        val configFile = File("configuration.yml")
+        val configPath = if (configurationPath.isNullOrBlank()) {
+            "configuration.yml"
+        } else {
+            configurationPath
+        }
+        val configFile = File(configPath)
         return ConfigLoader(jackson, configFile).getConfig()
     }
 

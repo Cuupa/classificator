@@ -5,12 +5,12 @@ classificator:
   api_key_required: true
 
   admin:
-    username: "Jane"
-    password: "Doe"
+    username: "admin"
+    password: "admin"
 
   monitor:
-    username: "John"
-    password: "Doe"
+    username: "admin"
+    password: "admin"
     enabled: true
     logText: true
     database_name: "monitor.db"
