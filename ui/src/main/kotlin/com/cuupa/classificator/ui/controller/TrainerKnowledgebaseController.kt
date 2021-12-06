@@ -2,7 +2,7 @@ package com.cuupa.classificator.ui.controller
 
 import com.cuupa.classificator.domain.Metadata
 import com.cuupa.classificator.domain.Regex
-import com.cuupa.classificator.engine.ClassificatorImplementation
+import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.engine.services.TextExtractor
 import com.cuupa.classificator.trainer.services.Trainer
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
 class TrainerKnowledgebaseController(
-    classificator: ClassificatorImplementation,
+    classificator: Classificator,
     manager: KnowledgeManager,
     trainer: Trainer,
     textExtractor: TextExtractor
