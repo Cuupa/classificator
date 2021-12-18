@@ -89,7 +89,7 @@ open class TrainerConfiguration {
         }
     }
 
-    private fun getDatabaseName() = configuration?.classificator?.trainerConfig?.databaseName ?: ""
+    private fun getDatabaseName() = "data/${configuration?.classificator?.trainerConfig?.databaseName}"
 
     @PostConstruct
     fun configLoaded() {

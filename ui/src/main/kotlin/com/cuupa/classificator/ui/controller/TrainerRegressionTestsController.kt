@@ -3,7 +3,7 @@ package com.cuupa.classificator.ui.controller
 import com.cuupa.classificator.domain.Metadata
 import com.cuupa.classificator.domain.Sender
 import com.cuupa.classificator.domain.Topic
-import com.cuupa.classificator.engine.ClassificatorImplementation
+import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.engine.services.TextExtractor
 import com.cuupa.classificator.trainer.services.Document
@@ -29,7 +29,7 @@ import java.util.*
 
 @Controller
 class TrainerRegressionTestsController(
-    classificator: ClassificatorImplementation,
+    classificator: Classificator,
     manager: KnowledgeManager,
     trainer: Trainer,
     textExtractor: TextExtractor

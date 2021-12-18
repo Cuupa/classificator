@@ -16,6 +16,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.sql.DataSource
@@ -77,7 +79,7 @@ open class MonitorConfiguration {
         }
     }
 
-    private fun getDatabaseName() = configuration?.classificator?.monitorConfig?.databaseName ?: ""
+    private fun getDatabaseName() = "data/${configuration?.classificator?.monitorConfig?.databaseName}"
 
     private fun isEnabled() = configuration?.classificator?.monitorConfig?.enabled ?: false
 
@@ -86,6 +88,12 @@ open class MonitorConfiguration {
     @PostConstruct
     fun configLoaded() {
         log.info("Loaded ${MonitorConfiguration::class.simpleName}")
+
+        val parentDir = Paths.get(getDatabaseName()).parent
+        if (!Files.exists(parentDir)) {
+            Files.createDirectories(parentDir)
+            log.info("Directory $parentDir created")
+        }
     }
 
     companion object {
