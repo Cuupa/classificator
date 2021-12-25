@@ -19,7 +19,7 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
     @RequestMapping(value = ["/api-keys"], method = [RequestMethod.GET])
     fun admin(): ModelAndView {
         val adminProcess = AdminProcess().apply { apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate } }
-        return ModelAndView("admin").apply { addObject("adminProcess", adminProcess) }
+        return ModelAndView("api_keys").apply { addObject("adminProcess", adminProcess) }
     }
 
     @GetMapping(value = ["/api-keys/revoke{id}"])
