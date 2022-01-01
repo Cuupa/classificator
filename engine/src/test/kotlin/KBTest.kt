@@ -1,3 +1,4 @@
+import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.engine.KnowledgeManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import regressionTests.config.EngineTestConfiguration
+import kotlin.system.measureTimeMillis
 
 @SpringBootTest(classes = [EngineTestConfiguration::class])
 @ExtendWith(SpringExtension::class)
@@ -25,22 +27,34 @@ class KBTest {
 
     @Test
     fun parseBill() {
-        val resultsBill = knowledgeManager!!.getResults(textBill)
+        var resultsBill = listOf<SemanticResult>()
+        val time = measureTimeMillis {
+            resultsBill = knowledgeManager!!.getResults(textBill)
+        }
+        println("Took $time ms")
         assertTrue(resultsBill.isNotEmpty())
         assertEquals("BILL", resultsBill[0].topic)
     }
 
     @Test
     fun parseWarning() {
-        val resultsWarning = knowledgeManager!!.getResults(textWarning)
+        var resultsWarning = listOf<SemanticResult>()
+        val time = measureTimeMillis {
+            resultsWarning = knowledgeManager!!.getResults(textWarning)
+        }
+        println("Took $time ms")
         assertEquals(1, resultsWarning.size.toLong())
         assertEquals("WARNING", resultsWarning[0].topic)
     }
 
     @Test
     fun parseSicknote() {
-        val resultsWarning = knowledgeManager!!.getResults(textSicknote)
-        assertEquals(1, resultsWarning.size.toLong())
-        assertEquals("SICKNOTE", resultsWarning[0].topic)
+        var resultsSicknote = listOf<SemanticResult>()
+        val time = measureTimeMillis {
+            resultsSicknote = knowledgeManager!!.getResults(textSicknote)
+        }
+        println("Took $time ms")
+        assertEquals(1, resultsSicknote.size.toLong())
+        assertEquals("SICKNOTE", resultsSicknote[0].topic)
     }
 }

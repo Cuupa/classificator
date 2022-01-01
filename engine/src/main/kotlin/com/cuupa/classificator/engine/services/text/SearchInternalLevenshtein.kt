@@ -19,23 +19,21 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
 
     operator fun invoke(): SearchInternalLevenshtein {
         val currentWordFromPlain = plainText[currentPositionPlainText]
-        var currentWordToSearch = wordsToSearch[currentPositionSearchString]
-        var distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain, currentWordToSearch)
+        val currentWordToSearch = wordsToSearch[currentPositionSearchString]
+        val distance = LevenshteinDistance(tolerance).apply(currentWordFromPlain, currentWordToSearch)
         when {
+            // Found a word. increase the indices to check if the following words of the sentence matches
             matches(distance) -> {
                 increment()
                 currentPositionPlainText++
                 this.distance += distance
             }
 
+            // We found a word, but the following word does not match
+            // For example looking for "lorem ipsum", but just "lorem" was found
+            // Reset the search index
             isToReset() -> {
                 reset()
-
-                currentWordToSearch = wordsToSearch[currentPositionSearchString]
-                distance = LevenshteinDistance.getDefaultInstance().apply(currentWordFromPlain, currentWordToSearch)
-                if (matches(distance)) {
-                    increment()
-                }
                 currentPositionPlainText++
             }
             else -> currentPositionPlainText++
@@ -43,9 +41,14 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
 
         if (currentPositionSearchString + 1 > wordsToSearch.length()) {
             numberOfOccurences++
+            //if(isSearchEndReached(wordsToSearch)) {
+            // Reset the position to search the rest of the text.
+            // Otherwise, it would just find one occurrence and simply return
+            //currentPositionSearchString = 0
+            //}
         }
 
-        if (isSearchToCancel(plainText, wordsToSearch)) {
+        if (isTextEndReached(plainText) || isSearchEndReached(wordsToSearch)) {
             cancelSearch()
         }
         return this
@@ -64,7 +67,7 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
 
     private fun isToReset() = currentPositionSearchString > 0
 
-    private fun matches(distance: Int) = distance <= tolerance
+    private fun matches(distance: Int) = distance <= tolerance && distance > -1
 
     fun cancelSearch() {
         isToSearch = false
@@ -73,9 +76,6 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
     private fun isTextEndReached(plaintext: PlainText) = currentPositionPlainText + 1 > plaintext.length()
 
     private fun isSearchEndReached(wordsToSearch: SearchText) = currentPositionSearchString + 1 > wordsToSearch.length()
-
-    private fun isSearchToCancel(plaintext: PlainText, wordsToSearch: SearchText) =
-        isTextEndReached(plaintext) || isSearchEndReached(wordsToSearch)
 
     fun found() = matchingWords == wordsToSearch.length() && distance <= tolerance
 }

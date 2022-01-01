@@ -104,7 +104,7 @@ class MetaDataToken {
     }
 
     private fun isMetadataAlreadyRegistered(match: Map<Metadata, Int>, metadataValue: String): Boolean {
-        return match.entries.stream().noneMatch { name == it.key.name && it.key.value == metadataValue }
+        return match.entries.none { name == it.key.name && it.key.value == metadataValue }
     }
 
     // FIXME: Tokenvalues are overridden
