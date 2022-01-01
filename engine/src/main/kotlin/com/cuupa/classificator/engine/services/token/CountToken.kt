@@ -16,5 +16,5 @@ class CountToken : Token() {
         return token
     }
 
-    fun countOccurences(textToSearch: String?, text: String?) = TextSearch(text).countOccurence(textToSearch)
+    fun countOccurences(textToSearch: String?, text: String?) = TextSearch(text).search(textToSearch).numberOfOccurences
 }

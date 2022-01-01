@@ -10,8 +10,11 @@ class All : Token() {
 
     override fun match(text: String?): Boolean {
         val textSearch = TextSearch(text)
-        val isMatching = tokenValue.all { textSearch.contains(it) }
-        distance = textSearch.distance
+        val isMatching = tokenValue.all {
+            val result = textSearch.search(it)
+            distance = result.distance
+            result.contains
+        }
         return isMatching
     }
 

@@ -8,7 +8,7 @@ class Not : Token() {
     override fun match(text: String?): Boolean {
         val plaintext = TextSearch(text)
         for (token in tokenValue) {
-            if (plaintext.contains(token)) {
+            if (plaintext.search(token).contains) {
                 return false
             }
         }

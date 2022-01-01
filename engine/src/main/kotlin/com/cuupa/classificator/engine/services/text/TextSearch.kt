@@ -5,60 +5,24 @@ class TextSearch(plainText: String?) {
 
     private val plainText: PlainText = PlainText(plainText ?: "")
 
-    var distance = 0
-        private set
+    fun search(text: String?): SearchResult {
+        return search(text, 1)
+    }
 
-    fun contains(text: String?, tolerance: Int): Boolean {
+    fun search(text: String?, tolerance: Int): SearchResult {
         val searchText = SearchText(text ?: "")
         if (searchText.isEmpty() || plainText.isEmpty()) {
-            return false
+            return SearchResult()
         }
-        return when (searchText.text) {
-            plainText.text -> true
-            else -> search(plainText, searchText, tolerance)
-        }
+        return search(plainText, searchText, tolerance)
     }
 
-    operator fun contains(text: String?): Boolean {
-        return contains(text, 1)
-    }
+    private fun search(plaintext: PlainText, wordsToSearch: SearchText, tolerance: Int): SearchResult {
+        var search = SearchInternalLevenshtein(wordsToSearch, plaintext, tolerance)
 
-    fun countOccurence(text: String?): Int {
-        val searchText = SearchText(text ?: "")
-        return when {
-            searchText.isEmpty() || plainText.isEmpty() -> 0
-            else -> count(plainText, searchText, 1)
+        while (search.isToSearch) {
+            search = search.invoke()
         }
-    }
-
-    //TODO: This is still a little bit buggy. Need to redesign this
-    private fun count(plainText: PlainText, wordsToSearch: SearchText, tolerance: Int): Int {
-        var numberOfOccurences = 0
-        var searchInternal = SearchInternalLevenshtein(wordsToSearch, plainText, tolerance)
-
-        while (searchInternal.isToSearch) {
-            searchInternal = searchInternal.invoke()
-            if (searchInternal.currentPositionSearchString + 1 > wordsToSearch.length()) {
-                numberOfOccurences++
-                searchInternal.resetCurrentPositionSearchString()
-            }
-            if (searchInternal.currentPositionPlainText + 1 > plainText.length() || searchInternal.currentPositionSearchString + 1 > wordsToSearch.length()) {
-                searchInternal.cancelSearch()
-            }
-        }
-        return numberOfOccurences
-    }
-
-    private fun search(tempPlaintext: PlainText, wordsToSearch: SearchText, tolerance: Int): Boolean {
-        var searchInternal = SearchInternalLevenshtein(wordsToSearch, tempPlaintext, tolerance)
-
-        while (searchInternal.isToSearch) {
-            searchInternal = searchInternal.invoke()
-            if (searchInternal.currentPositionPlainText + 1 > tempPlaintext.length() || searchInternal.currentPositionSearchString + 1 > wordsToSearch.length()) {
-                searchInternal.cancelSearch()
-            }
-        }
-        distance = searchInternal.distance
-        return searchInternal.matchingWords == wordsToSearch.length() && searchInternal.distance <= tolerance
+        return SearchResult(search.found(), search.distance, search.numberOfOccurences)
     }
 }

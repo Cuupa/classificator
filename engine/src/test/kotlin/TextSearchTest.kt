@@ -7,34 +7,36 @@ class TextSearchTest {
     @Test
     fun shouldFindText() {
         val text = TextSearch("abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor sit amet xyz")
-        val contains = text.contains("ipsum dolor")
+        val contains = text.search("ipsum dolor").contains
         assertTrue(contains)
     }
 
     @Test
     fun shouldNotFindText() {
         val text = TextSearch("abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor sit amet xyz")
-        val contains = text.contains("lorem ipsum dolor")
+        val contains = text.search("lorem ipsum dolor").contains
         assertFalse(contains)
     }
 
     @Test
     fun shouldHaveThreeOccurences() {
         val textSearch = TextSearch(
-                "abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz")
-        val numberOfOccurences = textSearch.countOccurence("Sparkasse Krefeld")
+            "abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz abc lorem sdsdfhsdhfsduhfsdhfshdfu ipsum dolor Sparkasse Krefeld sit amet xyz"
+        )
+        val numberOfOccurences = textSearch.search("Sparkasse Krefeld").numberOfOccurences
         assertEquals(3, numberOfOccurences.toLong())
     }
 
     @Test
     fun shouldHaveOneOccurences() {
         val textSearch = TextSearch(
-                "Sehr geehrte Damen und Herren. Hiermit kündige ich meinen Vertrag bei Ihnen. Mit freundlichen Grüßen, Max Mustermann")
-        var numberOfOccurences = textSearch.countOccurence("Vertrag")
+            "Sehr geehrte Damen und Herren. Hiermit kündige ich meinen Vertrag bei Ihnen. Mit freundlichen Grüßen, Max Mustermann"
+        )
+        var numberOfOccurences = textSearch.search("Vertrag").numberOfOccurences
         assertEquals(1, numberOfOccurences.toLong())
-        numberOfOccurences = textSearch.countOccurence("Vertrag")
+        numberOfOccurences = textSearch.search("Vertrag").numberOfOccurences
         assertEquals(1, numberOfOccurences.toLong())
-        numberOfOccurences = textSearch.countOccurence("Max Mustermann")
+        numberOfOccurences = textSearch.search("Max Mustermann").numberOfOccurences
         assertEquals(1, numberOfOccurences.toLong())
     }
 }

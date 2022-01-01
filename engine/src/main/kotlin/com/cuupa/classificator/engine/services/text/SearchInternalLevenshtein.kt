@@ -4,15 +4,17 @@ import org.apache.commons.text.similarity.LevenshteinDistance
 
 internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, private val plainText: PlainText,
                                          private val tolerance: Int) {
-    var currentPositionPlainText = 0
+    private var currentPositionPlainText = 0
         private set
-    var currentPositionSearchString = 0
+    private var currentPositionSearchString = 0
         private set
-    var matchingWords = 0
+    private var matchingWords = 0
         private set
     var isToSearch = true
         private set
     var distance = 0
+        private set
+    var numberOfOccurences = 0
         private set
 
     operator fun invoke(): SearchInternalLevenshtein {
@@ -38,6 +40,14 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
             }
             else -> currentPositionPlainText++
         }
+
+        if (currentPositionSearchString + 1 > wordsToSearch.length()) {
+            numberOfOccurences++
+        }
+
+        if (isSearchToCancel(plainText, wordsToSearch)) {
+            cancelSearch()
+        }
         return this
     }
 
@@ -60,7 +70,12 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
         isToSearch = false
     }
 
-    fun resetCurrentPositionSearchString() {
-        currentPositionSearchString = 0
-    }
+    private fun isTextEndReached(plaintext: PlainText) = currentPositionPlainText + 1 > plaintext.length()
+
+    private fun isSearchEndReached(wordsToSearch: SearchText) = currentPositionSearchString + 1 > wordsToSearch.length()
+
+    private fun isSearchToCancel(plaintext: PlainText, wordsToSearch: SearchText) =
+        isTextEndReached(plaintext) || isSearchEndReached(wordsToSearch)
+
+    fun found() = matchingWords == wordsToSearch.length() && distance <= tolerance
 }

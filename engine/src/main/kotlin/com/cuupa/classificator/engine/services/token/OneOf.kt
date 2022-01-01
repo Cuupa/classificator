@@ -11,8 +11,9 @@ class OneOf : Token() {
     override fun match(text: String?): Boolean {
         val textSearch = TextSearch(text)
         for (value in tokenValue) {
-            if (textSearch.contains(value)) {
-                distance = textSearch.distance
+            val result = textSearch.search(value)
+            if (result.contains) {
+                distance = result.distance
                 return true
             }
         }

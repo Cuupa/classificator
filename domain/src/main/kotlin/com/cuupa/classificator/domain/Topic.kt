@@ -11,8 +11,11 @@ class Topic : SemanticResultData() {
     }
 
     fun match(text: String): Boolean {
+        if (name == "SICKNOTE") {
+            println()
+        }
         val match = tokenList.stream().allMatch { it.match(text) }
-        if(log.isDebugEnabled) {
+        if (log.isDebugEnabled) {
             if (match) {
                 log.debug("Topic $name matched with ${tokenList.map { it::class.java.simpleName + it.tokenValue }}")
             } else {
