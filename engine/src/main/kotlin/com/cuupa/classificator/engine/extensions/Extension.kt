@@ -33,11 +33,11 @@ object Extension {
         return substringAfter(leftDelimiter).substringBefore(rightDelimiter)
     }
 
-    fun String.tryToInt(): Int {
-        return try {
-            this.toInt()
-        } catch (e: Exception) {
-            0
-        }
+    fun Int.isPositive(): Boolean {
+        return this >= 0
+    }
+
+    fun Long.isPositive(): Boolean {
+        return this >= 0
     }
 }

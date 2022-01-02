@@ -23,6 +23,6 @@ class TextSearch(plainText: String?) {
         while (search.isToSearch) {
             search = search.invoke()
         }
-        return SearchResult(search.found(), search.distance, search.numberOfOccurences)
+        return SearchResult(search.found, search.distance, search.numberOfOccurrences)
     }
 }

@@ -1,20 +1,21 @@
 package com.cuupa.classificator.engine.services.text
 
+import com.cuupa.classificator.engine.extensions.Extension.isPositive
 import org.apache.commons.text.similarity.LevenshteinDistance
 
 internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, private val plainText: PlainText,
                                          private val tolerance: Int) {
     private var currentPositionPlainText = 0
-        private set
     private var currentPositionSearchString = 0
-        private set
     private var matchingWords = 0
-        private set
     var isToSearch = true
         private set
     var distance = 0
         private set
-    var numberOfOccurences = 0
+    var numberOfOccurrences = 0
+        private set
+
+    var found = false
         private set
 
     operator fun invoke(): SearchInternalLevenshtein {
@@ -39,16 +40,20 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
             else -> currentPositionPlainText++
         }
 
-        if (currentPositionSearchString + 1 > wordsToSearch.length()) {
-            numberOfOccurences++
-            //if(isSearchEndReached(wordsToSearch)) {
-            // Reset the position to search the rest of the text.
-            // Otherwise, it would just find one occurrence and simply return
-            //currentPositionSearchString = 0
-            //}
+        if (matchingWords == wordsToSearch.length() && distance <= tolerance && distance.isPositive()) {
+            found = true
         }
 
-        if (isTextEndReached(plainText) || isSearchEndReached(wordsToSearch)) {
+        if (currentPositionSearchString + 1 > wordsToSearch.length()) {
+            numberOfOccurrences++
+            if (isSearchEndReached(wordsToSearch)) {
+                // Reset the position to search the rest of the text.
+                // Otherwise, it would just find one occurrence and simply return
+                currentPositionSearchString = 0
+            }
+        }
+
+        if (isTextEndReached(plainText)) {
             cancelSearch()
         }
         return this
@@ -67,7 +72,7 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
 
     private fun isToReset() = currentPositionSearchString > 0
 
-    private fun matches(distance: Int) = distance <= tolerance && distance > -1
+    private fun matches(distance: Int) = distance <= tolerance && distance.isPositive()
 
     fun cancelSearch() {
         isToSearch = false
@@ -76,6 +81,4 @@ internal class SearchInternalLevenshtein(private val wordsToSearch: SearchText, 
     private fun isTextEndReached(plaintext: PlainText) = currentPositionPlainText + 1 > plaintext.length()
 
     private fun isSearchEndReached(wordsToSearch: SearchText) = currentPositionSearchString + 1 > wordsToSearch.length()
-
-    fun found() = matchingWords == wordsToSearch.length() && distance <= tolerance
 }
