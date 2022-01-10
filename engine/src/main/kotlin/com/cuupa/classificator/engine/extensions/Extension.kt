@@ -1,5 +1,7 @@
 package com.cuupa.classificator.engine.extensions
 
+import com.cuupa.classificator.domain.Metadata
+import com.cuupa.classificator.engine.services.token.MetaDataToken
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.apache.pdfbox.text.TextPosition
@@ -38,6 +40,16 @@ object Extension {
             this.toInt()
         } catch (e: Exception) {
             0
+        }
+    }
+
+    fun List<MetaDataToken>.toMetadata(): List<Metadata> {
+        return this.map {
+            Metadata().apply {
+                name = it.name
+                tokenList = it.tokenList
+                regexContent = it.regexContent
+            }
         }
     }
 }

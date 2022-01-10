@@ -5,11 +5,11 @@ import com.cuupa.classificator.domain.Sender
 import com.cuupa.classificator.domain.Topic
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.extensions.Extension.toMetadata
 import com.cuupa.classificator.engine.services.TextExtractor
 import com.cuupa.classificator.trainer.services.Document
 import com.cuupa.classificator.trainer.services.Trainer
 import com.cuupa.classificator.ui.TrainerClassifyProcess
-import com.cuupa.classificator.ui.TrainerProcess
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -29,11 +29,11 @@ import java.util.*
 
 @Controller
 class TrainerRegressionTestsController(
-    classificator: Classificator,
-    manager: KnowledgeManager,
-    trainer: Trainer,
-    textExtractor: TextExtractor
-) : TrainerController(classificator, manager, trainer, textExtractor) {
+    val classificator: Classificator,
+    val manager: KnowledgeManager,
+    val trainer: Trainer,
+    val textExtractor: TextExtractor
+) {
 
     @GetMapping(value = ["/trainer"])
     fun trainer(): ModelAndView {
@@ -70,9 +70,7 @@ class TrainerRegressionTestsController(
 
     @GetMapping(value = ["/trainer/add"])
     fun trainerAdd(model: Model): String {
-        if (!model.containsAttribute("trainerProcess")) {
-            model.addAttribute("trainerProcess", TrainerProcess())
-        }
+        model.addAttribute("uuid", "text-${UUID.randomUUID()}")
         return "trainer/regression/trainer_add"
     }
 
@@ -83,26 +81,34 @@ class TrainerRegressionTestsController(
         redirectAttributes: RedirectAttributes
     ): ModelAndView {
 
-        val model = ModelAndView().apply { viewName = "trainer/regression/trainer_add" }
+        val model = ModelAndView("trainer/regression/trainer_add")
 
         val success = try {
 
             val contentType = file?.contentType ?: MediaType.APPLICATION_OCTET_STREAM_VALUE
             val content = file?.bytes ?: ByteArray(0)
-            val textExtract = textExtractor.extractText(contentType, content)
 
-            trainer.persist(
-                contentType,
-                content,
-                textExtract.content,
-                batchName ?: "",
-                Instant.now().toEpochMilli()
-            )
-            model.addObject(
-                "message",
-                "Successfully imported 1 documents with batch name '$batchName'."
-            )
-            true
+            if (content.isEmpty()) {
+                model.addObject("message", "The document is empty")
+                false
+            } else {
+                val textExtract = textExtractor.extract(contentType, content)
+                val timestamp = Instant.now().toEpochMilli()
+                textExtract.forEach {
+                    trainer.persist(
+                        it.contentType,
+                        it.contentBytes,
+                        it.content,
+                        batchName ?: "",
+                        timestamp
+                    )
+                }
+                model.addObject(
+                    "message",
+                    "Successfully imported 1 documents with batch name '$batchName'."
+                )
+                true
+            }
         } catch (e: Exception) {
             false
         }
@@ -134,12 +140,19 @@ class TrainerRegressionTestsController(
             modelAndView.addObject("message", "Document $documentId does not exist in Batch $batchId")
         } else {
             modelAndView.addObject("selectedDocument", document)
-            modelAndView.addObject("next", documentIds[documentIds.indexOf(documentId) + 1])
+            modelAndView.addObject("next", getNext(documentIds, documentId))
             modelAndView.addObject("topics", manager.getTopics())
             modelAndView.addObject("sender", manager.getSender())
             modelAndView.addObject("metadata", manager.getMetadata())
         }
         return modelAndView
+    }
+
+    private fun getNext(documentIds: List<String>, documentId: String?): String {
+        if (documentIds.size < documentIds.indexOf(documentId) + 1) {
+            return documentIds[documentIds.indexOf(documentId) + 1]
+        }
+        return ""
     }
 
     @GetMapping(value = ["/trainer/batch/delete/{id}"])
@@ -161,7 +174,9 @@ class TrainerRegressionTestsController(
 
         trainer.removeBatch(id)
         muv.addObject("success", true)
-        muv.addObject("message", "Batch $id with ${batch.size} documents successfully removed")
+        muv.addObject("message", "Batch '$id' with ${batch.size} documents successfully removed")
+        muv.addObject("batchNames", trainer.getBatchNames())
+        muv.addObject("batchContent", listOf<Document>())
         return muv
     }
 
@@ -172,9 +187,9 @@ class TrainerRegressionTestsController(
         @RequestParam("payload-metadata") metadata: String?,
         @RequestParam("documentId") documentId: String?
     ): String {
-        val configuredTopics = topics?.split(";")?.filter { !it.isNullOrEmpty() } ?: listOf()
-        val configuredSender = sender?.split(";")?.filter { !it.isNullOrEmpty() } ?: listOf()
-        val configuredMetadata = metadata?.split(";")?.filter { !it.isNullOrEmpty() } ?: listOf()
+        val configuredTopics = topics?.split(";")?.filter { it.isNotEmpty() } ?: listOf()
+        val configuredSender = sender?.split(";")?.filter { it.isNotEmpty() } ?: listOf()
+        val configuredMetadata = metadata?.split(";")?.filter { it.isNotEmpty() } ?: listOf()
 
         val document = trainer.getDocument(documentId)
         trainer.complete(document.apply {
@@ -195,15 +210,14 @@ class TrainerRegressionTestsController(
     }
 
     @GetMapping(value = ["/trainer/classify/open"])
-    fun classifyOpen() = ModelAndView().apply {
+    fun classifyOpen() = ModelAndView("trainer/regression/trainer_classify").apply {
         addObject("batchNames", trainer.getBatchNames())
         addObject("batchContent", listOf<Document>())
-        viewName = "trainer/regression/trainer_classify"
     }
 
     @GetMapping(value = ["/trainer/classify/open/{id}"])
     fun batchDetails(@PathVariable id: String?): ModelAndView {
-        val modelAndView = ModelAndView().apply { viewName = "trainer/regression/trainer_classify" }
+        val modelAndView = ModelAndView("trainer/regression/trainer_classify")
         if (id.isNullOrEmpty()) {
             modelAndView.addObject("success", false)
             modelAndView.addObject("message", "No batch ID provided")
@@ -289,7 +303,7 @@ class TrainerRegressionTestsController(
     )
 
     companion object {
-        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
+        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
         val decimalFormat = DecimalFormat("0.00")
     }
 }

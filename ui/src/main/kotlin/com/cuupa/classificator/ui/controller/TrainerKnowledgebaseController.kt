@@ -4,6 +4,7 @@ import com.cuupa.classificator.domain.Metadata
 import com.cuupa.classificator.domain.Regex
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.extensions.Extension.toMetadata
 import com.cuupa.classificator.engine.services.TextExtractor
 import com.cuupa.classificator.trainer.services.Trainer
 import com.cuupa.classificator.ui.TrainerProcess
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
 class TrainerKnowledgebaseController(
-    classificator: Classificator,
-    manager: KnowledgeManager,
-    trainer: Trainer,
-    textExtractor: TextExtractor
-) : TrainerController(classificator, manager, trainer, textExtractor) {
+    val classificator: Classificator,
+    val manager: KnowledgeManager,
+    val trainer: Trainer,
+    val textExtractor: TextExtractor
+) {
 
     @GetMapping(value = ["/trainer/topics"])
     fun topics(model: Model): String {

@@ -33,7 +33,7 @@ class TextExtractorTest {
 
     @Test
     fun shouldExtractPdfText() {
-        val payload = javaClass.classLoader.getResourceAsStream("hello_world.pdf").readAllBytes()
+        val payload = javaClass.classLoader?.getResourceAsStream("hello_world.pdf")?.readAllBytes()
 
         val result = unitToTest.extractText(MediaType.APPLICATION_PDF_VALUE, payload)
 
@@ -42,16 +42,15 @@ class TextExtractorTest {
         assertEquals("Hello World", result.content?.trim())
     }
 
-    //@Test
-    // TODO: tika-parsers are required for this test
+    @Test
     fun shouldExtractPdfWithoutHints() {
-        val payload = javaClass.classLoader.getResourceAsStream("hello_world.pdf").readAllBytes()
+        val payload = javaClass.classLoader?.getResourceAsStream("hello_world.pdf")?.readAllBytes()
 
         val result = unitToTest.extractText(null, payload)
 
         assertNotNull(result)
         assertEquals(MediaType.APPLICATION_PDF_VALUE, result.contentType)
-        assertEquals("Hello World\n", result.content)
+        assertEquals("Hello World", result.content?.trim())
     }
 
     @Test
