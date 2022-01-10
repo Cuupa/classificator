@@ -25,6 +25,7 @@ open class SqliteDocumentStorage(private val documentRepository: DocumentReposit
         documentRepository.save(document.apply { done = true })
     }
 
+    @Transactional(value = "trainer_transactionManager")
     override fun removeBatch(id: String?) = documentRepository.deleteAllByBatchNameEquals(id)
     override fun getDistinctExpectedTopics() = documentRepository.findDistinctExpectedTopics()
     override fun getDistinctActualTopics() = documentRepository.findDistinctActualTopics()
