@@ -25,7 +25,8 @@
             <td style="width: 50%">
                 <label>
                 <textarea autofocus="autofocus" class="form-control input-lg" cols="100%"
-                          disabled id="textarea" placeholder="Text to process" rows="30"
+                          disabled id="textarea" placeholder="Text to process" rows="10"
+                          style="overflow-y: scroll; height: 50%"
                           th:field="${selectedDocument.plainText}"></textarea>
                 </label>
             </td>
@@ -148,6 +149,7 @@
         <input type="hidden" id="payload-metadata" name="payload-metadata">
         <input type="hidden" id="documentId" name="documentId" th:value="${selectedDocument.id}">
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save & Next entry"/>
+        <a class="btn btn-lg btn-secondary btn-block" href="/trainer/classify/open">Cancel</a>
     </form>
 </div>
 
