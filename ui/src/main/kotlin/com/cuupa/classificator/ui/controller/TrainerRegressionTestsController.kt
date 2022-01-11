@@ -5,6 +5,7 @@ import com.cuupa.classificator.domain.Sender
 import com.cuupa.classificator.domain.Topic
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.extensions.Extension.isLast
 import com.cuupa.classificator.engine.extensions.Extension.toMetadata
 import com.cuupa.classificator.engine.services.TextExtractor
 import com.cuupa.classificator.trainer.services.Document
@@ -38,32 +39,35 @@ class TrainerRegressionTestsController(
     @GetMapping(value = ["/trainer"])
     fun trainer(): ModelAndView {
         val topics = manager.getTopics()
-        val precisionTopics = trainer.getPrecision(topics)
-        val recallTopics = trainer.getRecall(topics)
-        val fScoreTopics = trainer.getFScore(precisionTopics, recallTopics)
+        val trainerMeasures = trainer.getMeasures(topics)
 
         val sender = manager.getSender()
-        val precisionSender = trainer.getPrecision(sender)
-        val recallSender = trainer.getRecall(sender)
-        val fScoreSender = trainer.getFScore(precisionSender, recallSender)
+        val senderMeasures = trainer.getMeasures(sender)
 
-        val metadata = manager.getMetadata()
-        val precisionMetadata = trainer.getPrecision(metadata.toMetadata())
-        val recallMetadata = trainer.getRecall(metadata.toMetadata())
-        val fScoreMetadata = trainer.getFScore(precisionMetadata, recallMetadata)
+        val metadata = manager.getMetadata().toMetadata()
+        val metadataMeasures = trainer.getMeasures(metadata)
 
         val modelAndView = ModelAndView("trainer/trainer").apply {
-            addObject("precisionTopics", decimalFormat.format(precisionTopics))
-            addObject("recallTopics", decimalFormat.format(recallTopics))
-            addObject("fScoreTopics", decimalFormat.format(fScoreTopics))
+            addObject("precisionTopics", decimalFormat.format(trainerMeasures.precision))
+            addObject("recallTopics", decimalFormat.format(trainerMeasures.recall))
+            addObject("fScoreTopics", decimalFormat.format(trainerMeasures.fScore))
+            addObject("numberOfDocuments_topic", trainerMeasures.numberOfDocuments)
+            addObject("correct_topic", trainerMeasures.correct)
+            addObject("incorrect_topic", trainerMeasures.incorrect)
 
-            addObject("precisionSender", decimalFormat.format(precisionSender))
-            addObject("recallSender", decimalFormat.format(recallSender))
-            addObject("fScoreSender", decimalFormat.format(fScoreSender))
+            addObject("precisionSender", decimalFormat.format(senderMeasures.precision))
+            addObject("recallSender", decimalFormat.format(senderMeasures.recall))
+            addObject("fScoreSender", decimalFormat.format(senderMeasures.fScore))
+            addObject("numberOfDocuments_sender", senderMeasures.numberOfDocuments)
+            addObject("correct_sender", senderMeasures.correct)
+            addObject("incorrect_sender", senderMeasures.incorrect)
 
-            addObject("precisionMetadata", decimalFormat.format(precisionMetadata))
-            addObject("recallMetadata", decimalFormat.format(recallMetadata))
-            addObject("fScoreMetadata", decimalFormat.format(fScoreMetadata))
+            addObject("precisionMetadata", decimalFormat.format(metadataMeasures.precision))
+            addObject("recallMetadata", decimalFormat.format(metadataMeasures.recall))
+            addObject("fScoreMetadata", decimalFormat.format(metadataMeasures.fScore))
+            addObject("numberOfDocuments_metadata", metadataMeasures.numberOfDocuments)
+            addObject("correct_metadata", metadataMeasures.correct)
+            addObject("incorrect_metadata", metadataMeasures.incorrect)
         }
         return modelAndView
     }
@@ -308,4 +312,3 @@ class TrainerRegressionTestsController(
     }
 }
 
-private fun List<Document>.isLast(index: Int) = this.size == index + 1

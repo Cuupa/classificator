@@ -33,4 +33,5 @@ open class SqliteDocumentStorage(private val documentRepository: DocumentReposit
     override fun getDistinctActualSender() = documentRepository.findDistinctActualSender()
     override fun getDistinctExpectedMetadata() = documentRepository.findDistinctExpectedMetadata()
     override fun getDistinctActualMetadata() = documentRepository.findDistinctActualMetadata()
+    override fun count() = documentRepository.count()
 }

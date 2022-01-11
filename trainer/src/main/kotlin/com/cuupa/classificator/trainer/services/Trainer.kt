@@ -2,6 +2,7 @@ package com.cuupa.classificator.trainer.services
 
 import com.cuupa.classificator.domain.SemanticResultData
 import com.cuupa.classificator.trainer.services.statistics.MeasureType
+import com.cuupa.classificator.trainer.services.statistics.Measures
 
 class Trainer(private val documentService: DocumentService) {
 
@@ -29,7 +30,7 @@ class Trainer(private val documentService: DocumentService) {
 
     fun removeBatch(id: String?) = documentService.removeBatch(id)
 
-    fun getPrecision(semData: List<SemanticResultData>): Double {
+    private fun getPrecision(semData: List<SemanticResultData>): Double {
         val type = MeasureType.getFor(semData.firstOrNull())
         val data = getData(type, semData)
 
@@ -70,7 +71,7 @@ class Trainer(private val documentService: DocumentService) {
         return semData.filter { data.contains(it.name) }.map { it.name }
     }
 
-    fun getRecall(semData: List<SemanticResultData>): Double {
+    private fun getRecall(semData: List<SemanticResultData>): Double {
         val type = MeasureType.getFor(semData.firstOrNull())
         val data = getData(type, semData)
 
@@ -86,7 +87,7 @@ class Trainer(private val documentService: DocumentService) {
         return recall / data.size
     }
 
-    fun getFScore(precision: Double, recall: Double): Double {
+    private fun getFScore(precision: Double, recall: Double): Double {
         val denominator = precision + recall
 
         if (denominator == 0.0) {
@@ -95,6 +96,75 @@ class Trainer(private val documentService: DocumentService) {
         val nominator = precision * recall
         val fracture = nominator / denominator
         return 2 * fracture
+    }
+
+    private fun getNumberOfDocuments(value: List<SemanticResultData>): Int {
+        val type = MeasureType.getFor(value.firstOrNull())
+        val list = documentService.list()
+
+        return when (type) {
+            MeasureType.TOPIC -> list.filter { it.expectedTopics.isNotEmpty() }.size
+            MeasureType.SENDER -> list.filter { it.expectedSenders.isNotEmpty() }.size
+            MeasureType.METADATA -> list.filter { it.expectedMetadata.isNotEmpty() }.size
+            MeasureType.UNDEFINED -> -1
+        }
+    }
+
+    private fun getNumberOfCorrect(value: List<SemanticResultData>): Int {
+        val type = MeasureType.getFor(value.firstOrNull())
+        val list = documentService.list()
+
+        return when (type) {
+            MeasureType.TOPIC -> {
+                list.filter { it.expectedTopics.isNotEmpty() }
+                    .filter { it.expectedTopics == it.actualTopics }
+                    .size
+            }
+            MeasureType.SENDER -> {
+                list.filter { it.expectedSenders.isNotEmpty() }
+                    .filter { it.expectedSenders == it.actualSenders }
+                    .size
+            }
+            MeasureType.METADATA -> {
+                list.filter { it.expectedMetadata.isNotEmpty() }
+                    .filter { it.expectedMetadata == it.actualMetadata }
+                    .size
+            }
+            MeasureType.UNDEFINED -> -1
+        }
+    }
+
+    private fun getNumberOfIncorrect(value: List<SemanticResultData>): Int {
+        val type = MeasureType.getFor(value.firstOrNull())
+        val list = documentService.list()
+
+        return when (type) {
+            MeasureType.TOPIC -> {
+                list.filter { it.expectedTopics.isNotEmpty() }
+                    .filter { it.expectedTopics != it.actualTopics }
+                    .size
+            }
+            MeasureType.SENDER -> {
+                list.filter { it.expectedSenders.isNotEmpty() }
+                    .filter { it.expectedSenders != it.actualSenders }
+                    .size
+            }
+            MeasureType.METADATA -> {
+                list.filter { it.expectedMetadata.isNotEmpty() }
+                    .filter { it.expectedMetadata != it.actualMetadata }
+                    .size
+            }
+            MeasureType.UNDEFINED -> -1
+        }
+    }
+
+    fun getMeasures(value: List<SemanticResultData>) = Measures().apply {
+        precision = getPrecision(value)
+        recall = getRecall(value)
+        fScore = getFScore(precision, recall)
+        numberOfDocuments = getNumberOfDocuments(value)
+        correct = getNumberOfCorrect(value)
+        incorrect = getNumberOfIncorrect(value)
     }
 }
 

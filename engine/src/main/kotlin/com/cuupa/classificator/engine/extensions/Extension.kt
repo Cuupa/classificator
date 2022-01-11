@@ -52,4 +52,6 @@ object Extension {
             }
         }
     }
+
+    fun List<Any>.isLast(index: Int) = this.size == index + 1
 }

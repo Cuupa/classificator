@@ -35,6 +35,14 @@ open class DocumentService(
     fun getActualSender() = storage.getDistinctActualSender()
     fun getExpectedMetadata() = storage.getDistinctExpectedMetadata()
     fun getActualMetadata() = storage.getDistinctActualMetadata()
+
+    fun getCorrect(type: MeasureType): List<Document> {
+        return listOf()
+    }
+
+    fun getIncorrect(type: MeasureType): List<Document> {
+        return list()
+    }
 }
 
 private fun DocumentEntity.mapToDomainObject(): Document {

@@ -19,4 +19,5 @@ abstract class DocumentStorage {
     abstract fun getDistinctActualSender(): List<String>
     abstract fun getDistinctExpectedMetadata(): List<String>
     abstract fun getDistinctActualMetadata(): List<String>
+    abstract fun count(): Long
 }
