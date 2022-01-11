@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -30,8 +31,10 @@ import javax.sql.DataSource
 )
 open class ApiImplementationTestConfiguration {
 
-    @Value("\${classificator.api_repository.database_name}")
-    private var databaseName: String? = null
+    private var databaseName: String = "api_repository.db"
+
+    @Value("\${classificator.datapath}")
+    private var dataPath: String? = null
 
     @Bean
     open fun apiKeyValidator(config: Config, apiKeyRepository: ApiKeyRepository): ApiKeyValidator {
@@ -69,7 +72,7 @@ open class ApiImplementationTestConfiguration {
         }
     }
 
-    fun databasepath() = "data/$databaseName"
+    fun databasepath() = "$dataPath${File.separator}$databaseName"
 
     @PostConstruct
     fun postConstruct() {

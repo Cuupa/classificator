@@ -13,5 +13,7 @@ logging.level:
 classificator:
   application_name: "Classificator"
 
+  datapath: data
+
   api_repository:
     database_name: "api_repository.db"

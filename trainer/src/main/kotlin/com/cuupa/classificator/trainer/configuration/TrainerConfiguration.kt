@@ -11,6 +11,7 @@ import com.cuupa.classificator.trainer.services.statistics.Recall
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
+import java.io.File
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.sql.DataSource
@@ -29,6 +31,9 @@ import javax.sql.DataSource
     transactionManagerRef = "trainer_transactionManager"
 )
 open class TrainerConfiguration {
+
+    @Value("\${classificator.datapath}")
+    private var dataPath: String? = null
 
     @Autowired
     private var configuration: Config? = null
@@ -89,7 +94,8 @@ open class TrainerConfiguration {
         }
     }
 
-    private fun getDatabaseName() = "data/${configuration?.classificator?.trainerConfig?.databaseName}"
+    private fun getDatabaseName() =
+        "$dataPath${File.separator}${configuration?.classificator?.trainerConfig?.databaseName}"
 
     @PostConstruct
     fun configLoaded() {
