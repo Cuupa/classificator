@@ -9,9 +9,9 @@ import com.cuupa.classificator.engine.services.TextExtractor
 import com.cuupa.classificator.trainer.services.Trainer
 import com.cuupa.classificator.ui.TrainerProcess
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.servlet.ModelAndView
 
 @Controller
 class TrainerKnowledgebaseController(
@@ -22,47 +22,55 @@ class TrainerKnowledgebaseController(
 ) {
 
     @GetMapping(value = ["/trainer/topics"])
-    fun topics(model: Model): String {
+    fun topics(): ModelAndView {
         val trainerProcess = TrainerProcess(
             version = manager.getVersion(),
             topics = manager.getTopics().distinctBy { it.name }.sortedBy { it.name })
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer/knowledgebase/trainer_topics"
+        return ModelAndView("${directory}trainer_topics").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     @GetMapping(value = ["/trainer/topics/{id}"])
-    fun topicsDetail(model: Model, @PathVariable id: String): String {
+    fun topicsDetail(@PathVariable id: String): ModelAndView {
         val topics = manager.getTopics().distinctBy { it.name }.sortedBy { it.name }
         val trainerProcess = TrainerProcess(
             version = manager.getVersion(),
             topics = topics,
             selected = topics.first { it.name == id })
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer/knowledgebase/trainer_topics"
+        return ModelAndView("${directory}trainer_topics").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     @GetMapping(value = ["/trainer/sender"])
-    fun sender(model: Model): String {
+    fun sender(): ModelAndView {
         val trainerProcess = TrainerProcess(
             version = manager.getVersion(),
             sender = manager.getSender().distinctBy { it.name }.sortedBy { it.name })
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer/knowledgebase/trainer_sender"
+        return ModelAndView("${directory}trainer_sender").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     @GetMapping(value = ["/trainer/sender/{id}"])
-    fun senderDetail(model: Model, @PathVariable id: String): String {
+    fun senderDetail(@PathVariable id: String): ModelAndView {
         val sender = manager.getSender().distinctBy { it.name }.sortedBy { it.name }
         val trainerProcess =
             TrainerProcess(version = manager.getVersion(),
                 sender = sender,
                 selected = sender.first { it.name == id })
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer/knowledgebase/trainer_sender"
+        return ModelAndView("${directory}trainer_sender").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     @GetMapping(value = ["/trainer/metadata"])
-    fun metadata(model: Model): String {
+    fun metadata(): ModelAndView {
         val trainerProcess = TrainerProcess(version = manager.getVersion(), metadata = manager.getMetadata().map {
             Metadata().apply {
                 name = it.name
@@ -70,24 +78,28 @@ class TrainerKnowledgebaseController(
                 regexContent = it.regexContent
             }
         }.distinctBy { it.name }.sortedBy { it.name })
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer/knowledgebase/trainer_metadata"
+        return ModelAndView("${directory}trainer_metadata").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     @GetMapping(value = ["/trainer/metadata/{id}"])
-    fun metadataDetail(model: Model, @PathVariable id: String): String {
+    fun metadataDetail(@PathVariable id: String): ModelAndView {
         val metadata = manager.getMetadata().toMetadata().distinctBy { it.name }.sortedBy { it.name }
         val trainerProcess =
             TrainerProcess(
                 version = manager.getVersion(),
                 metadata = metadata,
                 selected = metadata.first { it.name == id })
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer/knowledgebase/trainer_metadata"
+        return ModelAndView("${directory}trainer_metadata").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     @GetMapping(value = ["/trainer/regex"])
-    fun regex(model: Model): String {
+    fun regex(): ModelAndView {
         val trainerProcess =
             TrainerProcess(version = manager.getVersion(), regex = manager.getMetadata().map {
                 Regex().apply {
@@ -95,12 +107,14 @@ class TrainerKnowledgebaseController(
                     regexContent = it.regexContent
                 }
             }.distinctBy { it.name }.sortedBy { it.name }, selected = Regex())
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "trainer/knowledgebase/trainer_regex"
+        return ModelAndView("${directory}trainer_regex").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     @GetMapping(value = ["/trainer/regex/{id}"])
-    fun regexDetail(model: Model, @PathVariable id: String): String {
+    fun regexDetail(@PathVariable id: String): ModelAndView {
         val regex = manager.getMetadata().map {
             Regex().apply {
                 name = it.regexContent.firstOrNull()?.first ?: ""
@@ -113,8 +127,10 @@ class TrainerKnowledgebaseController(
                 version = manager.getVersion(),
                 regex = regex,
                 selected = regex.first { it.name == id })
-        model.addAttribute("trainerProcess", trainerProcess)
-        return "$directory/trainer_regex"
+        return ModelAndView("${directory}trainer_regex").apply {
+            addObject("trainerProcess", trainerProcess)
+            addObject("kb_version", manager.getVersion())
+        }
     }
 
     companion object{
