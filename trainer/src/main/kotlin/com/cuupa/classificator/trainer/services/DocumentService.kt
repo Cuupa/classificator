@@ -14,7 +14,7 @@ open class DocumentService(
     fun save(document: List<Document>) = storage.save(document.map { it.mapToEntity() })
     fun save(document: Document) = storage.save(document.mapToEntity())
     fun getOpenDocuments() = storage.getOpenDocuments().map { it.mapToDomainObject() }
-    fun getBatchNames() = storage.getBatchNames().map { if (it.isEmpty()) "Unnamed" else it }
+    fun getBatchNames() = storage.getBatchNames().map { it.ifEmpty { "Unnamed" } }
     fun find(id: String?) = storage.find(id).mapToDomainObject()
     fun getBatch(id: String?) = storage.getBatch(id).map { it.mapToDomainObject() }
     fun complete(document: Document) = storage.save(document.mapToEntity().apply { done = true })

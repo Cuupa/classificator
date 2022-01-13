@@ -12,6 +12,8 @@ import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.trainer.services.Document
 import com.cuupa.classificator.trainer.services.Trainer
 import com.cuupa.classificator.ui.TrainerClassifyProcess
+import com.cuupa.classificator.ui.csv.CsvFile
+import org.apache.commons.logging.LogFactory
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -105,13 +107,16 @@ class TrainerRegressionTestsController(
             if (content.isEmpty()) {
                 model.addObject("message", "The document is empty")
                 false
+            } else if (isUnsupportedContentType(contentType)) {
+                model.addObject("message", "The uploaded document '${file?.originalFilename}' is not a CSV file")
+                false
             } else {
-                val textExtract = textExtractor.extract(contentType, content)
+                val csvFile = CsvFile(content)
                 val timestamp = Instant.now().toEpochMilli()
-                textExtract.forEach {
+                csvFile.lines.forEach {
                     trainer.persist(
                         it.contentType,
-                        it.contentBytes,
+                        it.content.toByteArray(),
                         it.content,
                         batchName ?: "",
                         timestamp
@@ -119,16 +124,27 @@ class TrainerRegressionTestsController(
                 }
                 model.addObject(
                     "message",
-                    "Successfully imported 1 documents with batch name '$batchName'."
+                    "Successfully imported ${csvFile.size} documents with batch name '$batchName' from ${file?.originalFilename}"
                 )
+                model.addObject("uuid", "text-${UUID.randomUUID()}")
                 true
             }
         } catch (e: Exception) {
+            model.addObject("message", "failed to upload testdata ${file?.originalFilename}")
+            log.error("failed to upload testdata ${file?.originalFilename}", e)
             false
         }
+        log.info(model.modelMap["message"])
+
+        if (!success) {
+            model.addObject("uuid", batchName)
+        }
+
         model.addObject("success", success)
         return model
     }
+
+    private fun isUnsupportedContentType(contentType: String) = contentType != "application/vnd.ms-excel"
 
     @GetMapping(value = ["/trainer/classify/batch/{batchId}"])
     fun classifyBatch(@PathVariable batchId: String?): String {
@@ -340,5 +356,6 @@ class TrainerRegressionTestsController(
     companion object {
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
         val decimalFormat = DecimalFormat("0.00")
+        val log = LogFactory.getLog(TrainerRegressionTestsController::class.java)
     }
 }
