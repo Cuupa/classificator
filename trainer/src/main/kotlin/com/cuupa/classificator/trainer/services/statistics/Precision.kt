@@ -45,16 +45,28 @@ class Precision {
     }
 
     private fun getTopicPrecision(name: String, all: List<Document>): PrecisionResult {
-        val truePositive = all
-            .filter { it.actualTopics.contains(name) }
-            .filter { it.expectedTopics.contains(name) }
-            .size.toDouble()
+        return if (name.isEmpty()) {
+            val truePositive = all
+                .filter { it.actualTopics.isEmpty() }
+                .filter { it.expectedTopics.isEmpty() }
+                .size.toDouble()
 
-        val trueNegative = all
-            .filter { !it.actualTopics.contains(name) }
-            .filter { !it.expectedTopics.contains(name) }
-            .size.toDouble()
+            val trueNegative = all
+                .filter { it.actualTopics.isNotEmpty() }
+                .filter { it.expectedTopics.isNotEmpty() }
+                .size.toDouble()
+            PrecisionResult(MeasureType.TOPIC).apply { setPrecision(truePositive, trueNegative) }
+        } else {
+            val truePositive = all
+                .filter { it.actualTopics.contains(name) }
+                .filter { it.expectedTopics.contains(name) }
+                .size.toDouble()
 
-        return PrecisionResult(MeasureType.TOPIC).apply { setPrecision(truePositive, trueNegative) }
+            val trueNegative = all
+                .filter { !it.actualTopics.contains(name) }
+                .filter { !it.expectedTopics.contains(name) }
+                .size.toDouble()
+            PrecisionResult(MeasureType.TOPIC).apply { setPrecision(truePositive, trueNegative) }
+        }
     }
 }

@@ -303,11 +303,11 @@ class TrainerRegressionTestsController(
             modelAndView.addObject("success", false)
             modelAndView.addObject("message", "No batch ID provided")
         } else {
-            modelAndView.addObject("batchNames", trainer.getBatchNames())
-            modelAndView.addObject("selectedBatchName", id)
             val batch = trainer.getBatch(id)
-            modelAndView.addObject("batchContent", batch)
-            modelAndView.addObject("uploadTime", getUploadTime(batch))
+            modelAndView.addObject("batchNames", trainer.getBatchNames())
+                .addObject("selectedBatchName", id)
+                .addObject("batchContent", batch)
+                .addObject("uploadTime", getUploadTime(batch))
         }
         return modelAndView
     }
@@ -322,11 +322,41 @@ class TrainerRegressionTestsController(
             modelAndView.addObject("success", false)
             modelAndView.addObject("message", "No batch ID provided")
         } else {
-            modelAndView.addObject("batchNames", trainer.getBatchNames())
-            modelAndView.addObject("selectedBatchName", id)
             val batch = trainer.getBatch(id)
-            modelAndView.addObject("batchContent", batch)
-            modelAndView.addObject("uploadTime", getUploadTime(batch))
+            modelAndView.addObject("batchNames", trainer.getBatchNames())
+                .addObject("selectedBatchName", id)
+                .addObject("batchContent", batch)
+                .addObject("uploadTime", getUploadTime(batch))
+                .addObject("documents", batch)
+                .addObject("selected", "1")
+        }
+        return modelAndView
+    }
+
+    @GetMapping(value = ["/trainer/process/doprocess/{id}"])
+    fun doprocess(@PathVariable id: String?): ModelAndView {
+        val modelAndView = ModelAndView("trainer/regression/trainer_process_details").apply {
+            addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
+        }
+        if (id.isNullOrEmpty()) {
+            modelAndView.addObject("success", false)
+            modelAndView.addObject("message", "No batch ID provided")
+        } else {
+            val batch = trainer.getBatch(id)
+            batch.forEach { document ->
+                val result = classificator.classify(document.contentType, document.plainText)
+                document.actualTopics = result.second.map { it.topic }.filter { it != "OTHER" }.filter { it.isNotEmpty() }
+                document.actualSenders = result.second.map { it.sender }.filter { it != "UNKNOWN" }.filter { it.isNotEmpty() }
+                trainer.complete(document)
+            }
+
+            modelAndView.addObject("batchNames", trainer.getBatchNames())
+                .addObject("selectedBatchName", id)
+                .addObject("batchContent", batch)
+                .addObject("uploadTime", getUploadTime(batch))
+                .addObject("documents", batch)
+                .addObject("selected", "1")
         }
         return modelAndView
     }

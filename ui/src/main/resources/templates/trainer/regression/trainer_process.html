@@ -59,8 +59,9 @@
             <div th:if="${selectedBatchName != null}">
                 <a class="btn btn-primary" role="button" th:href="@{/trainer/process/doprocess/} + ${selectedBatchName}"
                    th:text="'Process'"></a>
-                <a class="btn btn-primary" role="button" th:href="@{/trainer/process/details/} + ${selectedBatchName}"
-                   th:text="'Details'"></a>
+                <!-- TODO: do we need the details button for the batch? what details do we need? -->
+                <!--<a class="btn btn-primary" role="button" th:href="@{/trainer/process/details/} + ${selectedBatchName}"
+                   th:text="'Details'"></a>-->
             </div>
         </td>
     </tr>

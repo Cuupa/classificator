@@ -68,7 +68,8 @@ class Trainer(private val documentService: DocumentService) {
 
             MeasureType.UNDEFINED -> listOf()
         }
-        return semData.filter { data.contains(it.name) }.map { it.name }
+        return data
+//        return semData.filter { data.contains(it.name) }.map { it.name }
     }
 
     private fun getRecall(semData: List<SemanticResultData>): Double {
@@ -99,15 +100,7 @@ class Trainer(private val documentService: DocumentService) {
     }
 
     private fun getNumberOfDocuments(value: List<SemanticResultData>): Int {
-        val type = MeasureType.getFor(value.firstOrNull())
-        val list = documentService.list()
-
-        return when (type) {
-            MeasureType.TOPIC -> list.filter { it.expectedTopics.isNotEmpty() }.size
-            MeasureType.SENDER -> list.filter { it.expectedSenders.isNotEmpty() }.size
-            MeasureType.METADATA -> list.filter { it.expectedMetadata.isNotEmpty() }.size
-            MeasureType.UNDEFINED -> -1
-        }
+        return documentService.listDone().size
     }
 
     private fun getNumberOfCorrect(value: List<SemanticResultData>): Int {

@@ -22,7 +22,9 @@ open class DocumentService(
     fun removeBatch(id: String?) = storage.removeBatch(id)
 
     fun getPrecision(name: String, type: MeasureType): PrecisionResult {
-        return precision.getPrecision(storage.findAll()?.map { it.mapToDomainObject() } ?: listOf(), name, type)
+        return precision.getPrecision(storage.findAll()?.filter { it.done }?.map { it.mapToDomainObject() } ?: listOf(),
+            name,
+            type)
     }
 
     fun getRecall(name: String, type: MeasureType): RecallResult {
@@ -42,6 +44,10 @@ open class DocumentService(
 
     fun getIncorrect(type: MeasureType): List<Document> {
         return list()
+    }
+
+    fun listDone(): List<Document> {
+        return storage.findAll()?.filter { it.done }?.map { it.mapToDomainObject() } ?: listOf()
     }
 }
 
