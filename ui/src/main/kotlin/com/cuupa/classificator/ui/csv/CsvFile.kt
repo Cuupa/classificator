@@ -2,7 +2,7 @@ package com.cuupa.classificator.ui.csv
 
 import java.nio.charset.StandardCharsets
 
-class CsvFile(content: ByteArray) : Iterable<CsvLine> {
+class CsvFile(content: ByteArray) {
 
     val lines: List<CsvLine>
 
@@ -18,18 +18,8 @@ class CsvFile(content: ByteArray) : Iterable<CsvLine> {
         } else {
             val headlines = contentLines[0]
             contentLines
-                .filter { isContent(it) }
+                .filter { it != headlines }
                 .map { CsvLine(headlines, it) }
         }
     }
-
-    private fun isContent(line: String): Boolean {
-        return !line.contains(headlines.joinToString(";"))
-    }
-
-    companion object {
-        val headlines = listOf("content", "tag")
-    }
-
-    override fun iterator() = lines.iterator()
 }

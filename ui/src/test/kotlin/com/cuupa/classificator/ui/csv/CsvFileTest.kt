@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 open class CsvFileTest {
 
-    private val content = "content;tag;\nHello World;test;".toByteArray()
+    private val content = "content;contentType;tag;\nHello World;text/plain;test;".toByteArray()
 
     @Test
     open fun shouldParse(){
@@ -28,5 +28,13 @@ open class CsvFileTest {
         assertEquals(1, file.size)
         assertNotNull(file.lines[0])
         assertEquals("test", file.lines[0].tag)
+    }
+
+    @Test
+    open fun shouldParseHaveContentType(){
+        val file = CsvFile(content)
+        assertEquals(1, file.size)
+        assertNotNull(file.lines[0])
+        assertEquals("text/plain", file.lines[0].tag)
     }
 }

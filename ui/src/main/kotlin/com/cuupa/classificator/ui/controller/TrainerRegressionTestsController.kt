@@ -106,16 +106,14 @@ class TrainerRegressionTestsController(
 
             if (content.isEmpty()) {
                 model.addObject("message", "The document is empty")
-                model.addObject("uuid", batchName)
                 false
             } else if (isUnsupportedContentType(contentType)) {
                 model.addObject("message", "The uploaded document '${file?.originalFilename}' is not a CSV file")
-                model.addObject("uuid", batchName)
                 false
             } else {
                 val csvFile = CsvFile(content)
                 val timestamp = Instant.now().toEpochMilli()
-                csvFile.forEach {
+                csvFile.lines.forEach {
                     trainer.persist(
                         it.contentType,
                         it.content.toByteArray(),
@@ -126,8 +124,9 @@ class TrainerRegressionTestsController(
                 }
                 model.addObject(
                     "message",
-                    "Successfully imported 1 documents with batch name '$batchName'."
+                    "Successfully imported ${csvFile.size} documents with batch name '$batchName' from ${file?.originalFilename}"
                 )
+                model.addObject("uuid", "text-${UUID.randomUUID()}")
                 true
             }
         } catch (e: Exception) {
@@ -136,6 +135,11 @@ class TrainerRegressionTestsController(
             false
         }
         log.info(model.modelMap["message"])
+
+        if (!success) {
+            model.addObject("uuid", batchName)
+        }
+
         model.addObject("success", success)
         return model
     }
