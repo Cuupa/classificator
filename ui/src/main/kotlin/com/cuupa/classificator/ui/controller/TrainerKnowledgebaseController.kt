@@ -6,6 +6,7 @@ import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.engine.extensions.Extension.toMetadata
 import com.cuupa.classificator.engine.services.TextExtractor
+import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.trainer.services.Trainer
 import com.cuupa.classificator.ui.TrainerProcess
 import org.springframework.stereotype.Controller
@@ -15,10 +16,11 @@ import org.springframework.web.servlet.ModelAndView
 
 @Controller
 class TrainerKnowledgebaseController(
-    val classificator: Classificator,
-    val manager: KnowledgeManager,
-    val trainer: Trainer,
-    val textExtractor: TextExtractor
+    private val classificator: Classificator,
+    private val manager: KnowledgeManager,
+    private val trainer: Trainer,
+    private val textExtractor: TextExtractor,
+    private val infoService: InfoService
 ) {
 
     @GetMapping(value = ["/trainer/topics"])
@@ -29,6 +31,7 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_topics").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -42,6 +45,7 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_topics").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -53,6 +57,7 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_sender").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -66,6 +71,7 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_sender").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -81,6 +87,7 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_metadata").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -95,6 +102,7 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_metadata").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -110,6 +118,7 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_regex").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -130,10 +139,11 @@ class TrainerKnowledgebaseController(
         return ModelAndView("${directory}trainer_regex").apply {
             addObject("trainerProcess", trainerProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
-    companion object{
+    companion object {
         const val directory = "trainer/knowledgebase/"
     }
 }

@@ -1,5 +1,6 @@
 package com.cuupa.classificator.configuration
 
+import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.monitor.configuration.MonitorConfiguration
 import com.cuupa.classificator.trainer.configuration.TrainerConfiguration
 import com.cuupa.classificator.ui.configuration.SecurityConfiguration
@@ -24,5 +25,10 @@ open class ApplicationTestConfiguration {
     @Bean
     open fun servletWebServerFactory(): ServletWebServerFactory {
         return TomcatServletWebServerFactory()
+    }
+
+    @Bean
+    open fun infoService(): InfoService {
+        return InfoService()
     }
 }

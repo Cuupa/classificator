@@ -32,7 +32,7 @@ object Extension {
     }
 
     fun String.substringBetween(leftDelimiter: String, rightDelimiter: String): String {
-        return substringAfter(leftDelimiter).substringBefore(rightDelimiter)
+        return substringAfter(leftDelimiter, "").substringBefore(rightDelimiter, "")
     }
 
     fun String.tryToInt(): Int {

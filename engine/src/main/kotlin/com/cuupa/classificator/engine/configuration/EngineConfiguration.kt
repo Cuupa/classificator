@@ -5,6 +5,7 @@ import com.cuupa.classificator.engine.ClassificatorImplementation
 import com.cuupa.classificator.engine.ClassificatorOld
 import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.engine.services.*
+import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
@@ -98,6 +99,11 @@ open class EngineConfiguration {
     @Bean
     open fun analyser(): PdfAnalyser {
         return PdfAnalyser()
+    }
+
+    @Bean
+    open fun infoService(): InfoService {
+        return InfoService()
     }
 
     private fun getKnowledgeBaseDir() = configuration?.classificator?.knowledgeBase ?: ""

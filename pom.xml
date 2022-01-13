@@ -52,6 +52,8 @@
         <tika.version>2.1.0</tika.version>
         <jackson-yaml.version>2.13.0</jackson-yaml.version>
 
+        <jackson-jsr310.version>2.13.1</jackson-jsr310.version>
+
         <openapi.version>1.5.7</openapi.version>
 
         <mockito-core.version>4.2.0</mockito-core.version>
@@ -195,6 +197,13 @@
                 <groupId>org.xerial</groupId>
                 <artifactId>sqlite-jdbc</artifactId>
                 <version>${sqlite-jdbc.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-jsr310.version}</version>
             </dependency>
 
             <dependency>

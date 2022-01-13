@@ -17,3 +17,8 @@ classificator:
 
   api_repository:
     database_name: "api_repository.db"
+
+management:
+  endpoints:
+    web.exposure.include: "health,info"
+  endpoints.info.enabled: true
