@@ -13,7 +13,6 @@ import com.cuupa.classificator.trainer.services.Trainer
 import com.cuupa.classificator.ui.TrainerClassifyProcess
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -68,14 +67,18 @@ class TrainerRegressionTestsController(
             addObject("numberOfDocuments_metadata", metadataMeasures.numberOfDocuments)
             addObject("correct_metadata", metadataMeasures.correct)
             addObject("incorrect_metadata", metadataMeasures.incorrect)
+
+            addObject("kb_version", manager.getVersion())
         }
         return modelAndView
     }
 
     @GetMapping(value = ["/trainer/add"])
-    fun trainerAdd(model: Model): String {
-        model.addAttribute("uuid", "text-${UUID.randomUUID()}")
-        return "trainer/regression/trainer_add"
+    fun trainerAdd(): ModelAndView {
+        return ModelAndView("trainer/regression/trainer_add").apply {
+            addObject("kb_version", manager.getVersion())
+            addObject("uuid", "text-${UUID.randomUUID()}")
+        }
     }
 
     @PostMapping(value = ["/trainer/add"])
@@ -85,7 +88,9 @@ class TrainerRegressionTestsController(
         redirectAttributes: RedirectAttributes
     ): ModelAndView {
 
-        val model = ModelAndView("trainer/regression/trainer_add")
+        val model = ModelAndView("trainer/regression/trainer_add").apply {
+            addObject("kb_version", manager.getVersion())
+        }
 
         val success = try {
 
@@ -131,7 +136,10 @@ class TrainerRegressionTestsController(
 
     @GetMapping(value = ["/trainer/classify/batch/{batchId}/{documentId}"])
     fun classifyBatch(@PathVariable batchId: String?, @PathVariable documentId: String?): ModelAndView {
-        val modelAndView = ModelAndView("trainer/regression/trainer_classify_batch")
+        val modelAndView = ModelAndView("trainer/regression/trainer_classify_batch").apply {
+            addObject("kb_version", manager.getVersion())
+        }
+
         if (batchId.isNullOrEmpty()) {
             modelAndView.addObject("message", "No ID provided")
             return modelAndView
@@ -161,7 +169,9 @@ class TrainerRegressionTestsController(
 
     @GetMapping(value = ["/trainer/batch/delete/{id}"])
     fun deleteBatch(@PathVariable id: String?): ModelAndView {
-        val muv = ModelAndView("trainer/regression/trainer_classify")
+        val muv = ModelAndView("trainer/regression/trainer_classify").apply {
+            addObject("kb_version", manager.getVersion())
+        }
 
         if (id.isNullOrEmpty()) {
             muv.addObject("success", false)
@@ -217,11 +227,14 @@ class TrainerRegressionTestsController(
     fun classifyOpen() = ModelAndView("trainer/regression/trainer_classify").apply {
         addObject("batchNames", trainer.getBatchNames())
         addObject("batchContent", listOf<Document>())
+        addObject("kb_version", manager.getVersion())
     }
 
     @GetMapping(value = ["/trainer/classify/open/{id}"])
     fun batchDetails(@PathVariable id: String?): ModelAndView {
-        val modelAndView = ModelAndView("trainer/regression/trainer_classify")
+        val modelAndView = ModelAndView("trainer/regression/trainer_classify").apply {
+            addObject("kb_version", manager.getVersion())
+        }
         if (id.isNullOrEmpty()) {
             modelAndView.addObject("success", false)
             modelAndView.addObject("message", "No batch ID provided")
@@ -243,6 +256,7 @@ class TrainerRegressionTestsController(
         process.selectedResult = result
         return ModelAndView("trainer/regression/trainer_classify_batch").apply {
             addObject("trainerClassifyProcess", process)
+            addObject("kb_version", manager.getVersion())
         }
     }
 
@@ -250,11 +264,14 @@ class TrainerRegressionTestsController(
     fun process() = ModelAndView("trainer/regression/trainer_process").apply {
         addObject("batchNames", trainer.getBatchNames())
         addObject("batchContent", listOf<Document>())
+        addObject("kb_version", manager.getVersion())
     }
 
     @GetMapping(value = ["/trainer/process/{id}"])
     fun process(@PathVariable id: String?): ModelAndView {
-        val modelAndView = ModelAndView("trainer/regression/trainer_process")
+        val modelAndView = ModelAndView("trainer/regression/trainer_process").apply {
+            addObject("kb_version", manager.getVersion())
+        }
         if (id.isNullOrEmpty()) {
             modelAndView.addObject("success", false)
             modelAndView.addObject("message", "No batch ID provided")
@@ -270,7 +287,9 @@ class TrainerRegressionTestsController(
 
     @GetMapping(value = ["/trainer/process/details/{id}"])
     fun processDetails(@PathVariable id: String?): ModelAndView {
-        val modelAndView = ModelAndView("trainer/regression/trainer_process_details")
+        val modelAndView = ModelAndView("trainer/regression/trainer_process_details").apply {
+            addObject("kb_version", manager.getVersion())
+        }
         if (id.isNullOrEmpty()) {
             modelAndView.addObject("success", false)
             modelAndView.addObject("message", "No batch ID provided")
