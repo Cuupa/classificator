@@ -8,6 +8,7 @@ import com.cuupa.classificator.engine.KnowledgeManager
 import com.cuupa.classificator.engine.extensions.Extension.isLast
 import com.cuupa.classificator.engine.extensions.Extension.toMetadata
 import com.cuupa.classificator.engine.services.TextExtractor
+import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.trainer.services.Document
 import com.cuupa.classificator.trainer.services.Trainer
 import com.cuupa.classificator.ui.TrainerClassifyProcess
@@ -29,10 +30,11 @@ import java.util.*
 
 @Controller
 class TrainerRegressionTestsController(
-    val classificator: Classificator,
-    val manager: KnowledgeManager,
-    val trainer: Trainer,
-    val textExtractor: TextExtractor
+    private val classificator: Classificator,
+    private val manager: KnowledgeManager,
+    private val trainer: Trainer,
+    private val textExtractor: TextExtractor,
+    private val infoService: InfoService
 ) {
 
     @GetMapping(value = ["/trainer"])
@@ -69,6 +71,7 @@ class TrainerRegressionTestsController(
             addObject("incorrect_metadata", metadataMeasures.incorrect)
 
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
         return modelAndView
     }
@@ -78,6 +81,7 @@ class TrainerRegressionTestsController(
         return ModelAndView("trainer/regression/trainer_add").apply {
             addObject("kb_version", manager.getVersion())
             addObject("uuid", "text-${UUID.randomUUID()}")
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -90,6 +94,7 @@ class TrainerRegressionTestsController(
 
         val model = ModelAndView("trainer/regression/trainer_add").apply {
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
 
         val success = try {
@@ -138,6 +143,7 @@ class TrainerRegressionTestsController(
     fun classifyBatch(@PathVariable batchId: String?, @PathVariable documentId: String?): ModelAndView {
         val modelAndView = ModelAndView("trainer/regression/trainer_classify_batch").apply {
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
 
         if (batchId.isNullOrEmpty()) {
@@ -171,6 +177,7 @@ class TrainerRegressionTestsController(
     fun deleteBatch(@PathVariable id: String?): ModelAndView {
         val muv = ModelAndView("trainer/regression/trainer_classify").apply {
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
 
         if (id.isNullOrEmpty()) {
@@ -228,12 +235,14 @@ class TrainerRegressionTestsController(
         addObject("batchNames", trainer.getBatchNames())
         addObject("batchContent", listOf<Document>())
         addObject("kb_version", manager.getVersion())
+        addObject("application_version", infoService.getVersion())
     }
 
     @GetMapping(value = ["/trainer/classify/open/{id}"])
     fun batchDetails(@PathVariable id: String?): ModelAndView {
         val modelAndView = ModelAndView("trainer/regression/trainer_classify").apply {
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
         if (id.isNullOrEmpty()) {
             modelAndView.addObject("success", false)
@@ -257,6 +266,7 @@ class TrainerRegressionTestsController(
         return ModelAndView("trainer/regression/trainer_classify_batch").apply {
             addObject("trainerClassifyProcess", process)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -265,6 +275,7 @@ class TrainerRegressionTestsController(
         addObject("batchNames", trainer.getBatchNames())
         addObject("batchContent", listOf<Document>())
         addObject("kb_version", manager.getVersion())
+        addObject("application_version", infoService.getVersion())
     }
 
     @GetMapping(value = ["/trainer/process/{id}"])
@@ -289,6 +300,7 @@ class TrainerRegressionTestsController(
     fun processDetails(@PathVariable id: String?): ModelAndView {
         val modelAndView = ModelAndView("trainer/regression/trainer_process_details").apply {
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
         if (id.isNullOrEmpty()) {
             modelAndView.addObject("success", false)
@@ -330,4 +342,3 @@ class TrainerRegressionTestsController(
         val decimalFormat = DecimalFormat("0.00")
     }
 }
-

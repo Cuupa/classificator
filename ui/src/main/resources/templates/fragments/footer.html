@@ -12,9 +12,13 @@
           </section>
     </div>-->
 
-    <div class="text-center p-3 fw-light row">
-        <div class="fw-lighter col-sm">
+    <div class="text-center p-3 fw-lighter row">
+        <div class="col-sm">
             <span th:text="'Knowledgebase version: ' + ${kb_version}"></span>
+        </div>
+
+        <div class="col-sm">
+            <span th:text="'Application version: ' + ${application_version}"></span>
         </div>
 
         <div class="col-sm">

@@ -28,6 +28,7 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             .antMatchers("/js/**").permitAll()
             .antMatchers("/api/**").permitAll()
             .antMatchers("/guiProcess").permitAll()
+            .antMatchers("/actuator/info").permitAll()
             .antMatchers("/monitor", "/download").hasAnyRole("USER", "ADMIN")
             .antMatchers("/admin").hasAnyRole("ADMIN")
             .antMatchers("/trainer/**").hasAnyRole("ADMIN")

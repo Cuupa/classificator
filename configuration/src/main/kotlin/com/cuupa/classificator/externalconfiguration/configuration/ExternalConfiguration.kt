@@ -19,23 +19,20 @@ open class ExternalConfiguration {
     private var configurationPath: String? = null
 
     @Bean
-    open fun jackson(): ObjectMapper {
-        return ObjectMapper(YAMLFactory()).apply {
+    @Primary
+    open fun configuration(): Config {
+        val mapper = ObjectMapper(YAMLFactory()).apply {
             enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         }
-    }
 
-    @Bean
-    @Primary
-    open fun configuration(jackson: ObjectMapper): Config {
         val configPath = if (configurationPath.isNullOrBlank()) {
             "configuration.yml"
         } else {
             configurationPath
         }
         val configFile = File(configPath)
-        return ConfigLoader(jackson, configFile).getConfig()
+        return ConfigLoader(mapper, configFile).getConfig()
     }
 
     companion object {

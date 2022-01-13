@@ -3,6 +3,7 @@ package com.cuupa.classificator.ui.controller
 import com.cuupa.classificator.api_implementation.api_key.repository.ApiKeyRepository
 import com.cuupa.classificator.api_implementation.api_key.repository.entity.ApiKeyEntity
 import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.ui.AdminProcess
 import org.apache.commons.logging.LogFactory
 import org.springframework.stereotype.Controller
@@ -15,7 +16,11 @@ import javax.servlet.http.HttpServletResponse
  * @author Simon Thiel (https://github.com/cuupa) (30.05.2021)
  */
 @Controller
-class AdminController(private val apiKeyRepository: ApiKeyRepository, val manager: KnowledgeManager) {
+class AdminController(
+    private val apiKeyRepository: ApiKeyRepository,
+    private val manager: KnowledgeManager,
+    private val infoService: InfoService
+) {
 
     @RequestMapping(value = ["/api-keys"], method = [RequestMethod.GET])
     fun admin(): ModelAndView {
@@ -23,6 +28,7 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository, val manage
         return ModelAndView("api_keys").apply {
             addObject("adminProcess", adminProcess)
             addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
     }
 
@@ -45,7 +51,10 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository, val manage
     fun create(
         @ModelAttribute adminProcess: AdminProcess
     ): ModelAndView {
-        val modelAndView = ModelAndView("api_keys").apply { addObject("kb_version", manager.getVersion()) }
+        val modelAndView = ModelAndView("api_keys").apply {
+            addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
+        }
         try {
 
             if (adminProcess.associate.isBlank()) {
