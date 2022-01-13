@@ -40,7 +40,10 @@ class InfoService {
             return null
         }
         try {
-            return response.substringBetween("version\":\"", "\",")
+            val version = response.substringBetween("version\":\"", "\",")
+            if (version.isNullOrEmpty()){
+                return null
+            }
         } catch (e: Exception) {
             log.error("Failed to determine version number from $response", e)
         }
