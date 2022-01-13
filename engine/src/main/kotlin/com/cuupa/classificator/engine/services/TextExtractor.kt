@@ -10,15 +10,18 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.ZipInputStream
 
-class TextExtractor(val tika: Tika) {
+class TextExtractor(private val tika: Tika) {
 
     fun extract(contentType: String?, content: ByteArray?): List<TextExtract> {
-        return if ("application/zip" == contentType) {
-            val zipEntries = getZipEntries(content)
-            zipEntries.map { extractText(null, it) }
-        } else {
-            listOf(extractText(contentType, content))
+        return when (contentType) {
+            "application/zip" -> getZipEntries(content).map { extractText(null, it) }
+            "application/vnd.ms-excel" -> extractCSV(content)
+            else -> listOf(extractText(contentType, content))
         }
+    }
+
+    private fun extractCSV(content: ByteArray?): List<TextExtract> {
+        TODO("Not yet implemented")
     }
 
     private fun getZipEntries(content: ByteArray?): MutableList<ByteArray> {
