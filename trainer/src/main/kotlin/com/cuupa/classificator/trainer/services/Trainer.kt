@@ -6,18 +6,8 @@ import com.cuupa.classificator.trainer.services.statistics.Measures
 
 class Trainer(private val documentService: DocumentService) {
 
-    fun persist(contentType: String, bytes: ByteArray, plainText: String?, batchName: String?, timestamp: Long) {
-
-        val document = listOf(
-            Document(
-                content = bytes,
-                contentType = contentType,
-                plainText = plainText ?: "",
-                batchName = batchName ?: "Unnamed",
-                timestamp = timestamp
-            )
-        )
-        documentService.save(document)
+    fun persist(documents: List<Document>) {
+        documentService.save(documents)
     }
 
     fun getOpenDocuments() = documentService.getOpenDocuments()
@@ -32,7 +22,7 @@ class Trainer(private val documentService: DocumentService) {
 
     private fun getPrecision(semData: List<SemanticResultData>): Double {
         val type = MeasureType.getFor(semData.firstOrNull())
-        val data = getData(type, semData)
+        val data = getData(type)
 
         var precision = 0.0
         if (data.isEmpty()) {
@@ -46,7 +36,7 @@ class Trainer(private val documentService: DocumentService) {
         return precision / data.size
     }
 
-    private fun getData(type: MeasureType, semData: List<SemanticResultData>): List<String> {
+    private fun getData(type: MeasureType): List<String> {
         val data = when (type) {
             MeasureType.TOPIC -> {
                 val expected = documentService.getExpectedTopics()
@@ -74,7 +64,7 @@ class Trainer(private val documentService: DocumentService) {
 
     private fun getRecall(semData: List<SemanticResultData>): Double {
         val type = MeasureType.getFor(semData.firstOrNull())
-        val data = getData(type, semData)
+        val data = getData(type)
 
         var recall = 0.0
         if (data.isEmpty()) {
@@ -99,7 +89,7 @@ class Trainer(private val documentService: DocumentService) {
         return 2 * fracture
     }
 
-    private fun getNumberOfDocuments(value: List<SemanticResultData>): Int {
+    private fun getNumberOfDocuments(): Int {
         return documentService.listDone().size
     }
 
@@ -108,18 +98,9 @@ class Trainer(private val documentService: DocumentService) {
         val list = documentService.listDone()
 
         return when (type) {
-            MeasureType.TOPIC -> {
-                list.filter { it.expectedTopics == it.actualTopics }
-                    .size
-            }
-            MeasureType.SENDER -> {
-                list.filter { it.expectedSenders == it.actualSenders }
-                    .size
-            }
-            MeasureType.METADATA -> {
-                list.filter { it.expectedMetadata == it.actualMetadata }
-                    .size
-            }
+            MeasureType.TOPIC -> list.filter { it.expectedTopics == it.actualTopics }.size
+            MeasureType.SENDER -> list.filter { it.expectedSenders == it.actualSenders }.size
+            MeasureType.METADATA -> list.filter { it.expectedMetadata == it.actualMetadata }.size
             MeasureType.UNDEFINED -> -1
         }
     }
@@ -149,7 +130,7 @@ class Trainer(private val documentService: DocumentService) {
         precision = getPrecision(value)
         recall = getRecall(value)
         fScore = getFScore(precision, recall)
-        numberOfDocuments = getNumberOfDocuments(value)
+        numberOfDocuments = getNumberOfDocuments()
         correct = getNumberOfCorrect(value)
         incorrect = getNumberOfIncorrect(value)
     }
