@@ -17,6 +17,7 @@ open class SqliteDocumentStorage(private val documentRepository: DocumentReposit
 
     override fun find(id: String?) = documentRepository.findById(id).orElse(DocumentEntity())
     override fun findAll() = documentRepository.findAll()
+    override fun findAllCompleted() = documentRepository.findAllByDoneTrue()
     override fun getBatchNames() = documentRepository.findDistinctBatchName()
     override fun getBatch(id: String?) = documentRepository.findAllByBatchNameEquals(id)
 

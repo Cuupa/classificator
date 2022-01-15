@@ -17,31 +17,57 @@ class Precision {
     }
 
     private fun getMetadataPrecision(name: String, all: List<Document>): PrecisionResult {
-        val truePositive = all
-            .filter { it.actualMetadata.contains(name) }
-            .filter { it.expectedMetadata.contains(name) }
-            .size.toDouble()
+        return if (name.isEmpty()) {
+            val truePositive = all
+                .filter { it.actualMetadata.isEmpty() }
+                .filter { it.expectedMetadata.isEmpty() }
+                .size.toDouble()
 
-        val trueNegative = all
-            .filter { !it.actualMetadata.contains(name) }
-            .filter { !it.expectedMetadata.contains(name) }
-            .size.toDouble()
+            val trueNegative = all
+                .filter { it.actualMetadata.isNotEmpty() }
+                .filter { it.expectedMetadata.isNotEmpty() }
+                .size.toDouble()
+            PrecisionResult(MeasureType.METADATA).apply { setPrecision(truePositive, trueNegative) }
+        } else {
+            val truePositive = all
+                .filter { it.actualMetadata.contains(name) }
+                .filter { it.expectedMetadata.contains(name) }
+                .size.toDouble()
 
-        return PrecisionResult(MeasureType.METADATA).apply { setPrecision(truePositive, trueNegative) }
+            val trueNegative = all
+                .filter { !it.actualMetadata.contains(name) }
+                .filter { !it.expectedMetadata.contains(name) }
+                .size.toDouble()
+
+            PrecisionResult(MeasureType.METADATA).apply { setPrecision(truePositive, trueNegative) }
+        }
     }
 
     private fun getSenderPrecision(name: String, all: List<Document>): PrecisionResult {
-        val truePositive = all
-            .filter { it.actualSenders.contains(name) }
-            .filter { it.expectedSenders.contains(name) }
-            .size.toDouble()
+        return if (name.isEmpty()) {
+            val truePositive = all
+                .filter { it.actualSenders.isEmpty() }
+                .filter { it.expectedSenders.isEmpty() }
+                .size.toDouble()
 
-        val trueNegative = all
-            .filter { !it.actualSenders.contains(name) }
-            .filter { !it.expectedSenders.contains(name) }
-            .size.toDouble()
+            val trueNegative = all
+                .filter { it.actualSenders.isNotEmpty() }
+                .filter { it.expectedSenders.isNotEmpty() }
+                .size.toDouble()
+            PrecisionResult(MeasureType.SENDER).apply { setPrecision(truePositive, trueNegative) }
+        } else {
+            val truePositive = all
+                .filter { it.actualSenders.contains(name) }
+                .filter { it.expectedSenders.contains(name) }
+                .size.toDouble()
 
-        return PrecisionResult(MeasureType.SENDER).apply { setPrecision(truePositive, trueNegative) }
+            val trueNegative = all
+                .filter { !it.actualSenders.contains(name) }
+                .filter { !it.expectedSenders.contains(name) }
+                .size.toDouble()
+
+            PrecisionResult(MeasureType.SENDER).apply { setPrecision(truePositive, trueNegative) }
+        }
     }
 
     private fun getTopicPrecision(name: String, all: List<Document>): PrecisionResult {

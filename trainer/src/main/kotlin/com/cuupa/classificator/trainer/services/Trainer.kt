@@ -105,22 +105,19 @@ class Trainer(private val documentService: DocumentService) {
 
     private fun getNumberOfCorrect(value: List<SemanticResultData>): Int {
         val type = MeasureType.getFor(value.firstOrNull())
-        val list = documentService.list()
+        val list = documentService.listDone()
 
         return when (type) {
             MeasureType.TOPIC -> {
-                list.filter { it.expectedTopics.isNotEmpty() }
-                    .filter { it.expectedTopics == it.actualTopics }
+                list.filter { it.expectedTopics == it.actualTopics }
                     .size
             }
             MeasureType.SENDER -> {
-                list.filter { it.expectedSenders.isNotEmpty() }
-                    .filter { it.expectedSenders == it.actualSenders }
+                list.filter { it.expectedSenders == it.actualSenders }
                     .size
             }
             MeasureType.METADATA -> {
-                list.filter { it.expectedMetadata.isNotEmpty() }
-                    .filter { it.expectedMetadata == it.actualMetadata }
+                list.filter { it.expectedMetadata == it.actualMetadata }
                     .size
             }
             MeasureType.UNDEFINED -> -1
@@ -133,18 +130,15 @@ class Trainer(private val documentService: DocumentService) {
 
         return when (type) {
             MeasureType.TOPIC -> {
-                list.filter { it.expectedTopics.isNotEmpty() }
-                    .filter { it.expectedTopics != it.actualTopics }
+                list.filter { it.expectedTopics != it.actualTopics }
                     .size
             }
             MeasureType.SENDER -> {
-                list.filter { it.expectedSenders.isNotEmpty() }
-                    .filter { it.expectedSenders != it.actualSenders }
+                list.filter { it.expectedSenders != it.actualSenders }
                     .size
             }
             MeasureType.METADATA -> {
-                list.filter { it.expectedMetadata.isNotEmpty() }
-                    .filter { it.expectedMetadata != it.actualMetadata }
+                list.filter { it.expectedMetadata != it.actualMetadata }
                     .size
             }
             MeasureType.UNDEFINED -> -1

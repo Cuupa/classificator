@@ -22,14 +22,18 @@ open class DocumentService(
     fun removeBatch(id: String?) = storage.removeBatch(id)
 
     fun getPrecision(name: String, type: MeasureType): PrecisionResult {
-        return precision.getPrecision(storage.findAll()?.filter { it.done }?.map { it.mapToDomainObject() } ?: listOf(),
+        return precision.getPrecision(
+            listDone(),
             name,
-            type)
+            type
+        )
     }
 
     fun getRecall(name: String, type: MeasureType): RecallResult {
-        return recall.getRecall(storage.findAll()?.map { it.mapToDomainObject() } ?: listOf(), name, type)
+        return recall.getRecall(listDone(), name, type)
     }
+
+    fun listDone() = storage.findAllCompleted()?.map { it.mapToDomainObject() } ?: listOf()
 
     fun getExpectedTopics() = storage.getDistinctExpectedTopics()
     fun getActualTopics() = storage.getDistinctActualTopics()
@@ -44,10 +48,6 @@ open class DocumentService(
 
     fun getIncorrect(type: MeasureType): List<Document> {
         return list()
-    }
-
-    fun listDone(): List<Document> {
-        return storage.findAll()?.filter { it.done }?.map { it.mapToDomainObject() } ?: listOf()
     }
 }
 

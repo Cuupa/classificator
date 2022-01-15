@@ -9,6 +9,7 @@ abstract class DocumentStorage {
     abstract fun getOpenDocuments(): List<DocumentEntity>
     abstract fun find(id: String?): DocumentEntity
     abstract fun findAll(): List<DocumentEntity>?
+    abstract fun findAllCompleted(): List<DocumentEntity>?
     abstract fun getBatchNames(): List<String>
     abstract fun getBatch(id: String?): List<DocumentEntity>
     abstract fun complete(document: DocumentEntity)

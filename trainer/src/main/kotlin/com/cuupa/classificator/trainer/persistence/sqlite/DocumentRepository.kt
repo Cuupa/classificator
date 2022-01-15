@@ -9,6 +9,8 @@ interface DocumentRepository : JpaRepository<DocumentEntity, String> {
 
     fun findByDoneFalse(): List<DocumentEntity>
 
+    fun findAllByDoneTrue(): List<DocumentEntity>
+
     @Query("SELECT DISTINCT d.batchName FROM DocumentEntity d")
     fun findDistinctBatchName(): List<String>
 

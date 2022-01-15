@@ -144,7 +144,7 @@ class TrainerRegressionTestsController(
         return model
     }
 
-    private fun isUnsupportedContentType(contentType: String) = contentType != "application/vnd.ms-excel"
+    private fun isUnsupportedContentType(contentType: String) = !supportedContentTypes.contains(contentType)
 
     @GetMapping(value = ["/trainer/classify/batch/{batchId}"])
     fun classifyBatch(@PathVariable batchId: String?): String {
@@ -387,5 +387,10 @@ class TrainerRegressionTestsController(
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
         val decimalFormat = DecimalFormat("0.00")
         val log = LogFactory.getLog(TrainerRegressionTestsController::class.java)
+        val supportedContentTypes = listOf(
+            "text/csv",
+            // if office is installed on windows machines, a CSV file will have application/vnd.ms-excel contenttype
+            "application/vnd.ms-excel"
+        )
     }
 }
