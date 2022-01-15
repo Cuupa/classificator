@@ -113,15 +113,30 @@ class TrainerRegressionTestsController(
             } else {
                 val csvFile = CsvFile(content)
                 val timestamp = Instant.now().toEpochMilli()
-                csvFile.lines.forEach {
-                    trainer.persist(
-                        it.contentType,
-                        it.content.toByteArray(),
-                        it.content,
-                        batchName ?: "",
-                        timestamp
+                val documents = csvFile.lines.map {
+                    Document(
+                        content = it.content.toByteArray(),
+                        contentType = it.contentType,
+                        plainText = it.content,
+                        batchName = batchName ?: "Unnamed",
+                        timestamp = timestamp,
+                        expectedTopics = it.topics,
+                        expectedSenders = it.senders,
+                        expectedMetadata = it.metadata
                     )
                 }
+                trainer.persist(documents)
+
+                for (entry in csvFile.lines) {
+                    val document =
+                        documents.find { it.plainText == entry.content && it.contentType == entry.contentType }
+                    document?.let {
+                        if (isPreclassified(csvFile, it)) {
+                            trainer.complete(it)
+                        }
+                    }
+                }
+
                 model.addObject(
                     "message",
                     "Successfully imported ${csvFile.size} documents with batch name '$batchName' from ${file?.originalFilename}"
@@ -142,6 +157,20 @@ class TrainerRegressionTestsController(
 
         model.addObject("success", success)
         return model
+    }
+
+    private fun isPreclassified(csvFile: CsvFile, document: Document): Boolean {
+        csvFile.lines.forEach {
+            if ((it.senders.isNotEmpty()
+                    .or(it.topics.isNotEmpty())
+                    .or(it.metadata.isNotEmpty()))
+                && document.plainText == it.content
+                && document.contentType == it.contentType
+            ) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun isUnsupportedContentType(contentType: String) = !supportedContentTypes.contains(contentType)
@@ -346,8 +375,22 @@ class TrainerRegressionTestsController(
             val batch = trainer.getBatch(id)
             batch.forEach { document ->
                 val result = classificator.classify(document.contentType, document.plainText)
-                document.actualTopics = result.second.map { it.topic }.filter { it != "OTHER" }.filter { it.isNotEmpty() }
-                document.actualSenders = result.second.map { it.sender }.filter { it != "UNKNOWN" }.filter { it.isNotEmpty() }
+                document.actualTopics = result.second
+                    .map { it.topic }
+                    .filter { it != "OTHER" }
+                    .filter { it.isNotEmpty() }
+
+                document.actualSenders = result.second
+                    .map { it.sender }
+                    .filter { it != "UNKNOWN" }
+                    .filter { it.isNotEmpty() }
+
+                document.actualMetadata = result.second
+                    .map { it.metadata }
+                    .map { it.joinToString { entry -> "${entry.name}:${entry.value}" } }
+                    .filter { it.isNotEmpty() }
+                    .filter { it != ":" }
+
                 trainer.complete(document)
             }
 
