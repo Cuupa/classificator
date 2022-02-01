@@ -22,12 +22,6 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
-        <!--  <dependency>
-              <groupId>io.springfox</groupId>
-              <artifactId>springfox-boot-starter</artifactId>
-              <version>3.0.0</version>
-          </dependency>
-  -->
         <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -58,11 +52,6 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
         </dependency>
-
-        <!-- <dependency>
-             <groupId>com.google.code.findbugs</groupId>
-             <artifactId>jsr305</artifactId>
-         </dependency> -->
 
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
