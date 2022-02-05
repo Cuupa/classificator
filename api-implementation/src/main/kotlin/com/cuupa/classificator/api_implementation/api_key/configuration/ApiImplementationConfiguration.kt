@@ -5,8 +5,8 @@ import com.cuupa.classificator.api_implementation.api_key.repository.ApiKeyRepos
 import com.cuupa.classificator.externalconfiguration.Config
 import com.cuupa.classificator.externalconfiguration.configuration.ExternalConfiguration
 import org.apache.commons.logging.LogFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -34,8 +34,8 @@ open class ApiImplementationConfiguration {
 
     private var databaseName: String = "api_repository.db"
 
-    @Value("\${classificator.datapath}")
-    private var dataPath: String? = null
+    @Autowired
+    private var configuration: Config? = null
 
     @Bean
     open fun apiKeyValidator(config: Config, apiKeyRepository: ApiKeyRepository): ApiKeyValidator {
@@ -46,7 +46,7 @@ open class ApiImplementationConfiguration {
     open fun dataSource(): DataSource {
         return DataSourceBuilder.create()
             .driverClassName("org.sqlite.JDBC")
-            .url("jdbc:sqlite:${databasepath()}")
+            .url("jdbc:sqlite:${getDatabaseName()}")
             .build()
     }
 
@@ -73,14 +73,23 @@ open class ApiImplementationConfiguration {
         }
     }
 
-    fun databasepath() = "$dataPath${File.separator}$databaseName"
+    private fun getDatabaseName(): String {
+        var datapath = configuration?.classificator?.dataPath ?: ""
+        if (!datapath.endsWith(File.separator)
+            && datapath.isNotEmpty()
+        ) {
+            datapath = "$datapath${File.separator}"
+        }
+
+        return "$datapath$databaseName"
+    }
 
     @PostConstruct
     fun postConstruct() {
         log.info("Loaded ${ApiImplementationConfiguration::class.simpleName}")
 
-        val parentDir = Paths.get(databasepath()).parent
-        if (!Files.exists(parentDir)) {
+        val parentDir = Paths.get(getDatabaseName()).parent
+        if (parentDir != null && !Files.exists(parentDir)) {
             Files.createDirectories(parentDir)
             log.info("Directory $parentDir created")
         }

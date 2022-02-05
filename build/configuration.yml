@@ -1,7 +1,7 @@
 ---
 classificator:
-  knowledge_base: knowledgebase
-
+  knowledge_base: /opt/classificator/knowledgebase
+  data_path: /opt/classificator
   api_key_required: true
 
   admin:

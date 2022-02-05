@@ -12,6 +12,9 @@ class ClassificatorConfig {
     @JsonProperty("knowledge_base")
     var knowledgeBase: String? = null
 
+    @JsonProperty("data_path")
+    var dataPath: String? = null
+
     @JsonProperty("api_key_required")
     var apiKeyRequired: Boolean? = false
 

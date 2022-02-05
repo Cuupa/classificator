@@ -9,7 +9,6 @@ import com.cuupa.classificator.monitor.service.Monitor
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,9 +30,6 @@ import javax.sql.DataSource
     transactionManagerRef = "monitor_transactionManager"
 )
 open class MonitorConfiguration {
-
-    @Value("\${classificator.datapath}")
-    private var dataPath: String? = null
 
     @Autowired
     private var configuration: Config? = null
@@ -84,8 +80,16 @@ open class MonitorConfiguration {
         }
     }
 
-    private fun getDatabaseName() =
-        "$dataPath${File.separator}${configuration?.classificator?.monitorConfig?.databaseName}"
+    private fun getDatabaseName(): String {
+        var datapath = configuration?.classificator?.dataPath ?: ""
+        if (!datapath.endsWith(File.separator)
+            && datapath.isNotEmpty()
+        ) {
+            datapath = "$datapath${File.separator}"
+        }
+
+        return "$datapath${configuration?.classificator?.monitorConfig?.databaseName}"
+    }
 
     private fun isEnabled() = configuration?.classificator?.monitorConfig?.enabled ?: false
 
@@ -96,7 +100,7 @@ open class MonitorConfiguration {
         log.info("Loaded ${MonitorConfiguration::class.simpleName}")
 
         val parentDir = Paths.get(getDatabaseName()).parent
-        if (!Files.exists(parentDir)) {
+        if (parentDir != null && !Files.exists(parentDir)) {
             Files.createDirectories(parentDir)
             log.info("Directory $parentDir created")
         }
