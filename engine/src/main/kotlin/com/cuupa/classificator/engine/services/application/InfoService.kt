@@ -44,6 +44,7 @@ class InfoService {
             if (version.isNullOrEmpty()){
                 return null
             }
+            return version
         } catch (e: Exception) {
             log.error("Failed to determine version number from $response", e)
         }
