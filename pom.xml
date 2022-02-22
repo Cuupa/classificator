@@ -39,7 +39,7 @@
         <java.version>11</java.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.6.10</kotlin.version>
-        <kotlinx.version>1.6.0</kotlinx.version>
+        <kotlinx.version>1.6.0-native-mt</kotlinx.version>
 
         <commons-io.version>2.11.0</commons-io.version>
         <commons-text.version>1.9</commons-text.version>
