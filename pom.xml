@@ -35,12 +35,12 @@
         <start-class>com.cuupa.classificator.app.SpringBootClassificatorApplication</start-class>
         <app.filename>app</app.filename>
 
-        <spring-boot.version>2.6.2</spring-boot.version>
+        <spring-boot.version>2.6.6</spring-boot.version>
 
         <java.version>11</java.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.6.10</kotlin.version>
-        <kotlinx.version>1.6.0</kotlinx.version>
+        <kotlinx.version>1.6.0-native-mt</kotlinx.version>
 
         <commons-io.version>2.11.0</commons-io.version>
         <commons-text.version>1.9</commons-text.version>
@@ -48,13 +48,12 @@
         <commons-logging.version>1.2</commons-logging.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <sevenzip.version>1.9</sevenzip.version>
-        <pdfbox.version>2.0.24</pdfbox.version>
-        <tika.version>2.1.0</tika.version>
-        <jackson-yaml.version>2.13.0</jackson-yaml.version>
+        <pdfbox.version>2.0.25</pdfbox.version>
+        <tika.version>2.3.0</tika.version>
+        <jackson-yaml.version>2.13.2</jackson-yaml.version>
 
         <jackson-jsr310.version>2.13.1</jackson-jsr310.version>
-
-        <openapi.version>1.5.7</openapi.version>
+        <openapi.version>1.6.4</openapi.version>
 
         <mockito-core.version>4.2.0</mockito-core.version>
         <mockito-junit-jupter.version>4.2.0</mockito-junit-jupter.version>
