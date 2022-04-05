@@ -51,7 +51,7 @@
         <tika.version>2.3.0</tika.version>
         <jackson-yaml.version>2.13.2</jackson-yaml.version>
 
-        <openapi.version>1.6.5</openapi.version>
+        <openapi.version>1.6.6</openapi.version>
 
         <mockito-core.version>4.2.0</mockito-core.version>
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
