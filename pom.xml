@@ -56,7 +56,7 @@
         <mockito-core.version>4.2.0</mockito-core.version>
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <mockito-junit-jupter.version>4.2.0</mockito-junit-jupter.version>
-        <swagger-annotations.version>2.1.12</swagger-annotations.version>
+        <swagger-annotations.version>2.1.13</swagger-annotations.version>
 
         <documentation-to-build>README</documentation-to-build>
         <maven-jar-plugin.version>3.2.1</maven-jar-plugin.version>
