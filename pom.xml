@@ -48,7 +48,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <sevenzip.version>1.9</sevenzip.version>
         <pdfbox.version>2.0.25</pdfbox.version>
-        <tika.version>2.3.0</tika.version>
+        <tika.version>2.4.0</tika.version>
         <jackson-yaml.version>2.13.2</jackson-yaml.version>
 
         <openapi.version>1.6.5</openapi.version>
