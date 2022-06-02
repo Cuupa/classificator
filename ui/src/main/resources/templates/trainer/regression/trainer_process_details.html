@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Trainer</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/trainer.css}" type="text/css"/>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+
+<body>
+
+<div th:insert="fragments/header"></div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th th:text="'Documents (' + ${documents.size()} + ')'">Topics</th>
+        <th>Definition</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="width: 50%">
+            <div class="list-group" th:each="document : ${documents}">
+                <a class="list-group-item list-group-item-action active"
+                   th:href="@{/trainer/process/details/} + ${document.id}"
+                   th:if="${selected} == ${document.id}">
+                    <span th:text="${document.id}"></span>
+                </a>
+
+                <a class="list-group-item list-group-item-action"
+                   th:href="@{/trainer/process/details/} + ${document.id}"
+                   th:if="${selected} != ${document.id}">
+                    <span th:text="${document.id}"></span>
+                </a>
+            </div>
+        </td>
+
+        <td style="width: 50%; align-content: center">
+            <div id="document_details">
+                <h2 th:text="${selected}"></h2>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:insert="fragments/footer"></div>
+</body>
+</html>

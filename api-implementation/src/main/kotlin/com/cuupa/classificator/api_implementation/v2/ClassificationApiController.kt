@@ -55,7 +55,7 @@ open class ClassificationApiController @Autowired constructor(
             return try {
 
                 if (!apiKeyValidator.apiKeyValid(body?.apiKey)) {
-                    log.error("Tried to use '/api/rest/v2/classification' with invalid api key ${body?.apiKey}")
+                    log.error("Tried to use '/api/rest/v2/classification' with invalid api key '${body?.apiKey}'")
                     val error = com.cuupa.classificator.api_client.model.Error().apply {
                         code = "403"
                         message = "Forbidden"

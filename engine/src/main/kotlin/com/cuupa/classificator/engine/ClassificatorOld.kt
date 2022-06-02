@@ -44,7 +44,6 @@ class ClassificatorOld(
             PDDocument.load(ByteArrayInputStream(content)).use { document ->
                 val text = document.getText().joinToString(separator = "")
                 results.addAll(manager.getResults(text))
-                val resultFromStructure = analyser.getResults(document)
             }
         } catch (e: IOException) {
             log.error(e)

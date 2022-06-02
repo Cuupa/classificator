@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script th:src="@{/js/bootstrap.js}"></script>
 </head>
 <body>
 
@@ -20,7 +21,7 @@
            API key: <span th:text="${adminProcess.generatedApiKey}"></span>
         </div>
     </div>
-    <form action="#" th:action="@{/admin/create}" th:object="${adminProcess}" method="post">
+    <form action="#" method="post" th:action="@{/api-keys/create}" th:object="${adminProcess}">
         <div class="row align-items-center">
             <div class="col-xs-6 col-sm-6 col-md-6">
                 <input type="text" placeholder="E-Mail Address" required="required" autofocus="autofocus"
@@ -47,5 +48,6 @@
     </tr>
     </tbody>
 </table>
+<div th:insert="fragments/footer"></div>
 </body>
 </html>

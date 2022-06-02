@@ -33,9 +33,14 @@ class SenderService(private val senders: List<Sender>) {
     ): String {
 
         val sendersFromTopic = mutableListOf<Metadata>()
-        sendersFromTopic.addAll(metadata.filter { (name) -> StringConstants.sender == name })
+        sendersFromTopic.addAll(metadata.filter { StringConstants.sender == it.name })
 
-        sendersFromTopic.addAll(senders.map { Metadata(StringConstants.sender, it.name) })
+        sendersFromTopic.addAll(senders.map {
+            Metadata().apply {
+                name = StringConstants.sender
+                value = it.name
+            }
+        })
 
         val filteredText = sendersFromTopic.filter { text.contains(it.value) }
         val mutableMapOf = mutableMapOf<String, Int>()

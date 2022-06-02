@@ -1,6 +1,14 @@
 ---
+spring:
+  main:
+    web-application-type: none
+
 classificator:
   knowledge_base: ../build/knowledgebase/kb-DEV.db
+
+  admin:
+    username: admin
+    password: admin
 
   monitor:
     username: "John"

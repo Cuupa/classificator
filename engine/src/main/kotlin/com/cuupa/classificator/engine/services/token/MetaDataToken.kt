@@ -12,7 +12,7 @@ import java.util.stream.IntStream
 
 class MetaDataToken {
 
-    private val tokenList: MutableList<Token> = mutableListOf()
+    val tokenList = mutableListOf<Token>()
     var name: String = ""
     var regexContent: List<Pair<String, String>> = listOf()
 
@@ -80,7 +80,9 @@ class MetaDataToken {
         value: Int
     ) {
         if (isMetadataAlreadyRegistered(match, metadataValue)) {
-            val metadata = Metadata(name, metadataValue)
+            val metadata = Metadata()
+            metadata.name = name
+            metadata.value = metadataValue
             match[metadata] = tokens[value].distance
         }
     }
@@ -92,7 +94,9 @@ class MetaDataToken {
         if (isMetadataAlreadyRegistered(match, metadataValue)) {
             synchronized(MetaDataToken::class.java) {
                 if (isMetadataAlreadyRegistered(match, metadataValue)) {
-                    val metadata = Metadata(name, metadataValue)
+                    val metadata = Metadata()
+                    metadata.name = name
+                    metadata.value = metadataValue
                     match[metadata] = tokens[value].distance
                 }
             }

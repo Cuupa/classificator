@@ -1,17 +1,16 @@
-package com.cuupa.classificator
+package com.cuupa.classificator.configuration
 
 import com.cuupa.classificator.engine.Classificator
 import com.cuupa.classificator.engine.ClassificatorImplementation
 import com.cuupa.classificator.engine.KnowledgeManager
-import com.cuupa.classificator.engine.services.KnowledgeBaseExecutorService
-import com.cuupa.classificator.engine.services.MetadataService
-import com.cuupa.classificator.engine.services.SenderService
-import com.cuupa.classificator.engine.services.TopicService
+import com.cuupa.classificator.engine.services.*
 import com.cuupa.classificator.engine.services.kb.KnowledgeBase
 import com.cuupa.classificator.engine.services.kb.KnowledgeBaseInitiator
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.externalconfiguration.Config
 import com.cuupa.classificator.monitor.service.Monitor
+import org.apache.commons.logging.LogFactory
+import org.apache.tika.Tika
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -25,8 +24,23 @@ open class EngineTestConfiguration {
     private var configuration: Config? = null
 
     @Bean
-    open fun classificator(knowledgeManager: KnowledgeManager, analyser: PdfAnalyser, monitor: Monitor): Classificator {
-        return ClassificatorImplementation(knowledgeManager, analyser, monitor)
+    open fun classificator(
+        knowledgeManager: KnowledgeManager,
+        analyser: PdfAnalyser,
+        monitor: Monitor,
+        textExtractor: TextExtractor
+    ): Classificator {
+        return ClassificatorImplementation(knowledgeManager, analyser, monitor, textExtractor)
+    }
+
+    @Bean
+    open fun textExtractor(tika: Tika): TextExtractor {
+        return TextExtractor(tika)
+    }
+
+    @Bean
+    open fun tika(): Tika {
+        return Tika()
     }
 
     @Bean
@@ -75,4 +89,8 @@ open class EngineTestConfiguration {
     }
 
     private fun getKnowledgeBaseDir() = configuration?.classificator?.knowledgeBase ?: ""
+
+    companion object {
+        private val log = LogFactory.getLog(EngineTestConfiguration::class.java)
+    }
 }

@@ -21,6 +21,7 @@
     <modules>
         <module>app</module>
         <module>monitor</module>
+        <module>trainer</module>
         <module>engine</module>
         <module>api</module>
         <module>api-implementation</module>
@@ -51,10 +52,10 @@
         <tika.version>2.4.0</tika.version>
         <jackson-yaml.version>2.13.2</jackson-yaml.version>
 
+        <jackson-jsr310.version>2.13.1</jackson-jsr310.version>
         <openapi.version>1.6.9</openapi.version>
 
         <mockito-core.version>4.2.0</mockito-core.version>
-        <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <mockito-junit-jupter.version>4.2.0</mockito-junit-jupter.version>
         <swagger-annotations.version>2.1.12</swagger-annotations.version>
 
@@ -153,12 +154,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>${findbugs-jsr305.verion}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger-annotations.version}</version>
@@ -184,6 +179,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-parsers-standard-package</artifactId>
+                <version>${tika.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
                 <version>${spring-boot.version}</version>
@@ -196,6 +197,13 @@
                 <version>${sqlite-jdbc.version}</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-jsr310.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
@@ -206,6 +214,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-test</artifactId>
+                <version>${spring-security.version}</version>
             </dependency>
 
             <dependency>
@@ -231,6 +245,14 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito-core.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -286,6 +308,12 @@
             <dependency>
                 <groupId>com.cuupa</groupId>
                 <artifactId>monitor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.cuupa</groupId>
+                <artifactId>trainer</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -348,7 +376,6 @@
                         <configuration>
                             <sourceDirs>
                                 <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>
@@ -361,7 +388,6 @@
                         <configuration>
                             <sourceDirs>
                                 <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>

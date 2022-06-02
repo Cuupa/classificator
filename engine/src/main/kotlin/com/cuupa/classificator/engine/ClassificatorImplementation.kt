@@ -3,6 +3,7 @@ package com.cuupa.classificator.engine
 import com.cuupa.classificator.domain.SemanticResult
 import com.cuupa.classificator.engine.extensions.Extension.getText
 import com.cuupa.classificator.engine.extensions.Extension.isNullOrEmpty
+import com.cuupa.classificator.engine.services.TextExtractor
 import com.cuupa.classificator.engine.stripper.PdfAnalyser
 import com.cuupa.classificator.monitor.service.Monitor
 import kotlinx.coroutines.CoroutineScope
@@ -10,17 +11,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.commons.logging.LogFactory
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.tika.Tika
-import org.apache.tika.metadata.Metadata
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
 class ClassificatorImplementation(
     private val manager: KnowledgeManager, private val analyser: PdfAnalyser,
-    private val monitor: Monitor
+    private val monitor: Monitor,
+    private val textExtractor: TextExtractor
 ) : Classificator {
     private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -30,27 +29,19 @@ class ClassificatorImplementation(
 
     override fun classify(contentType: String?, content: String?): Pair<String, List<SemanticResult>> {
         val start = LocalDateTime.now()
+        val result =
+            try {
+                val isBase64 = content?.let { it.endsWith("=").and(base64Regex.matches(it)) } ?: false
+                val contentBytes =
+                    content?.let { if (isBase64) decodeBase64(it) else it.encodeToByteArray() } ?: ByteArray(0)
 
-        val finalContent = if (contentType != "text/plain") {
-            val isBase64 = content?.let { it.endsWith("=").and(base64Regex.matches(it)) } ?: false
-            if (isBase64) getContent(content) else content
-        } else {
-            content
-        }
-
-        val result = try {
-            classify(contentType, finalContent)
-        } catch (e: Exception) {
-            log.error("Invalid content-type or content")
-            val detectedContentType = detectContentType(finalContent)
-            when {
-                isSupportedContentType(detectedContentType) -> classify(detectedContentType, finalContent)
-                else -> {
-                    log.error("Content-Type $detectedContentType is not supported")
-                    Pair("application/octet-stream", listOf())
-                }
+                val extractText = textExtractor.extractText(content = contentBytes, contentType = contentType)
+                Pair(extractText.contentType, manager.getResults(extractText.content))
+            } catch (e: Exception) {
+                log.error("Invalid content-type or content")
+                Pair("application/octet-stream", listOf())
             }
-        }
+
         val done = LocalDateTime.now()
         scope.launch {
             monitor.writeEvent(
@@ -66,33 +57,8 @@ class ClassificatorImplementation(
 
     private fun isSupportedContentType(contentType: String) = supportedContentTypes.contains(contentType)
 
-    private fun classify(
-        contentType: String?,
-        finalContent: Serializable?,
-    ): Pair<String, List<SemanticResult>> {
-        return when (contentType) {
-            "application/pdf" -> Pair(contentType, classifyPdf(finalContent as ByteArray))
-            "text/plain" -> Pair(contentType, classifyText(finalContent as String))
-            else -> classifyOther(finalContent as ByteArray)
-        }
-    }
-
-    private fun classifyOther(content: ByteArray): Pair<String, List<SemanticResult>> {
-        val text = tika.parseToString(ByteArrayInputStream(content))
-        val contentType = tika.detector.detect(ByteArrayInputStream(content), Metadata()).toString()
-        val result = classifyText(text)
-        return Pair(contentType, result)
-    }
-
-    private fun detectContentType(content: Serializable?): String {
-        return when (content) {
-            is String -> return "plain/text"
-            is ByteArray -> return tika.detector.detect(ByteArrayInputStream(content), Metadata()).toString()
-            else -> "application/octet-stream"
-        }
-    }
-
-    private fun classifyPdf(contentBytes: ByteArray?): List<SemanticResult> {
+    @Deprecated(message = "")
+    fun classifyOld(contentBytes: ByteArray?): List<SemanticResult> {
         if (contentBytes.isNullOrEmpty()) {
             return listOf()
         }
@@ -108,17 +74,10 @@ class ClassificatorImplementation(
         }
     }
 
-    private fun classifyText(text: String?) = manager.getResults(text)
-
-    @Deprecated(message = "")
-    fun classifyOld(content: ByteArray?): List<SemanticResult> {
-        return classifyPdf(content)
-    }
-
     @Deprecated(message = "")
     fun classifyOld(text: String?): List<SemanticResult> {
         val start = LocalDateTime.now()
-        val result = classifyText(text)
+        val result = manager.getResults(text)
         val done = LocalDateTime.now()
         scope.launch {
             monitor.writeEvent(manager.getVersion(), text, result, start, done)
@@ -126,14 +85,11 @@ class ClassificatorImplementation(
         return result
     }
 
-    private fun getContent(content: String?) = Base64.getDecoder().decode(content)
+    private fun decodeBase64(content: String?) = Base64.getDecoder().decode(content)
 
     companion object {
         private val log = LogFactory.getLog(ClassificatorImplementation::class.java)
-        private val tika = Tika()
-
-        val base64Regex = Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$")
-
+        private val base64Regex = Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$")
         private val supportedContentTypes = listOf("text/plain", "application/pdf")
     }
 }

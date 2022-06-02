@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trainer</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <script th:src="@{/js/trainer.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+
+<body>
+<div th:insert="fragments/header"></div>
+
+<div class="container">
+    <table class="table table-striped" style="height: 80%">
+        <thead class="thead-dark">
+        <tr>
+            <th>Text</th>
+            <th>Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td style="width: 50%">
+                <label>
+                <textarea autofocus="autofocus" class="form-control input-lg" cols="100%"
+                          disabled id="textarea" placeholder="Text to process" rows="10"
+                          style="overflow-y: scroll; height: 50%"
+                          th:field="${selectedDocument.plainText}"></textarea>
+                </label>
+            </td>
+
+            <td style="width: 50%; align-content: center">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            <span th:text="Topic"></span>
+                            <span role="button" class="badge bg-danger"
+                                  th:onclick="clearItem('topic');"
+                                  th:text="'clear'">clear</span>
+                        </th>
+                        <th>Sender
+                            <span role="button" class="badge bg-danger"
+                                  th:attr="onclick=|clearItem('sender')|"
+                                  th:text="'clear'">clear</span>
+                        </th>
+                        <th>Metadata
+                            <span role="button" class="badge bg-danger"
+                                  th:attr="onclick=|clearItem('metadata')|"
+                                  th:text="'clear'">Sender</span>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="semantic_result">
+                    <tr>
+                        <td style="width: 20%;">
+                            <span class="badge bg-sselectedDocumentecondary"></span>
+                        </td>
+
+                        <td style="width: 20%;">
+                            <span class="badge bg-secondary"></span>
+                        </td>
+
+                        <td style="width: 60%;">
+                            <table>
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <td style="width: 50%">
+                                    </td>
+                                    <td style="width: 50%">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%;">
+                            <div class="btn-group">
+                                <button aria-expanded="false" class="btn btn-primary dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                        type="button">
+                                    Add Topic
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li th:each="topic : ${topics}">
+                                        <div class="dropdown-item" th:attr="onclick=|add('${topic.name}', 'topic')|"
+                                             th:text="${topic.name}">Action
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+
+                        <td style="width: 20%;">
+                            <div class="btn-group">
+                                <button aria-expanded="false" class="btn btn-primary dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                        type="button">
+                                    Add Sender
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li th:each="sender : ${sender}">
+                                        <div class="dropdown-item" th:attr="onclick=|add('${sender.name}', 'sender')|"
+                                             th:text="${sender.name}">Action
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+
+                        <td style="width: 20%;">
+                            <div class="btn-group">
+                                <button aria-expanded="false" class="btn btn-primary dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                        type="button">
+                                    Add Metadata
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li th:each="metadata : ${metadata}">
+                                        <div class="dropdown-item"
+                                             th:attr="onclick=|add('${metadata.name}', 'metadata')|"
+                                             th:text="${metadata.name}">Action
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form th:action="'/trainer/classify/document/'" th:method="POST">
+        <input type="hidden" id="payload-topic" name="payload-topic">
+        <input type="hidden" id="payload-sender" name="payload-sender">
+        <input type="hidden" id="payload-metadata" name="payload-metadata">
+        <input type="hidden" id="documentId" name="documentId" th:value="${selectedDocument.id}">
+        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save & Next entry"/>
+        <a class="btn btn-lg btn-secondary btn-block" href="/trainer/classify/open">Cancel</a>
+    </form>
+</div>
+<div th:insert="fragments/footer"></div>
+</body>
+</html>

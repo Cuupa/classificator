@@ -23,6 +23,9 @@ class ClassificatorConfig {
     @JsonProperty("monitor")
     var monitorConfig: MonitorConfig? = null
 
+    @JsonProperty("trainer")
+    var trainerConfig: TrainerConfig? = null
+
     @JsonIgnore
     private val additionalProperties: MutableMap<String, Any> = HashMap()
 }
