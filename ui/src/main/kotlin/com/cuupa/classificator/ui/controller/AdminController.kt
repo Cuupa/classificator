@@ -2,6 +2,8 @@ package com.cuupa.classificator.ui.controller
 
 import com.cuupa.classificator.api_implementation.api_key.repository.ApiKeyRepository
 import com.cuupa.classificator.api_implementation.api_key.repository.entity.ApiKeyEntity
+import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.ui.AdminProcess
 import org.apache.commons.logging.LogFactory
 import org.springframework.stereotype.Controller
@@ -14,15 +16,23 @@ import javax.servlet.http.HttpServletResponse
  * @author Simon Thiel (https://github.com/cuupa) (30.05.2021)
  */
 @Controller
-class AdminController(private val apiKeyRepository: ApiKeyRepository) {
+class AdminController(
+    private val apiKeyRepository: ApiKeyRepository,
+    private val manager: KnowledgeManager,
+    private val infoService: InfoService
+) {
 
-    @RequestMapping(value = ["/admin"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/api-keys"], method = [RequestMethod.GET])
     fun admin(): ModelAndView {
         val adminProcess = AdminProcess().apply { apiUsers = apiKeyRepository.findAll().mapNotNull { it.assosiate } }
-        return ModelAndView("admin").apply { addObject("adminProcess", adminProcess) }
+        return ModelAndView("api_keys").apply {
+            addObject("adminProcess", adminProcess)
+            addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
+        }
     }
 
-    @GetMapping(value = ["/admin/revoke{id}"])
+    @GetMapping(value = ["/api-keys/revoke{id}"])
     @ResponseBody
     fun revoke(
         @RequestParam(name = "id") id: String,
@@ -37,11 +47,14 @@ class AdminController(private val apiKeyRepository: ApiKeyRepository) {
         return ModelAndView("redirect:/admin")
     }
 
-    @PostMapping(value = ["/admin/create"])
+    @PostMapping(value = ["/api-keys/create"])
     fun create(
         @ModelAttribute adminProcess: AdminProcess
     ): ModelAndView {
-        val modelAndView = ModelAndView("admin")
+        val modelAndView = ModelAndView("api_keys").apply {
+            addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
+        }
         try {
 
             if (adminProcess.associate.isBlank()) {

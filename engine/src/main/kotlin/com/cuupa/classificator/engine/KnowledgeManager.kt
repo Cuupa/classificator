@@ -11,4 +11,7 @@ class KnowledgeManager(
     fun getResults(text: String?) = knowledgeBaseExecutorService.submit(text)
 
     fun getVersion() = knowledgeBase.knowledgeBaseMetadata.version
+    fun getTopics() = knowledgeBase.topicList
+    fun getSender() = knowledgeBase.sendersList
+    fun getMetadata() = knowledgeBase.metadataList
 }

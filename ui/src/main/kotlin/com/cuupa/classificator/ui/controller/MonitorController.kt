@@ -1,5 +1,7 @@
 package com.cuupa.classificator.ui.controller
 
+import com.cuupa.classificator.engine.KnowledgeManager
+import com.cuupa.classificator.engine.services.application.InfoService
 import com.cuupa.classificator.monitor.service.Event
 import com.cuupa.classificator.monitor.service.Monitor
 import com.cuupa.classificator.ui.MonitorProcess
@@ -17,8 +19,16 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * @author Simon Thiel (https://github.com/cuupa)
+ */
 @Controller
-class MonitorController(private val monitor: Monitor, private val gson: Gson) {
+class MonitorController(
+    private val monitor: Monitor,
+    private val gson: Gson,
+    private val manager: KnowledgeManager,
+    private val infoService: InfoService
+) {
 
     @RequestMapping(value = ["/monitor"], method = [RequestMethod.GET])
     fun monitor(model: Model): ModelAndView {
@@ -28,16 +38,21 @@ class MonitorController(private val monitor: Monitor, private val gson: Gson) {
             addObject("topics", gson.toJson(statistics.topicDistribution))
             addObject("senders", gson.toJson(statistics.senderDistribution))
             addObject("processingHistory", gson.toJson(statistics.processingHistory))
+            addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
         }
         model.addAttribute("monitorProcess", monitorProcess)
         return modelAndView
     }
 
     @RequestMapping(value = ["/monitorWithFilter"], method = [RequestMethod.POST])
-    fun monitorWithFilter(@ModelAttribute monitorProcess: MonitorProcess, model: Model): String {
+    fun monitorWithFilter(@ModelAttribute monitorProcess: MonitorProcess): ModelAndView {
         monitorProcess.events = load(monitorProcess)
-        model.addAttribute("monitorProcess", monitorProcess)
-        return "monitor"
+        return ModelAndView("monitor").apply {
+            addObject("monitorProcess", monitorProcess)
+            addObject("kb_version", manager.getVersion())
+            addObject("application_version", infoService.getVersion())
+        }
     }
 
     @RequestMapping(value = ["/exportAsPdf"], method = [RequestMethod.POST])

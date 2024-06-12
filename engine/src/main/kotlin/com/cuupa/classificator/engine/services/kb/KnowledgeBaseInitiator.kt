@@ -14,9 +14,9 @@ class KnowledgeBaseInitiator(private val knowledgebaseDir: String) {
         val kb = getKnowledgebase(file)
 
         if (!kb.isValid()) {
-            log.error("No knowledgebase found for $file")
+            log.error("No knowledgebase found for ${file.absolutePath}")
         } else {
-            log.error("Successfully loaded Knowledgbase $file")
+            log.error("Successfully loaded Knowledgbase ${file.absolutePath}")
             log.error("Running Knowledgebase ${kb.knowledgeBaseMetadata.version}")
             log.error("Loaded ${kb.topicList.size} topic definitions")
             log.error("Loaded ${kb.sendersList.size} sender definitions")

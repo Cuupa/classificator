@@ -1,0 +1,29 @@
+<!--<link rel="stylesheet" type="text/css" th:href="@{/css/fontawesome.min.css}"/> -->
+<footer class="bg-light text-center fixed-bottom">
+    <!-- Grid container -->
+    <!-- <div class="container p-4">
+        <section class="mb-4">
+              <a class="btn btn-primary btn-floating m-1" style="background-color: #3b5998" href="#!" role="button"><i class="fab fa-facebook-f"></i></a>
+              <a class="btn btn-primary btn-floating m-1" style="background-color: #55acee" href="#!" role="button"><i class="fab fa-twitter"></i></a>
+              <a class="btn btn-primary btn-floating m-1" style="background-color: #dd4b39" href="#!" role="button"><i class="fab fa-google"></i></a>
+              <a class="btn btn-primary btn-floating m-1" style="background-color: #ac2bac" href="#!" role="button"><i class="fab fa-instagram"></i></a>
+              <a class="btn btn-primary btn-floating m-1" style="background-color: #0082ca" href="#!" role="button"><i class="fab fa-linkedin-in"></i></a>
+              <a class="btn btn-primary btn-floating m-1" style="background-color: #333333" href="#!" role="button"><i class="fab fa-github"></i></a>
+          </section>
+    </div>-->
+
+    <div class="text-center p-3 fw-lighter row">
+        <div class="col-sm">
+            <span th:text="'Knowledgebase version: ' + ${kb_version}"></span>
+        </div>
+
+        <div class="col-sm">
+            <span th:text="'Application version: ' + ${application_version}"></span>
+        </div>
+
+        <div class="col-sm">
+            © 2020 Copyright:
+            <a class="text-dark" href="https://github.com/cuupa">Cuupa</a>
+        </div>
+    </div>
+</footer>

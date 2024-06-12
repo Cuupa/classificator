@@ -4,9 +4,10 @@
     <meta charset="UTF-8"/>
     <title>Testing</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 
-<body style="overflow: hidden">
+<body>
 
 <div th:insert="fragments/header"></div>
 
@@ -23,7 +24,10 @@
         <tr>
             <td style="width: 50%">
                 <label>
-                <textarea class="form-control input-lg" autofocus="autofocus" cols="100%" rows="30" th:field="${guiProcess.inputText}" placeholder="Text to process"></textarea>
+                    <textarea autofocus="autofocus" class="form-control input-lg" cols="100%"
+                              placeholder="Text to process"
+                              rows="10"
+                              style="overflow-y: scroll; height: 50%" th:field="${guiProcess.inputText}"></textarea>
                 </label>
             </td>
             <td align="center" style="width: 50%">
@@ -64,10 +68,11 @@
             </td>
         </tr>
         <tr>
-            <td><input type="submit" class="btn btn-lg btn-primary btn-block" value="Process"/></td>
+            <td><input class="btn btn-lg btn-primary btn-block" id="submit_text" type="submit" value="Process"/></td>
         </tr>
         </tbody>
     </table>
 </form>
+<div th:insert="fragments/footer"></div>
 </body>
 </html>

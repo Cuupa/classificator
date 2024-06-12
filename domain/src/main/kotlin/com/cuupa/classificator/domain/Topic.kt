@@ -4,8 +4,7 @@ import org.apache.commons.logging.LogFactory
 
 class Topic : SemanticResultData() {
 
-    private val tokenList = mutableListOf<Token>()
-    var name: String = ""
+    val tokenList = mutableListOf<Token>()
 
     override fun addToken(token: Token) {
         tokenList.add(token)

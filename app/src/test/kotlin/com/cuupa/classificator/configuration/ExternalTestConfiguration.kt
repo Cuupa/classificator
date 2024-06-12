@@ -1,4 +1,4 @@
-package com.cuupa.classificator
+package com.cuupa.classificator.configuration
 
 import com.cuupa.classificator.externalconfiguration.Config
 import com.cuupa.classificator.externalconfiguration.ConfigLoader
